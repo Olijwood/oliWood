@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>API Information</title>
+        <link rel="stylesheet" href="css/style.css">
+    </head>
+    <body>
+        <div id="preloader"></div>
+
+        <h1>API Information App</h1>
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>API Name</th>
+                    <th>API Description and Parameters</th>
+                    <th>Results</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>API 1</td>
+                    <td>
+                        Country: <input type="text" id="api1-country" placeholder="Enter country code">
+                        Language: <input type="text" id="api1-language" placeholder="Enter language code">
+                        <button id="btnRunApi1">Get Info</button>
+                    </td>
+                    <td>
+                        <div id="resultApi1"></div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <script src="js/jquery-2.2.3.min.js"></script>
+        <script src="js/script.js"></script>
+    </body>
+</html>
