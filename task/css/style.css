@@ -1,76 +1,71 @@
+/* Base Styles */
 body {
-    font-family: Arial, Helvetica, sans-serif;
-    padding: 20px;
+    font-family: Arial, Helvetica, sans-serif; /* Set base font for the page */
+    padding: 20px; /* Add padding around the page content */
 }
 
 h1 {
-    text-align: center;
+    text-align: center; /* Center align the heading */
 }
 
+/* Table Styles */
 table {
-    width: 100%;
-    margin: 20px 0;
-    border-collapse: collapse;
+    width: 100%; /* Full-width table */
+    margin: 20px 0; /* Margin above and below the table */
+    border-collapse: collapse; /* Collapse table borders */
 }
 
 th, td {
-    padding: 10px;
-    text-align: left;
+    padding: 10px; /* Padding inside table cells */
+    text-align: left; /* Left-align text in cells */
 }
 
+/* Preloader Styles */
 #preloader {
-    position: fixed;
+    position: fixed; /* Fixed position to cover the entire viewport */
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    z-index: 9999;
-    overflow: hidden;
-    background: #fff;
+    z-index: 9999; /* Ensure it is on top of other content */
+    overflow: hidden; /* Hide any overflow */
+    background: #fff; /* White background */
 }
 
 #preloader:before {
-    content: "";
-    position: fixed;
-    top: calc(50% - 30px);
-    left: calc(50% - 30px);
-    border: 6px solid #f2f2f2;
-    border-top: 6px solid #56829e ;
-    border-radius: 50%;
-    width: 60px;
-    height: 60px;
-    -webkit-animation: animate-preloader 1s linear infinite;
-    animation: animate-preloader 1s linear infinite;
+    content: ""; /* Empty content for the spinner */
+    position: fixed; /* Fixed position for spinner */
+    top: calc(50% - 30px); /* Center vertically */
+    left: calc(50% - 30px); /* Center horizontally */
+    border: 6px solid #f2f2f2; /* Light grey border */
+    border-top: 6px solid #56829e; /* Darker border for spinner effect */
+    border-radius: 50%; /* Circular spinner */
+    width: 60px; /* Spinner width */
+    height: 60px; /* Spinner height */
+    animation: animate-preloader 1s linear infinite; /* Animation for spinning effect */
 }
 
-@-webkit-keyframes animate-preloader {
-    0% {
-        -webkit-transform: rotate(0deg);
-        transform: rotate(0deg);
-    }
-    100% {
-        -webkit-transform: rotate(360deg);
-        transform: rotate(360deg);
-    }
-}
+/* Keyframes for Spinner Animation */
 @keyframes animate-preloader {
     0% {
-        -webkit-transform: rotate(0deg);
-        transform: rotate(0deg);
+        transform: rotate(0deg); /* Start from 0 degrees */
     }
     100% {
-        -webkit-transform: rotate(360deg);
-        transform: rotate(360deg);
+        transform: rotate(360deg); /* Rotate to 360 degrees */
     }
 }
 
-/* Ensure no bullet points and adjust spacing */
+/* Result Weather Styles */
+#resultWeather {
+    margin-top: 20px; /* Space above the result section */
+}
+
 #resultWeather ul {
-    list-style-type: none; /* Remove bullet points */
-    padding: 0; /* Remove padding */
-    margin: 0; /* Remove margin */
+    list-style-type: none; /* Remove bullet points from the list */
+    padding: 0; /* Remove padding from the list */
+    margin: 0; /* Remove margin from the list */
 }
 
 #resultWeather li {
-    margin-bottom: 10px; /* Optional: space between items */
+    margin-bottom: 10px; /* Space between list items */
 }

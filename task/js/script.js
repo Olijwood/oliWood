@@ -1,4 +1,5 @@
 $(window).on('load', function () {
+    // Fade out preloader once the page is fully loaded
     if ($('#preloader').length) {
         $('#preloader').delay(1000).fadeOut('slow', function () {
             $(this).remove();
@@ -6,6 +7,7 @@ $(window).on('load', function () {
     }
 });
 
+// Event handler for the "Get Neighbours" button
 $('#btnRunNeighbour').click(function() {
     $.ajax({
         url: 'php/getApiData.php',
@@ -16,19 +18,20 @@ $('#btnRunNeighbour').click(function() {
             api: 'neighbours'
         },
         success: function(result) {
-            if (result.status.name == "ok") {
+            if (result.status.name === "ok") {
                 let neighbours = result.data.map(item => item.countryName).join('<br>- ');
                 $('#resultNeighbours').html(`
-                    <p>8 neighbours:<br><br>- ${neighbours}</p>
+                    <p>Neighbours:<br><br>- ${neighbours}</p>
                 `);
             }
         },
-        error: function(jqXHR, textStatus, errorThrown) {
+        error: function() {
             $('#resultNeighbours').html('Error retrieving data.');
         }
     });
 });
 
+// Event handler for the "Get Nearby Populated Place" button
 $('#btnRunNearby').click(function() {
     $.ajax({
         url: 'php/getApiData.php',
@@ -40,7 +43,7 @@ $('#btnRunNearby').click(function() {
             api: 'nearbyPop'
         },
         success: function(result) {
-            if (result.status.name == "ok") {
+            if (result.status.name === "ok") {
                 $('#resultNearby').html(`
                     Name: ${result.data[0].name}<br><br>
                     Country: ${result.data[0].countryName}<br><br>
@@ -48,12 +51,13 @@ $('#btnRunNearby').click(function() {
                 `);
             }
         },
-        error: function(jqXHR, textStatus, errorThrown) {
+        error: function() {
             $('#resultNearby').html('Error retrieving data.');
         }
     });
 });
 
+// Event handler for the "Get Nearby Weather" button
 $('#btnRunWeather').click(function() {
     $.ajax({
         url: 'php/getApiData.php',
@@ -65,16 +69,16 @@ $('#btnRunWeather').click(function() {
             api: 'nearbyWeather'
         },
         success: function(result) {
-            if (result.status.name == "ok") {
-                $('#countryCode').html(`Country Code: ${result.data.countryCode}<br>`)
-                $('#station').html(`Weather Station: ${result.data.stationName}<br>`)
-                $('#temp').html(`Temperature (Celcius): ${result.data.temperature}<br>`)
-                $('#humidity').html(`Humidity: ${result.data.humidity}<br>`)
-                $('#clouds').html(`Clouds: ${result.data.clouds}<br>`)
-                $('#winSpeed').html(`Wind Speed: ${result.data.windSpeed}<br>`)
+            if (result.status.name === "ok") {
+                $('#countryCode').html(`Country Code: ${result.data.countryCode}<br>`);
+                $('#station').html(`Weather Station: ${result.data.stationName}<br>`);
+                $('#temp').html(`Temperature (Celsius): ${result.data.temperature}<br>`);
+                $('#humidity').html(`Humidity: ${result.data.humidity}<br>`);
+                $('#clouds').html(`Clouds: ${result.data.clouds}<br>`);
+                $('#winSpeed').html(`Wind Speed: ${result.data.windSpeed}<br>`);
             }
         },
-        error: function(jqXHR, textStatus, errorThrown) {
+        error: function() {
             $('#resultWeather').html('Error retrieving data.');
         }
     });
