@@ -62,4 +62,32 @@ $(document).ready(function () {
 
   infoBtn.addTo(map);
 
-})
+  // Event handler for country selection
+  $('#countrySelect').change(function() {
+    let selectedCountry = $(this).val();
+
+    $.ajax({
+      url: `php/getCountryBorders.php?code=${selectedCountry}`,
+      method: 'GET',
+      dataType: 'json',
+      success: function(borderData) {
+        // Remove existing layers
+        map.eachLayer(function(layer) {
+          if (layer instanceof L.GeoJSON) {
+            map.removeLayer(layer);
+          }
+        });
+
+        // Add new border data
+        L.geoJson(borderData).addTo(map);
+
+        // Fit map to new borders
+        map.fitBounds(L.geoJson(borderData).getBounds());
+      },
+      error: function(xhr, status, error) {
+        console.error("Failed to fetch country borders:", status, error);
+      }
+    });
+  });
+
+});
