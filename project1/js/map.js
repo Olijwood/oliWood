@@ -62,6 +62,17 @@ $(document).ready(function () {
 
   infoBtn.addTo(map);
 
+  // Check for geolocation support
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(function(position) {
+        let lat = position.coords.latitude;
+        let lon = position.coords.longitude;
+        map.setView([lat, lon], 10);
+    }, function(error) {
+        console.error('Geolocation request failed');
+    });
+  }
+
   // Event handler for country selection
   $('#countrySelect').change(function() {
     let selectedCountry = $(this).val();
