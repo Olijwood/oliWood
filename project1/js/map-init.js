@@ -35,6 +35,22 @@ var infoBtn = L.easyButton("fa-info fa-xl", function (btn, map) {
 
 $(document).ready(function () {
   
+  // Fetch countries and populate the dropdown
+  $.ajax({
+    url: 'php/getCountries.php',
+    method: 'GET',
+    dataType: 'json',
+    success: function(data) {
+        const select = $('#countrySelect');
+        data.forEach(country => {
+            select.append(new Option(country.name, country.code));
+        });
+    },
+    error: function(xhr, status, error) {
+      console.error("Failed to fetch countries:", status, error);
+    }
+  });
+
   map = L.map("map", {
     layers: [streets]
   }).setView([54.5, -4], 6);
