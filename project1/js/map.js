@@ -42,6 +42,10 @@ $(document).ready(function () {
     dataType: 'json',
     success: function(data) {
         const select = $('#countrySelect');
+
+        // Sort countries alphabetically by name
+        data.sort((a, b) => a.name.localeCompare(b.name));
+
         data.forEach(country => {
             select.append(new Option(country.name, country.code));
         });
