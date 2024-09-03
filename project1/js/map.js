@@ -4,6 +4,13 @@
 
 var map;
 
+function toTitleCase(str) {
+  return str.replace(
+    /\w\S*/g,
+    text => text.charAt(0).toUpperCase() + text.substring(1).toLowerCase()
+  );
+}
+
 // tile layers
 
 var streets = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}", {
@@ -31,6 +38,49 @@ var infoBtn = L.easyButton("fa-info fa-xl", function (btn, map) {
 // EVENT HANDLERS
 // ---------------------------------------------------------
 
+const updateWeatherUI = (data) => {
+  let weatherDescription = data.weather[0].description;
+  let temperature = data.main.temp;
+  let feelsLike = data.main.feels_like;
+  let humidity = data.main.humidity;
+  let windSpeed = data.wind.speed;
+
+  // Convert sunrise and sunset times from UNIX timestamp to human-readable format
+  let sunrise = new Date(data.sys.sunrise * 1000).toLocaleTimeString();
+  let sunset = new Date(data.sys.sunset * 1000).toLocaleTimeString();
+
+  // Update the modal with weather data
+  $('#locationName').html(`${data.name}, ${data.sys.country}`);
+  $('#weatherVal').html(toTitleCase(weatherDescription));
+  $('#tempVal').html(`${temperature} °C`);
+  $('#feelsLikeVal').html(`${feelsLike} °C`);
+  $('#humidityVal').html(`${humidity}%`);
+  $('#windspeedVal').html(`${windSpeed} m/s`);
+  $('#sunriseVal').html(sunrise);
+  $('#sunsetVal').html(sunset);
+};
+
+const fetchWeather = (lat, lon) => {
+  $.ajax({
+    url: 'php/getWeather.php',
+    type: 'GET',
+    data: {
+      lat: lat,
+      lon: lon
+    },
+    success: function(response) {
+      if (response.error) {
+        console.error('Error fetching weather data:', response.error);
+      } else {
+        console.log(response);
+        updateWeatherUI(response);
+      }
+    },
+    error: function() {
+      console.error('Failed to fetch weather data.');
+    }
+  });
+};
 // initialise and add controls once DOM is ready
 
 $(document).ready(function () {
@@ -72,6 +122,10 @@ $(document).ready(function () {
         let lat = position.coords.latitude;
         let lon = position.coords.longitude;
         map.setView([lat, lon], 10);
+
+        // Fetch weather based on user's location
+        fetchWeather(lat, lon);
+
     }, function(error) {
         console.error('Geolocation request failed');
     });

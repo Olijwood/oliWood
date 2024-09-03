@@ -30,13 +30,47 @@
             <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
               <div class="modal-content shadow">
                 <div class="modal-header bg-success bg-gradient text-white">
-                  <h5 class="modal-title">Overview</h5>
+                  <h5 class="modal-title" id="locationName"></h5><!-- City and Country Name -->
                   <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                   <table class="table table-striped">
                     <tr>
-          
+                        <td class="text-center"><i class="fa-solid fa-cloud-sun fa-xl text-success"></i></td>
+                        <td>Weather</td>
+                        <td class="text-end" id="weatherVal"></td>
+                    </tr>
+                    <tr>
+                        <td class="text-center"><i class="fa-solid fa-temperature-high fa-xl text-success"></i></td>
+                        <td>Temperature</td>
+                        <td class="text-end" id="tempVal"></td>
+                    </tr>
+                    <tr>
+                      <td class="text-center"><i class="fa-solid fa-tint fa-xl text-success"></i></td>
+                      <td>Feels Like</td>
+                      <td class="text-end" id="feelsLikeVal"></td>
+                    </tr>
+                    <tr>
+                      <td class="text-center"><i class="fa-solid fa-clock fa-xl text-success"></i></td>
+                      <td>Sunrise</td>
+                      <td class="text-end" id="sunriseVal"></td>
+                    </tr>
+                    <tr>
+                      <td class="text-center"><i class="fa-solid fa-clock fa-xl text-success"></i></td>
+                      <td>Sunset</td>
+                      <td class="text-end" id="sunsetVal"></td>
+                    </tr>
+                    <tr>
+                      <td class="text-center"><i class="fa-solid fa-wind fa-xl text-success"></i></td>
+                      <td>Wind Speed</td>
+                      <td class="text-end" id="windspeedVal"></td>
+                    </tr>
+                    <tr>
+                        <td class="text-center"><i class="fa-solid fa-tint fa-xl text-success"></i></td>
+                        <td>Humidity</td>
+                        <td class="text-end" id="humidityVal"></td>
+                    </tr>
+                    <!-- <tr>
                       <td class="text-center">
                         <i class="fa-solid fa-street-view fa-xl text-success"></i>
                       </td>
@@ -349,7 +383,7 @@
                         value
                       </td>
                       
-                    </tr>           
+                    </tr>            -->
                   </table>
                 </div>
                 <div class="modal-footer">
