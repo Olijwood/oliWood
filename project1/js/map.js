@@ -133,10 +133,33 @@ $(document).ready(function () {
 
   // Event handler for country selection
   $('#countrySelect').change(function() {
-    let selectedCountry = $(this).val();
+    let selectedCountryCode = $(this).val();
 
+    // Fetch the capital's coordinates for the selected country
     $.ajax({
-      url: `php/getCountryBorders.php?code=${selectedCountry}`,
+      url: `php/getCapitalCoordinates.php?code=${selectedCountryCode}`,
+      method: 'GET',
+      dataType: 'json',
+      success: function(capitalData) {
+        if (capitalData.error) {
+          console.error('Error fetching capital data:', capitalData.error);
+        } else {
+          let lat = capitalData.lat;
+          let lon = capitalData.lon;
+
+
+          // Fetch the weather for the capital
+          fetchWeather(lat, lon);
+        }
+      },
+      error: function(xhr, status, error) {
+        console.error('Failed to fetch capital coordinates:', status, error);
+      }
+    });
+
+    // Fetch and display country borders
+    $.ajax({
+      url: `php/getCountryBorders.php?code=${selectedCountryCode}`,
       method: 'GET',
       dataType: 'json',
       success: function(borderData) {
@@ -158,5 +181,4 @@ $(document).ready(function () {
       }
     });
   });
-
 });
