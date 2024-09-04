@@ -30,9 +30,10 @@ var basemaps = {
 
 // buttons
 
-var infoBtn = L.easyButton("fa-info fa-xl", function (btn, map) {
+var infoBtn = L.easyButton("fa-solid fa-cloud-sun fa-lg", function (btn, map) {
   $("#exampleModal").modal("show");
 });
+
 
 // ---------------------------------------------------------
 // EVENT HANDLERS
@@ -45,20 +46,20 @@ const updateWeatherUI = (data) => {
   let humidity = data.main.humidity;
   let windSpeed = data.wind.speed;
 
-  // Convert sunrise and sunset times from UNIX timestamp to human-readable format
-  let sunrise = new Date(data.sys.sunrise * 1000).toLocaleTimeString();
-  let sunset = new Date(data.sys.sunset * 1000).toLocaleTimeString();
+  // Convert sunrise and sunset times from UNIX timestamp to 24-hour format
+  let sunrise = new Date(data.sys.sunrise * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  let sunset = new Date(data.sys.sunset * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
   // Update the modal with weather data
   $('#locationName').html(`${data.name}, ${data.sys.country}`);
   $('#weatherVal').html(toTitleCase(weatherDescription));
-  $('#tempVal').html(`${temperature} °C`);
-  $('#feelsLikeVal').html(`${feelsLike} °C`);
+  $('#tempVal').html(`<span class="">${temperature} °C</span> <span class="text-muted small"> (Feels like ${feelsLike} °C)</span>`);
+  // $('#feelsLikeVal').html(`<span class="text-muted">${feelsLike} °C</span>`);
+  $('#sunriseSunsetVal').html(`<span class="">${sunrise}</span> | <span class="">${sunset}</span>`);
   $('#humidityVal').html(`${humidity}%`);
   $('#windspeedVal').html(`${windSpeed} m/s`);
-  $('#sunriseVal').html(sunrise);
-  $('#sunsetVal').html(sunset);
 };
+
 
 const fetchWeather = (lat, lon) => {
   $.ajax({
