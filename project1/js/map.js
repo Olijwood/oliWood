@@ -104,10 +104,16 @@ const fetchCountryInfo = (countryCode) => {
 };
 
 const updateCountryInfoUI = (data) => {
-  $('#countryName').html(data.name);
-  $('#populationVal').html(data.population.toLocaleString());
-  $('#capitalCityVal').html(data.capital);
+  
   $('#countryFlag').attr('src', data.flag);
+  $('#countryFlag').attr('alt', data.alt);
+
+  $('#countryName').html(data.name);
+  console.log(data);
+  $('#capitalCityVal').html(data.capital);
+  $('#continentVal').html(data.subcontinent);
+  $('#populationVal').html(data.population.toLocaleString());
+  
 
   const currencies = data.currencies;
   $('#currencies').empty(); // Clear previous content
@@ -122,6 +128,18 @@ const updateCountryInfoUI = (data) => {
       </div>
     `);
   });
+
+  const borders = data.borders;
+  $('#borderCs').empty(); // Clear previous content
+  let countriesList = '';
+  Object.keys(borders).forEach(country => {
+    const countryCode = borders[country];
+    countriesList += `${countryCode}, `;
+  });
+  $('#borderCs').html(countriesList.slice(0, -2));
+  $('#driveSide').html(toTitleCase(data.driveSide));
+
+
 };
 
 

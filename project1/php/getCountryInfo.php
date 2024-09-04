@@ -22,9 +22,14 @@ if (isset($data[0])) {
     $result = [
         'name' => $country['name']['common'],
         'capital' => $country['capital'][0],
+        'continent' => $country['region'],
+        'subcontinent' => $country['subregion'],
         'population' => $country['population'],
         'currencies' => isset($country['currencies']) ? $country['currencies'] : null,
-        'flag' => $country['flags']['svg']
+        'flag' => $country['flags']['svg'],
+        'alt' => $country['flags']['alt'],
+        'borders' => $country['borders'],
+        'driveSide' => $country['car']['side']
     ];
     echo json_encode($result);
 } else {

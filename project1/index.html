@@ -72,13 +72,15 @@
       <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content shadow">
           <div class="modal-header bg-info text-white">
-            <h5 class="modal-title" id="countryName">Country Information</h5>
+            <div class="text-center mb-3" style="justify-content: center;">
+              <img id="countryFlag" src="" alt="Country Flag" class="img-fluid" style="max-width: auto; height: 50px;">
+            </div>
+            <div style="align-items: center; align-content: center;">
+              <h5 class="modal-title" id="countryName">Country Information</h5>
+            </div>
             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <div class="text-center mb-3">
-              <img id="countryFlag" src="" alt="Country Flag" class="img-fluid" style="max-width: 100%; height: auto;">
-            </div>
             <div class="row">
               <div class="col-md-12">
                 <table class="table table-striped">
@@ -89,6 +91,11 @@
                       <td class="text-end" id="capitalCityVal"></td>
                     </tr>
                     <tr>
+                      <td class="text-center"><i class="fa-solid fa-city fa-xl"></i></td>
+                      <td>Region</td>
+                      <td class="text-end" id="continentVal"></td>
+                    </tr>
+                    <tr>
                       <td class="text-center"><i class="fa-solid fa-users fa-xl"></i></td>
                       <td>Population</td>
                       <td class="text-end" id="populationVal"></td>
@@ -97,7 +104,17 @@
                       <td class="text-center"><i class="fa-solid fa-money-bill-wave fa-xl"></i></td>
                       <td>Currencies</td>
                       <td class="text-end" id="currencies"></td>
-                    </tr>
+                    </tr>  
+                    <tr>
+                      <td class="text-center"><i class="fa-solid fa-money-bill-wave fa-xl"></i></td>
+                      <td>Bordering Countries</td>
+                      <td class="text-end" id="borderCs"></td>
+                    </tr>                    
+                    <tr>
+                      <td class="text-center"><i class="fa-solid fa-money-bill-wave fa-xl"></i></td>
+                      <td>Driving Side</td>
+                      <td class="text-end" id="driveSide"></td>
+                    </tr> 
                   </tbody>
                 </table>
               </div>
