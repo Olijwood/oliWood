@@ -2,106 +2,148 @@
 // GLOBAL DECLARATIONS
 // ---------------------------------------------------------
 
-var map;
+let map;
 
-function toTitleCase(str) {
-  return str.replace(
-    /\w\S*/g,
-    text => text.charAt(0).toUpperCase() + text.substring(1).toLowerCase()
-  );
-}
+const toTitleCase = (str) => str.replace(
+  /\w\S*/g,
+  text => text.charAt(0).toUpperCase() + text.substring(1).toLowerCase()
+);
 
-// tile layers
-
-var streets = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}", {
+// Tile layers for different map views
+const streets = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}", {
     attribution: "Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012"
-  }
-);
+});
 
-var satellite = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", {
+const satellite = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", {
     attribution: "Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community"
-  }
-);
+});
 
-var basemaps = {
+const basemaps = {
   "Streets": streets,
   "Satellite": satellite
 };
 
-// buttons
-
-var infoBtn = L.easyButton("fa-solid fa-cloud-sun fa-lg", function (btn, map) {
-  $("#exampleModal").modal("show");
+// Info button for showing weather modal
+const weatherBtn = L.easyButton("fa-solid fa-cloud-sun fa-lg", (btn, map) => {
+  $("#weatherModal").modal("show");
 });
 
+// Info button for showing country info modal
+const countryInfoBtn = L.easyButton("fa-solid fa-info-circle fa-lg", (btn, map) => {
+  // Ensure there's a selected country before showing the info
+  if ($("#countrySelect").val()) {
+    $("#countryInfoModal").modal("show");
+  } else {
+    alert("Please select a country to view information.");
+  }
+});
 
 // ---------------------------------------------------------
-// EVENT HANDLERS
+// WEATHER
 // ---------------------------------------------------------
 
 const updateWeatherUI = (data) => {
-  let weatherDescription = data.weather[0].description;
-  let temperature = data.main.temp;
-  let feelsLike = data.main.feels_like;
-  let humidity = data.main.humidity;
-  let windSpeed = data.wind.speed;
+  const weatherDescription = toTitleCase(data.weather[0].description);
+  const temperature = data.main.temp;
+  const feelsLike = data.main.feels_like;
+  const humidity = data.main.humidity;
+  const windSpeed = data.wind.speed;
 
-  // Convert sunrise and sunset times from UNIX timestamp to 24-hour format
-  let sunrise = new Date(data.sys.sunrise * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-  let sunset = new Date(data.sys.sunset * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  const sunrise = new Date(data.sys.sunrise * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  const sunset = new Date(data.sys.sunset * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-  // Update the modal with weather data
-  $('#locationName').html(`${data.name}, ${data.sys.country}`);
-  $('#weatherVal').html(toTitleCase(weatherDescription));
-  $('#tempVal').html(`<span class="">${temperature} °C</span> <span class="text-muted small"> (Feels like ${feelsLike} °C)</span>`);
-  // $('#feelsLikeVal').html(`<span class="text-muted">${feelsLike} °C</span>`);
-  $('#sunriseSunsetVal').html(`<span class="">${sunrise}</span> | <span class="">${sunset}</span>`);
+  $('#weatherLocationName').html(`${data.name}, ${data.sys.country}`);
+  $('#weatherVal').html(weatherDescription);
+  $('#tempVal').html(`<span>${temperature} °C</span> <span class="text-muted small"> (Feels like ${feelsLike} °C)</span>`);
+  $('#sunriseSunsetVal').html(`<span>${sunrise}</span> | <span>${sunset}</span>`);
   $('#humidityVal').html(`${humidity}%`);
   $('#windspeedVal').html(`${windSpeed} m/s`);
-};
 
+  // Fetch country information based on the country code from weather data
+  fetchCountryInfo(data.sys.country);
+};
 
 const fetchWeather = (lat, lon) => {
   $.ajax({
     url: 'php/getWeather.php',
     type: 'GET',
-    data: {
-      lat: lat,
-      lon: lon
-    },
-    success: function(response) {
+    data: { lat, lon },
+    success: (response) => {
       if (response.error) {
         console.error('Error fetching weather data:', response.error);
       } else {
-        console.log(response);
         updateWeatherUI(response);
       }
     },
-    error: function() {
+    error: () => {
       console.error('Failed to fetch weather data.');
     }
   });
 };
-// initialise and add controls once DOM is ready
 
-$(document).ready(function () {
-  
+// ---------------------------------------------------------
+// COUNTRY INFO
+// ---------------------------------------------------------
+
+const fetchCountryInfo = (countryCode) => {
+  $.ajax({
+    url: 'php/getCountryInfo.php',
+    type: 'GET',
+    data: { code: countryCode },
+    success: (response) => {
+      if (response.error) {
+        alert(response.error);
+      } else {
+        updateCountryInfoUI(response);
+      }
+    },
+    error: (xhr, status, error) => {
+      console.error('Error fetching country info:', error);
+    }
+  });
+};
+
+const updateCountryInfoUI = (data) => {
+  $('#countryName').html(data.name);
+  $('#populationVal').html(data.population.toLocaleString());
+  $('#capitalCityVal').html(data.capital);
+  $('#countryFlag').attr('src', data.flag);
+
+  const currencies = data.currencies;
+  $('#currencies').empty(); // Clear previous content
+
+  Object.keys(currencies).forEach(currencyCode => {
+    const cVals = currencies[currencyCode];
+    $('#currencies').append(`
+      <div class="currency-item">
+        <span>${currencyCode} | </span>
+        <span>${cVals.symbol} | </span>
+        <span>${toTitleCase(cVals.name)}</span>
+      </div>
+    `);
+  });
+};
+
+
+
+// ---------------------------------------------------------
+// INITIALIZATION
+// ---------------------------------------------------------
+
+$(document).ready(() => {
   // Fetch countries and populate the dropdown
   $.ajax({
     url: 'php/getCountries.php',
     method: 'GET',
     dataType: 'json',
-    success: function(data) {
-        const select = $('#countrySelect');
-
-        // Sort countries alphabetically by name
-        data.sort((a, b) => a.name.localeCompare(b.name));
-
-        data.forEach(country => {
-            select.append(new Option(country.name, country.code));
-        });
+    success: (data) => {
+      const select = $('#countrySelect');
+      data.sort((a, b) => a.name.localeCompare(b.name));
+      data.forEach(country => {
+        select.append(new Option(country.name, country.code));
+      });
     },
-    error: function(xhr, status, error) {
+    error: (xhr, status, error) => {
       console.error("Failed to fetch countries:", status, error);
     }
   });
@@ -109,13 +151,10 @@ $(document).ready(function () {
   map = L.map("map", {
     layers: [streets]
   }).setView([54.5, -4], 6);
-  
-  // setView is not required in your application as you will be
-  // deploying map.fitBounds() on the country border polygon
 
-  layerControl = L.control.layers(basemaps).addTo(map);
-
-  infoBtn.addTo(map);
+  L.control.layers(basemaps).addTo(map);
+  weatherBtn.addTo(map);
+  countryInfoBtn.addTo(map);
 
   // Check for geolocation support
   if (navigator.geolocation) {
@@ -123,61 +162,55 @@ $(document).ready(function () {
         let lat = position.coords.latitude;
         let lon = position.coords.longitude;
         map.setView([lat, lon], 10);
-
+        
         // Fetch weather based on user's location
         fetchWeather(lat, lon);
-
-    }, function(error) {
+      },
+      (error) => {
         console.error('Geolocation request failed');
-    });
+      }
+    );
+  } else {
+    console.warn('Geolocation is not supported by this browser.');
   }
 
   // Event handler for country selection
   $('#countrySelect').change(function() {
-    let selectedCountryCode = $(this).val();
+    const selectedCountryCode = $(this).val();
 
-    // Fetch the capital's coordinates for the selected country
     $.ajax({
       url: `php/getCapitalCoordinates.php?code=${selectedCountryCode}`,
       method: 'GET',
       dataType: 'json',
-      success: function(capitalData) {
+      success: (capitalData) => {
         if (capitalData.error) {
           console.error('Error fetching capital data:', capitalData.error);
         } else {
-          let lat = capitalData.lat;
-          let lon = capitalData.lon;
-
-
-          // Fetch the weather for the capital
+          const { lat, lon } = capitalData;
+          map.setView([lat, lon], 10);
           fetchWeather(lat, lon);
         }
       },
-      error: function(xhr, status, error) {
+      error: (xhr, status, error) => {
         console.error('Failed to fetch capital coordinates:', status, error);
       }
     });
 
-    // Fetch and display country borders
     $.ajax({
       url: `php/getCountryBorders.php?code=${selectedCountryCode}`,
       method: 'GET',
       dataType: 'json',
-      success: function(borderData) {
-        // Remove existing layers
-        map.eachLayer(function(layer) {
+      success: (borderData) => {
+        map.eachLayer((layer) => {
           if (layer instanceof L.GeoJSON) {
             map.removeLayer(layer);
           }
         });
 
-        // Add new border data
-        L.geoJson(borderData).addTo(map);
-
-        // Fit map to new borders
-        map.fitBounds(L.geoJson(borderData).getBounds());
+        const geoJsonLayer = L.geoJson(borderData).addTo(map);
+        map.fitBounds(geoJsonLayer.getBounds());
       },
-      error: function(xhr, status, error) {
+      error: (xhr, status, error) => {
         console.error("Failed to fetch country borders:", status, error);
       }
     });

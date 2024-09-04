@@ -23,12 +23,12 @@
     
     <div id="map"></div>
     
-    <!-- Updated modal layout -->
-    <div id="exampleModal" class="modal fade" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <!-- Weather modal -->
+    <div id="weatherModal" class="modal fade" data-bs-backdrop="static" tabindex="-1" aria-labelledby="weatherModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
           <div class="modal-content shadow">
               <div class="modal-header bg-info text-white">
-                  <h5 class="modal-title" id="locationName"></h5> <!-- City and Country Name -->
+                  <h5 class="modal-title" id="weatherLocationName"></h5> <!-- City and Country Name -->
                   <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
               <div class="modal-body">
@@ -43,18 +43,13 @@
                           <td>Temperature</td>
                           <td class="text-end" id="tempVal"></td>
                       </tr>
-                      <!-- <tr>
-                          <td class="text-center"><i class="fa-solid fa-temperature-low fa-xl text-warning"></i></td>
-                          <td>Feels Like</td>
-                          <td class="text-end" id="feelsLikeVal"></td>
-                      </tr> -->
                       <tr>
                           <td class="text-center"><i class="fa-solid fa-sun fa-xl text-warning"></i></td>
                           <td>Sunrise & Sunset</td>
                           <td class="text-end" id="sunriseSunsetVal"></td>
                       </tr>
                       <tr>
-                          <td class="text-center"><i class="fa-solid fa-wind fa-xl text-primary"></i></td>
+                          <td class="text-center"><i class="fa-solid fa-wind fa-xl text-muted"></i></td>
                           <td>Wind Speed</td>
                           <td class="text-end" id="windspeedVal"></td>
                       </tr>
@@ -71,6 +66,50 @@
           </div>
       </div>
     </div>
+
+    <!-- Country Info Modal -->
+    <div id="countryInfoModal" class="modal fade" data-bs-backdrop="static" tabindex="-1" aria-labelledby="countryInfoModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content shadow">
+          <div class="modal-header bg-info text-white">
+            <h5 class="modal-title" id="countryName">Country Information</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="text-center mb-3">
+              <img id="countryFlag" src="" alt="Country Flag" class="img-fluid" style="max-width: 100%; height: auto;">
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <table class="table table-striped">
+                  <tbody>
+                    <tr>
+                      <td class="text-center"><i class="fa-solid fa-city fa-xl"></i></td>
+                      <td>Capital City</td>
+                      <td class="text-end" id="capitalCityVal"></td>
+                    </tr>
+                    <tr>
+                      <td class="text-center"><i class="fa-solid fa-users fa-xl"></i></td>
+                      <td>Population</td>
+                      <td class="text-end" id="populationVal"></td>
+                    </tr>
+                    <tr>
+                      <td class="text-center"><i class="fa-solid fa-money-bill-wave fa-xl"></i></td>
+                      <td>Currencies</td>
+                      <td class="text-end" id="currencies"></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline-info btn-sm" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
 
 
     <script src="vendors/jquery-2.2.3.min.js"></script>
