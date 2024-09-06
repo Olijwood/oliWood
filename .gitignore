@@ -1,0 +1,13 @@
+# other directory files
+dashboard/
+geonamesExample/
+img/
+webalizer/
+applications.html
+bitnami.css
+favicon.ico
+index.php
+
+# Project1 files
+
+project1/templates/
