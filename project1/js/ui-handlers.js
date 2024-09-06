@@ -1,11 +1,7 @@
 // UI-related handlers
 
 $('#nav-info-li').on('click', () => {
-  if ($("#countrySelect").val()) {
-    $("#countryInfoModal").modal("show");
-  } else {
-    alert("Please select a country to view information.");
-  }
+  $("#infoModal").modal("show");
 });
 
 $('#nav-weather-li').on('click', () => {

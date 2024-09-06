@@ -86,12 +86,12 @@
               <!-- populate from an AJAX CALL to a PHP routine that returns a JSON object that is an array of just ISO codes and names from countryBorders.geo.json -->
               <option value="GB">United Kingdom</option>
           </select>
-      </span>
+        </span>
       </div>
 
        <!-- Weather Modal -->
-       <div id="weatherModal" class="modal fade" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
-        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+      <div id="weatherModal" class="modal fade" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
           <div class="modal-content">
             <div class="modal-header bg-primary text-white">
               <i id="weatherModalIcon" class="fas fas fa-cloud-sun fa-lg me-2"></i>
@@ -155,16 +155,17 @@
       </div>
 
        <!-- GeneralInfo Modal -->
+        <!-- General Info Modal -->
       <div id="infoModal" class="modal fade" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
-        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
           <div class="modal-content">
             <div class="modal-header bg-primary text-white">
               <i id="infoModalIcon" class="fas fas fa-info-circle fa-lg me-2"></i>
-              <h5 class="modal-title" id="genericModalLabel">General Information</h5>
-              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+              <h5 class="modal-title">General Information</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-              <!-- Tabs (if needed) -->
+              <!-- Your content here -->
               <ul class="nav nav-tabs" id="countryInfoTab" role="tablist">
                 <li class="nav-item" role="presentation">
                   <button class="nav-link active" id="generalInfo-tab" data-bs-toggle="tab" data-bs-target="#generalInfo" type="button" role="tab" aria-controls="generalInfo" aria-selected="true">General Info</button>
@@ -214,26 +215,23 @@
                     </tr>
                   </table>
                 </div>
-                <div class="tab-pane fade" id="moreInfo" role="tabpanel" aria-labelledby="moreInfo-tab">
+                <div class="tab-pane fade" id="moreInfo" role="tabpanel" aria-labelledby="moreInfo-tab"></div>
                   <!-- More Info Content -->
                   <div id="moreInfoContent">
                     <!-- Dynamic More Info Data Goes Here -->
                   </div>
                 </div>
-                
               </div>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
-              <!-- Add more buttons if needed -->
-            </div>
+            
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+                <!-- Add more buttons if needed -->
+              </div>
           </div>
         </div>
       </div>
     
-    
       <!-- Currency Modal -->
-
       <div id="currencyModal" class="modal fade" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
           <div class="modal-content">
@@ -303,10 +301,12 @@
         </div>
       </div>
    
-   
     </div>
     <!-- JQuery -->
-    <script src="vendors/jquery-2.2.3.min.js"></script>
+    <script
+    src="https://code.jquery.com/jquery-3.7.1.min.js"
+    integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+    crossorigin="anonymous"></script>    
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
     
     <!-- Leaflet -->
