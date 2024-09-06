@@ -38,6 +38,18 @@ const countryInfoBtn = L.easyButton("fa-solid fa-info-circle fa-lg", (btn, map) 
   }
 });
 
+$('#nav-info-li').on('click', () => {
+  if ($("#countrySelect").val()) {
+    $("#countryInfoModal").modal("show");
+  } else {
+    alert("Please select a country to view information.");
+  }
+});
+
+$('#nav-weather-li').on('click', () => {
+  $("#weatherModal").modal("show");
+});
+
 // ---------------------------------------------------------
 // WEATHER
 // ---------------------------------------------------------
@@ -109,7 +121,6 @@ const updateCountryInfoUI = (data) => {
   $('#countryFlag').attr('alt', data.alt);
 
   $('#countryName').html(data.name);
-  console.log(data);
   $('#capitalCityVal').html(data.capital);
   $('#continentVal').html(data.subcontinent);
   $('#populationVal').html(data.population.toLocaleString());
