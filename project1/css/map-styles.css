@@ -13,14 +13,14 @@ html, body {
   
   overflow: hidden;
   transition: top 0.35s ease ;
-  z-index: 1000; 
+  z-index: 900; 
 }
 
 #selectContainer {
   position: absolute;
   left: 50%;
   transform: translateX(-50%); 
-  z-index: 1000; 
+  z-index: 900; 
   padding: 0; 
   margin-top: 10px;
 }

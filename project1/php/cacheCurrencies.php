@@ -5,20 +5,11 @@ header('Content-Type: application/json');
 
 $cacheFile = '../data/currency_data.json';
 $cacheTime = 86400; // Cache for 24 hours (in seconds)
-echo "Attempting to write to: $cacheFile\n";
-
-if (file_exists($cacheFile)) {
-    echo 'File exists';
-} else {
-    echo 'File does not exist';
-}
-
 
 $apiUrl = 'https://restcountries.com/v3.1/all?fields=cca2,currencies';
 
 // Check if the cache file exists and is still valid
 if (file_exists($cacheFile) && (time() - filemtime($cacheFile)) < $cacheTime) {
-    echo 'still valid';
     // Return the cached currency data
     $cachedData = file_get_contents($cacheFile);
     echo $cachedData;

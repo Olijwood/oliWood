@@ -1,5 +1,5 @@
 
-$(document).ready(() => {
+
     // Function to populate currency dropdowns
     const populateCurrencyDropdowns = (currencies) => {
       const fromSelect = $('#fromCurrency');
@@ -81,5 +81,4 @@ $(document).ready(() => {
     $('#currencyModal').on('shown.bs.modal', () => {
       fetchCurrencyData();
     });
-  });
   

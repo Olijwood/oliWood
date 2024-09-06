@@ -1,40 +1,35 @@
-/* modal-styles.css */
+/* General Modal Styles */
+.modal-dialog {
+  position: absolute;
+  padding: 10rem 0rem 6rem 0rem ;
+}
 
-/* Ensure modals are displayed above the map */
-.modal {
-    z-index: 2000; /* Bootstrap modals default to 1050, increase if necessary */
-  }
-  
-/* Customize modal header */
-.modal-header {
+/* Ensure the header and footer are visible */
+.modal-content {
   display: flex;
-  align-items: center;
-}
-
-/* Icon spacing */
-#modalIcon {
-  margin-right: 10px;
-}
-
-/* Table Styling */
-.table td {
-  vertical-align: middle;
-}
-
-/* Responsive Images in Modals */
-.modal-body img {
-  max-width: 100%;
+  flex-direction: column;
   height: auto;
+  max-height: 80vh;
 }
 
-/* Adjust tab styles if necessary */
-.nav-tabs .nav-link {
-  border: none;
-  border-bottom: 2px solid transparent;
-  color: #495057;
+/* Make the modal body scrollable */
+.modal-body {
+  overflow-y: auto;
+  flex: 1 1 auto; /* Allows the modal body to grow and shrink */
 }
 
-.nav-tabs .nav-link.active {
-  border-color: #0d6efd;
-  color: #0d6efd;
+/* Optional: Adjust spacing around modals */
+#currencyModal, #infoModal, #weatherModal {
+  margin: 0; /* Remove margin if you want to make full use of space */
+}
+
+.modal-header, .modal-footer {
+  flex: 0 0 auto; /* Keeps header and footer fixed size */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .modal-dialog {
+    max-width: none; /* Remove max-width for smaller screens */
+  }
 }
