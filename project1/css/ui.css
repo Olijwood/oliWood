@@ -1,3 +1,4 @@
+/* Adjust the z-index values for stacking context */
 html, body {
   margin: 0;
   padding: 0;
@@ -9,7 +10,6 @@ html, body {
   width: 100%;
   margin: 0;
   padding: 0;
-  
 }
 
 .top-navbar {
@@ -19,7 +19,7 @@ html, body {
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 1050;
+  z-index: 2001; /* Ensure this is above other content */
   background-color: #282828;
 }
 
@@ -51,27 +51,27 @@ html, body {
 }
 
 .top-nav .navbar-brand {
-  color: rgba(255, 255, 255, 0.9);;
+  color: rgba(255, 255, 255, 0.9);
   font-weight: 700;
   font-size: 1rem;
   margin-left: auto;
 }
 
 /* Styles for the sidebar */
-
 #sidebar-container {
-  /* padding-top: 50px; */
   width: 100%;
-  margin: 0;
   padding: 50px 0 0 0;
-  height: auto;
+  height: 45; /* Adjusted for flexible height */
   border-bottom: 3px solid rgb(0, 0, 0, 0.9);
+  z-index: 1500; /* Ensure it’s below the top navbar but above the map */
+  position: fixed; /* Fixed to stay in place */
 }
 
 .sidebar {
   padding-bottom: 0.1em;
   padding-top: 0.1em;
-  height: auto;
+  height: 47; /* Adjusted for flexible height */
+  z-index: 1500; /* Ensure it’s in the correct stacking context */
 }
 
 .sidebar-nav {
@@ -99,4 +99,3 @@ html, body {
 #sidebar-ul .nav-link:hover {
   color: #007bff; 
 }
-

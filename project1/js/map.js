@@ -1,166 +1,22 @@
-// ---------------------------------------------------------
-// GLOBAL DECLARATIONS
-// ---------------------------------------------------------
-
+// Map initialization and interactions
 let map;
-
-const toTitleCase = (str) => str.replace(
-  /\w\S*/g,
-  text => text.charAt(0).toUpperCase() + text.substring(1).toLowerCase()
-);
-
-// Tile layers for different map views
 const streets = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}", {
-    attribution: "Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012"
+    attribution: "Tiles &copy; Esri ..."
 });
-
 const satellite = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", {
-    attribution: "Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community"
+    attribution: "Tiles &copy; Esri ..."
 });
+const basemaps = { "Streets": streets, "Satellite": satellite };
 
-const basemaps = {
-  "Streets": streets,
-  "Satellite": satellite
-};
-
-// Info button for showing weather modal
-const weatherBtn = L.easyButton("fa-solid fa-cloud-sun fa-lg", (btn, map) => {
+const weatherBtn = L.easyButton("fas fa-cloud-sun fa-lg", (btn, map) => {
   $("#weatherModal").modal("show");
 });
 
-// Info button for showing country info modal
-const countryInfoBtn = L.easyButton("fa-solid fa-info-circle fa-lg", (btn, map) => {
-  // Ensure there's a selected country before showing the info
-  if ($("#countrySelect").val()) {
-    $("#countryInfoModal").modal("show");
-  } else {
-    alert("Please select a country to view information.");
-  }
+const countryInfoBtn = L.easyButton("fas fa-info-circle fa-lg", (btn, map) => {
+  $("#infoModal").modal("show");
 });
-
-$('#nav-info-li').on('click', () => {
-  if ($("#countrySelect").val()) {
-    $("#countryInfoModal").modal("show");
-  } else {
-    alert("Please select a country to view information.");
-  }
-});
-
-$('#nav-weather-li').on('click', () => {
-  $("#weatherModal").modal("show");
-});
-
-// ---------------------------------------------------------
-// WEATHER
-// ---------------------------------------------------------
-
-const updateWeatherUI = (data) => {
-  const weatherDescription = toTitleCase(data.weather[0].description);
-  const temperature = data.main.temp;
-  const feelsLike = data.main.feels_like;
-  const humidity = data.main.humidity;
-  const windSpeed = data.wind.speed;
-
-  const sunrise = new Date(data.sys.sunrise * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-  const sunset = new Date(data.sys.sunset * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
-  $('#weatherLocationName').html(`${data.name}, ${data.sys.country}`);
-  $('#weatherVal').html(weatherDescription);
-  $('#tempVal').html(`<span>${temperature} °C</span> <span class="text-muted small"> (Feels like ${feelsLike} °C)</span>`);
-  $('#sunriseSunsetVal').html(`<span>${sunrise}</span> | <span>${sunset}</span>`);
-  $('#humidityVal').html(`${humidity}%`);
-  $('#windspeedVal').html(`${windSpeed} m/s`);
-
-  // Fetch country information based on the country code from weather data
-  fetchCountryInfo(data.sys.country);
-};
-
-const fetchWeather = (lat, lon) => {
-  $.ajax({
-    url: 'php/getWeather.php',
-    type: 'GET',
-    data: { lat, lon },
-    success: (response) => {
-      if (response.error) {
-        console.error('Error fetching weather data:', response.error);
-      } else {
-        updateWeatherUI(response);
-      }
-    },
-    error: () => {
-      console.error('Failed to fetch weather data.');
-    }
-  });
-};
-
-// ---------------------------------------------------------
-// COUNTRY INFO
-// ---------------------------------------------------------
-
-const fetchCountryInfo = (countryCode) => {
-  $.ajax({
-    url: 'php/getCountryInfo.php',
-    type: 'GET',
-    data: { code: countryCode },
-    success: (response) => {
-      if (response.error) {
-        alert(response.error);
-      } else {
-        updateCountryInfoUI(response);
-      }
-    },
-    error: (xhr, status, error) => {
-      console.error('Error fetching country info:', error);
-    }
-  });
-};
-
-const updateCountryInfoUI = (data) => {
-  
-  $('#countryFlag').attr('src', data.flag);
-  $('#countryFlag').attr('alt', data.alt);
-
-  $('#countryName').html(data.name);
-  $('#capitalCityVal').html(data.capital);
-  $('#continentVal').html(data.subcontinent);
-  $('#populationVal').html(data.population.toLocaleString());
-  
-
-  const currencies = data.currencies;
-  $('#currencies').empty(); // Clear previous content
-
-  Object.keys(currencies).forEach(currencyCode => {
-    const cVals = currencies[currencyCode];
-    $('#currencies').append(`
-      <div class="currency-item">
-        <span>${currencyCode} | </span>
-        <span>${cVals.symbol} | </span>
-        <span>${toTitleCase(cVals.name)}</span>
-      </div>
-    `);
-  });
-
-  const borders = data.borders;
-  $('#borderCs').empty(); // Clear previous content
-  let countriesList = '';
-  Object.keys(borders).forEach(country => {
-    const countryCode = borders[country];
-    countriesList += `${countryCode}, `;
-  });
-  $('#borderCs').html(countriesList.slice(0, -2));
-  $('#driveSide').html(toTitleCase(data.driveSide));
-
-
-};
-
-
-
-// ---------------------------------------------------------
-// INITIALIZATION
-// ---------------------------------------------------------
 
 $(document).ready(() => {
-  // Fetch countries and populate the dropdown
   $.ajax({
     url: 'php/getCountries.php',
     method: 'GET',
@@ -177,14 +33,35 @@ $(document).ready(() => {
     }
   });
 
-  map = L.map("map", {
-    layers: [streets]
-  }).setView([54.5, -4], 6);
-
+  map = L.map("map", { layers: [streets] }).setView([54.5, -4], 6);
   L.control.layers(basemaps).addTo(map);
+
   weatherBtn.addTo(map);
   countryInfoBtn.addTo(map);
 
+  // Define positions
+  const expandedPosition = '95px';
+  const collapsedPosition = '50px'; 
+
+  // Function to update map position based on sidebar state
+  const updateMapPosition = (position) => {
+    $('#map').stop().animate({ top: position}, 10); 
+  };
+
+  // Listen for Bootstrap collapse events
+  $('#sidebar').on('shown.bs.collapse', () => {
+    updateMapPosition(expandedPosition);
+  });
+
+  $('#sidebar').on('hidden.bs.collapse', () => {
+    updateMapPosition(collapsedPosition);
+  });
+
+  // Initial update based on sidebar's initial state
+  const initialPosition = $('#sidebar').hasClass('show') ? expandedPosition : collapsedPosition;
+  $('#map').css('top', initialPosition);
+  
+ 
   // Check for geolocation support
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(function(position) {
