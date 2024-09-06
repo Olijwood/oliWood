@@ -68,7 +68,7 @@
               </a>
             </li>
             <!-- Currency -->
-            <li>
+            <li id="nav-currency-li">
               <a href="#" class="nav-link" title="Currency">
                 <i class="bi-cash"></i>
               </a>
@@ -231,7 +231,78 @@
         </div>
       </div>
     </div>
-  
+    
+    <!-- Currency Modal -->
+
+    <div id="currencyModal" class="modal fade" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+        <div class="modal-content">
+          <div class="modal-header bg-primary text-white">
+            <div></i></div><br>
+            <h5 class="modal-title">Currency Information</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <!-- Tabs (if needed) -->
+            <ul class="nav nav-tabs" id="currencyTab" role="tablist">
+              <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="c-general-tab" data-bs-toggle="tab" data-bs-target="#currencyGeneral" type="button" role="tab" aria-controls="currencyGeneral" aria-selected="true">General</button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button class="nav-link" id="c-historical-tab" data-bs-toggle="tab" data-bs-target="#cHistorical" type="button" role="tab" aria-controls="cHistorical" aria-selected="false">Historical</button>
+              </li>
+            </ul>
+            <div class="tab-content mt-3" id="currencyTabContent">
+              <div class="tab-pane fade show active" id="currencyGeneral" role="tabpanel" aria-labelledby="c-historical-tab">
+                <table class="table table-sm table-hover caption-top ">
+                  <!-- <caption class="text-center">Currencies</caption> -->
+                  <thead class="table-light border-dark">
+                    <tr class="align-middle">
+                      <th scope=""><i id="currencyModalIcon" class="bi bi-cash"></i></th>
+                      <th scope="">Name</th>
+                      <th>Code</th>
+                    </tr>
+                  </thead>
+                  <tbody id="curr-tbody"></tbody>
+                </table>
+              </div>
+              <div class="modal-body">
+              <!-- Conversion Section -->
+              <h6>Currency Converter</h6>
+              <div class="row">
+                <div class="col">
+                  <input type="number" id="amountInput" class="form-control" placeholder="Amount">
+                </div>
+                <div class="col">
+                  <select id="fromCurrency" class="form-select">
+                    <!-- Populate with currencies -->
+                  </select>
+                </div>
+                <div class="col">
+                  <select id="toCurrency" class="form-select">
+                    <!-- Populate with currencies -->
+                  </select>
+                </div>
+                <div class="col">
+                  <button class="btn btn-primary" id="convertBtn">Convert</button>
+                </div>
+              </div>
+              <div id="conversionResult" class="mt-3"></div>
+              <div class="tab-pane fade" id="cHistorical" role="tabpanel" aria-labelledby="c-historical-tab">
+                <h6 class="mt-4">Historical Data</h6>
+                <div id="historicalContent">
+                  <!-- Dynamic hISORICALt Data Goes Here -->
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+            <!-- Add more buttons if needed -->
+          </div>
+        </div>
+      </div>
+    </div>
 
     <!-- JQuery -->
     <script src="vendors/jquery-2.2.3.min.js"></script>
@@ -242,10 +313,12 @@
     <script src="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.js"></script>
    
     <!-- Custom Scripts -->
+     
     <script src="js/utils.js" defer></script>
     <script src="js/map.js" defer></script>
     <script src="js/country-info.js" defer></script>
     <script src="js/weather.js" defer></script>
+    <script src="js/currency-modal.js"></script>
     <script src="js/ui-handlers.js" defer></script>
   </body>
 </html>

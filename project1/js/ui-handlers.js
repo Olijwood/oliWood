@@ -12,4 +12,6 @@ $('#nav-weather-li').on('click', () => {
   $("#weatherModal").modal("show");
 });
 
-// Additional UI handlers
+$('#nav-currency-li').on('click', () => {
+  $("#currencyModal").modal("show");
+});

@@ -1,4 +1,3 @@
-
 // import { toTitleCase } from './utils.js';
 
 const updateCountryInfoUI = (data) => {
@@ -21,6 +20,13 @@ const updateCountryInfoUI = (data) => {
         <strong>${currencyCode}</strong> | ${cVals.symbol} | ${toTitleCase(cVals.name)}
       </div>
     `);
+    $('#curr-tbody').append(`
+      <tr class="align-middle">
+        <td>${cVals.symbol}</td>
+        <td>${toTitleCase(cVals.name)}</td>
+        <td>${currencyCode}</td>
+      </tr>
+    `);
   });
 
   // Populate Bordering Countries
@@ -33,23 +39,22 @@ const updateCountryInfoUI = (data) => {
 
   // Populate Driving Side
   $('#driveSide').text(toTitleCase(data.driveSide));
-
 };
 
 const fetchCountryInfo = (countryCode) => {
-    $.ajax({
-      url: 'php/getCountryInfo.php',
-      type: 'GET',
-      data: { code: countryCode },
-      success: (response) => {
-        if (response.error) {
-          alert(response.error);
-        } else {
-          updateCountryInfoUI(response);
-        }
-      },
-      error: (xhr, status, error) => {
-        console.error('Error fetching country info:', error);
+  $.ajax({
+    url: 'php/getCountryInfo.php',
+    type: 'GET',
+    data: { code: countryCode },
+    success: (response) => {
+      if (response.error) {
+        alert(response.error);
+      } else {
+        updateCountryInfoUI(response);
       }
-    });
+    },
+    error: (xhr, status, error) => {
+      console.error('Error fetching country info:', error);
+    }
+  });
 };

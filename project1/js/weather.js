@@ -22,19 +22,19 @@ const updateWeatherUI = (data) => {
 };
 
 const fetchWeather = (lat, lon) => {
-    $.ajax({
-      url: 'php/getWeather.php',
-      type: 'GET',
-      data: { lat, lon },
-      success: (response) => {
-        if (response.error) {
-          console.error('Error fetching weather data:', response.error);
-        } else {
-          updateWeatherUI(response);
-        }
-      },
-      error: () => {
-        console.error('Failed to fetch weather data.');
+  $.ajax({
+    url: 'php/getWeather.php',
+    type: 'GET',
+    data: { lat, lon },
+    success: (response) => {
+      if (response.error) {
+        console.error('Error fetching weather data:', response.error);
+      } else {
+        updateWeatherUI(response);
       }
-    });
-  };
+    },
+    error: () => {
+      console.error('Failed to fetch weather data.');
+    }
+  });
+};

@@ -17,6 +17,14 @@ const countryInfoBtn = L.easyButton("fas fa-info-circle fa-lg", (btn, map) => {
 });
 
 $(document).ready(() => {
+  loadCountries();
+  initializeMap();
+  handleSidebarCollapse();
+  checkGeolocation();
+  handleCountrySelection();
+});
+
+function loadCountries() {
   $.ajax({
     url: 'php/getCountries.php',
     method: 'GET',
@@ -32,23 +40,23 @@ $(document).ready(() => {
       console.error("Failed to fetch countries:", status, error);
     }
   });
+}
 
+function initializeMap() {
   map = L.map("map", { layers: [streets] }).setView([54.5, -4], 6);
   L.control.layers(basemaps).addTo(map);
-
   weatherBtn.addTo(map);
   countryInfoBtn.addTo(map);
+}
 
-  // Define positions
+function handleSidebarCollapse() {
   const expandedPosition = '95px';
-  const collapsedPosition = '50px'; 
+  const collapsedPosition = '50px';
 
-  // Function to update map position based on sidebar state
   const updateMapPosition = (position) => {
-    $('#map').stop().animate({ top: position}, 10); 
+    $('#map').stop().animate({ top: position }, 10);
   };
 
-  // Listen for Bootstrap collapse events
   $('#sidebar').on('shown.bs.collapse', () => {
     updateMapPosition(expandedPosition);
   });
@@ -57,31 +65,27 @@ $(document).ready(() => {
     updateMapPosition(collapsedPosition);
   });
 
-  // Initial update based on sidebar's initial state
   const initialPosition = $('#sidebar').hasClass('show') ? expandedPosition : collapsedPosition;
   $('#map').css('top', initialPosition);
-  
- 
-  // Check for geolocation support
+}
+
+function checkGeolocation() {
   if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(function(position) {
-        let lat = position.coords.latitude;
-        let lon = position.coords.longitude;
-        map.setView([lat, lon], 10);
-        
-        // Fetch weather based on user's location
-        fetchWeather(lat, lon);
-      },
-      (error) => {
-        console.error('Geolocation request failed');
-      }
-    );
+    navigator.geolocation.getCurrentPosition((position) => {
+      let lat = position.coords.latitude;
+      let lon = position.coords.longitude;
+      map.setView([lat, lon], 10);
+      fetchWeather(lat, lon);
+    }, (error) => {
+      console.error('Geolocation request failed');
+    });
   } else {
     console.warn('Geolocation is not supported by this browser.');
   }
+}
 
-  // Event handler for country selection
-  $('#countrySelect').change(function() {
+function handleCountrySelection() {
+  $('#countrySelect').change(function () {
     const selectedCountryCode = $(this).val();
 
     $.ajax({
@@ -121,4 +125,4 @@ $(document).ready(() => {
       }
     });
   });
-});
+}
