@@ -1,5 +1,3 @@
-// import { toTitleCase } from './utils.js';
-
 
 const updateWeatherUI = (data) => {
   // Update weather elements
@@ -20,7 +18,6 @@ const updateWeatherUI = (data) => {
 
   userCountryCode = data.sys.country;
   userCountryCodeInput.val(userCountryCode).trigger('change');
-  console.log(userCountryCodeInput.val());
   fetchCountryInfo(data.sys.country);
 };
 
