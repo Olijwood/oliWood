@@ -3,7 +3,7 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 header('Content-Type: application/json');
 
-$cacheFile = '../data/currency_data.json';
+$cacheFile = '../../data/currency_data.json';
 $cacheTime = 86400; // Cache for 24 hours (in seconds)
 
 $apiUrl = 'https://restcountries.com/v3.1/all?fields=cca2,currencies';

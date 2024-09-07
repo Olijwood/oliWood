@@ -16,6 +16,8 @@ const countryInfoBtn = L.easyButton("fas fa-info-circle fa-lg", (btn, map) => {
   $("#infoModal").modal("show");
 });
 
+let userCountryCodeInput = $('#hiddenCountrySelected');
+
 $(document).ready(() => {
   loadCountries();
   initializeMap();

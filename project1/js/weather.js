@@ -1,5 +1,6 @@
 // import { toTitleCase } from './utils.js';
 
+
 const updateWeatherUI = (data) => {
   // Update weather elements
   const weatherDescription = toTitleCase(data.weather[0].description);
@@ -17,7 +18,9 @@ const updateWeatherUI = (data) => {
   $('#humidityVal').html(`${humidity}%`);
   $('#windspeedVal').html(`${windSpeed} m/s`);
 
-  // Fetch country information based on the country code from weather data
+  userCountryCode = data.sys.country;
+  userCountryCodeInput.val(userCountryCode).trigger('change');
+  console.log(userCountryCodeInput.val());
   fetchCountryInfo(data.sys.country);
 };
 

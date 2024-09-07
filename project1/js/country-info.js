@@ -10,24 +10,7 @@ const updateCountryInfoUI = (data) => {
   $('#continentVal').text(data.subcontinent);
   $('#populationVal').text(data.population.toLocaleString());
 
-  // Populate Currencies
-  const currencies = data.currencies;
-  $('#currencies').empty();
-  Object.keys(currencies).forEach(currencyCode => {
-    const cVals = currencies[currencyCode];
-    $('#currencies').append(`
-      <div class="mb-1">
-        <strong>${currencyCode}</strong> | ${cVals.symbol} | ${toTitleCase(cVals.name)}
-      </div>
-    `);
-    $('#curr-tbody').append(`
-      <tr class="align-middle">
-        <td>${cVals.symbol}</td>
-        <td>${toTitleCase(cVals.name)}</td>
-        <td>${currencyCode}</td>
-      </tr>
-    `);
-  });
+  
 
   // Populate Bordering Countries
   const borders = data.borders;
