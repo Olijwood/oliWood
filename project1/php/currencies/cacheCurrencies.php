@@ -13,12 +13,16 @@ if (file_exists($cacheFile) && (time() - filemtime($cacheFile)) < $cacheTime) {
     // Return the cached currency data
     $cachedData = file_get_contents($cacheFile);
     echo $cachedData;
-
 } else {
-
     // Fetch all countries data from the API
     $response = file_get_contents($apiUrl);
     $countries = json_decode($response, true);
+
+    if ($countries === null) {
+        http_response_code(500);
+        echo json_encode(['error' => 'Failed to fetch data from the API']);
+        exit;
+    }
 
     // Initialize arrays to store country-to-currency mappings and a list of currencies
     $countryToCurrency = [];
@@ -41,7 +45,8 @@ if (file_exists($cacheFile) && (time() - filemtime($cacheFile)) < $cacheTime) {
                         $currenciesList[$currencyCode] = [
                             'name' => $currencies[$currencyCode]['name'],
                             'symbol' => $currencies[$currencyCode]['symbol']
-                        ];                    }
+                        ];                    
+                    }
                 }
             }
         }
@@ -52,14 +57,15 @@ if (file_exists($cacheFile) && (time() - filemtime($cacheFile)) < $cacheTime) {
         'countryToCurrency' => $countryToCurrency,
         'currenciesList' => $currenciesList,
     ];
-    
-    if (file_put_contents($cacheFile, json_encode($result))) {
-        echo 'File has been written successfully';
-    } else {
-        echo 'Failed to write to the file';
+
+    // Try to cache the result
+    if (file_put_contents($cacheFile, json_encode($result)) === false) {
+        http_response_code(500);
+        echo json_encode(['error' => 'Failed to write to cache file']);
+        exit;
     }
+
     // Return the result
     echo json_encode($result);
 }
-
 ?>

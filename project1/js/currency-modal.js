@@ -100,7 +100,44 @@ function populateCurrencyDropdowns() {
   });
 }
 
-// Call populateCurrencyDropdowns when the modal is shown
+// Handle currency conversion
+$('#convertBtn').on('click', function() {
+  const amount = $('#amountInput').val();
+  const fromCurrency = $('#fromCurrency').val();
+  const toCurrency = $('#toCurrency').val();
+
+  if (amount && fromCurrency && toCurrency) {
+    $.ajax({
+      url: 'php/currencies/currencyConverter.php',
+      type: 'GET',
+      data: {
+        amount: amount,
+        from: fromCurrency,
+        to: toCurrency
+      },
+      dataType: 'json',
+      success: function(response) {
+        if (response.convertedAmount) {
+          $('#conversionResult').html(`
+            <p>${amount} ${fromCurrency} is approximately ${response.convertedAmount.toFixed(2)} ${toCurrency}</p>
+            <p>Conversion rate: 1 ${fromCurrency} = ${response.rate.toFixed(4)} ${toCurrency}</p>
+          `);
+        } else if (response.error) {
+          $('#conversionResult').html(`<p>Error: ${response.error}</p>`);
+        }
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+        console.error('Currency conversion failed:', textStatus, errorThrown);
+        $('#conversionResult').html(`<p>Error performing conversion. Please try again later.</p>`);
+      }
+    });
+  } else {
+    $('#conversionResult').html(`<p>Please enter a valid amount and select currencies.</p>`);
+  }
+});
+
+
+
 $('#currencyModal').on('shown.bs.modal', function () {
   populateCurrencyDropdowns();
 });
