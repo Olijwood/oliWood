@@ -1,29 +1,86 @@
-// import { toTitleCase } from './utils.js';
+const updateCountryInfo = (countryData) => {
+  const {
+    name,
+    officialName,
+    capital,
+    continent,
+    subcontinent,
+    population,
+    languages,
+    currencies,
+    flag,
+    alt,
+    borders,
+    driveSide,
+    landlocked,
+    area,
+    demonyms,
+    independent,
+    unm49,
+  } = countryData;
 
-const updateCountryInfoUI = (data) => {
-  // Update country info UI logic
-  $('#countryFlag').attr('src', data.flag);
-  $('#countryFlag').attr('alt', `${data.name} Flag`);
+  // Set country flag
+  $('#countryFlag').attr('src', flag).attr('alt', alt || `${name} Flag`);
 
-  $('#genericModalLabel').text(data.name);
-  $('#capitalCityVal').text(data.capital);
-  $('#continentVal').text(data.subcontinent);
-  $('#populationVal').text(data.population.toLocaleString());
+  // General Info
+  $('#cNameVal').text(name);
+  $('#officialNameVal').text(officialName);
+  $('#capitalCityVal').text(capital);
+  $('#continentVal').text(continent);
+  $('#subcontinentVal').text(subcontinent);
+  $('#populationVal').text(population.toLocaleString());
 
-  
-
-  // Populate Bordering Countries
-  const borders = data.borders;
+  // Bordering countries
   $('#borderCs').empty();
-  borders.forEach(countryCode => {
-    $('#borderCs').append(`${countryCode}, `);
-  });
-  $('#borderCs').html($('#borderCs').html().slice(0, -2)); // Remove trailing comma and space
+  if (borders && borders.length) {
+    borders.forEach((border) => {
+      $('#borderCs').append(`<li>${border}</li>`);
+    });
+  } else {
+    $('#borderCs').append(`<li>No bordering countries</li>`);
+  }
 
-  // Populate Driving Side
-  $('#driveSide').text(toTitleCase(data.driveSide));
+  // Driving side
+  $('#driveSideVal').text(toTitleCase(driveSide));
+
+  // Languages
+  $('#languagesTable').empty();
+  if (languages && Object.keys(languages).length) {
+    Object.entries(languages).forEach(([code, language]) => {
+      $('#languagesTable').append(`<li>${language}</li>`);
+    });
+  } else {
+    $('#languagesTable').html('<li>N/A</li>');
+  }
+
+  // Currencies
+  $('#currenciesVal').empty();
+  if (currencies && Object.keys(currencies).length) {
+    Object.entries(currencies).forEach(([code, currency]) => {
+      $('#currenciesVal').append(`<li>${currency.name}</li>`);
+    });
+  } else {
+    $('#currenciesVal').html('<li>N/A</li>');
+  }
+
+  // More Info
+  $('#areaVal').text(`${area.toLocaleString()} km²`);
+  $('#landlockedVal').text(landlocked ? 'Yes' : 'No');
+  $('#independentVal').text(independent ? 'Yes' : 'No');
+  $('#unm49Val').text(unm49 ? 'Yes' : 'No');
+
+  // Demonyms
+  $('#demonymsTable').empty();
+  if (demonyms && Object.keys(demonyms).length) {
+    Object.entries(demonyms).forEach(([lang, { m, f }]) => {
+      $('#demonymsTable').append(`<tr><td>${lang}</td><td>${m} / ${f}</td></tr>`);
+    });
+  } else {
+    $('#demonymsTable').html('<tr><td colspan="2">N/A</td></tr>');
+  }
 };
 
+// Fetch country info via AJAX
 const fetchCountryInfo = (countryCode) => {
   $.ajax({
     url: 'php/getCountryInfo.php',
@@ -33,11 +90,11 @@ const fetchCountryInfo = (countryCode) => {
       if (response.error) {
         alert(response.error);
       } else {
-        updateCountryInfoUI(response);
+        updateCountryInfo(response);
       }
     },
     error: (xhr, status, error) => {
       console.error('Error fetching country info:', error);
-    }
+    },
   });
 };

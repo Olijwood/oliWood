@@ -4,7 +4,6 @@
 }
 
 .modal-dialog {
-  position: absolute;
   padding: 10rem 0rem 6rem 0rem ;
   min-width: 90%;
 }
@@ -32,9 +31,27 @@
   flex: 0 0 auto; /* Keeps header and footer fixed size */
 }
 
+/* Custom Table Styling */
+.table-striped {
+  margin-bottom: 0.1rem;
+}
+
+.table td, .table th {
+  padding: 0.6rem;
+  vertical-align: middle;
+}
+
+.list-unstyled {
+  padding-left: 0;
+  margin-bottom: 0 !important;
+}
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .modal-dialog {
     max-width: none; /* Remove max-width for smaller screens */
+  }
+
+  .modal-body {
+    padding: 0.5rem;
   }
 }

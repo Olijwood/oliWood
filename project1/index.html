@@ -152,85 +152,116 @@
               <!-- Add more buttons if needed -->
             </div>
           </div>
+
         </div>
       </div>
 
-       <!-- GeneralInfo Modal -->
-        <!-- General Info Modal -->
-      <div id="infoModal" class="modal fade" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
-        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-          <div class="modal-content">
-            <div class="modal-header bg-primary text-white">
-              <i id="infoModalIcon" class="fas fas fa-info-circle fa-lg me-2"></i>
-              <h5 class="modal-title">General Information</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-              <!-- Your content here -->
-              <ul class="nav nav-tabs" id="countryInfoTab" role="tablist">
-                <li class="nav-item" role="presentation">
-                  <button class="nav-link active" id="generalInfo-tab" data-bs-toggle="tab" data-bs-target="#generalInfo" type="button" role="tab" aria-controls="generalInfo" aria-selected="true">General Info</button>
-                </li>
-                <li class="nav-item" role="presentation">
-                  <button class="nav-link" id="moreInfo-tab" data-bs-toggle="tab" data-bs-target="#moreInfo" type="button" role="tab" aria-controls="moreInfo" aria-selected="false">More Info</button>
-                </li>
-              </ul>
-              <div class="tab-content mt-3" id="countryInfoTabContent">
-                <div class="tab-pane fade show active" id="generalInfo" role="tabpanel" aria-labelledby="generalInfo-tab">
-                  <!-- General Info Content -->
-                  <table class="table table-striped">
-                    <tr>
-                      <td class="text-center"><i class="fas fa-flag fa-xl text-success"></i></td>
-                      <td>Flag</td>
-                      <td class="text-end"><img id="countryFlag" src="" alt="Country Flag" class="img-fluid" style="max-width: 100px;"></td>
-                    </tr>
-                    <tr>
-                      <td class="text-center"><i class="fas fa-city fa-xl text-info"></i></td>
-                      <td>Capital City</td>
-                      <td class="text-end" id="capitalCityVal"></td>
-                    </tr>
-                    <tr>
-                      <td class="text-center"><i class="fas fa-globe fa-xl text-warning"></i></td>
-                      <td>Region</td>
-                      <td class="text-end" id="continentVal"></td>
-                    </tr>
-                    <tr>
-                      <td class="text-center"><i class="fas fa-users fa-xl text-primary"></i></td>
-                      <td>Population</td>
-                      <td class="text-end" id="populationVal"></td>
-                    </tr>
-                    <tr>
-                      <td class="text-center"><i class="fas fa-money-bill-wave fa-xl text-secondary"></i></td>
-                      <td>Currency</td>
-                      <td class="text-end" id="currencies"></td>
-                    </tr>
-                    <tr>
-                      <td class="text-center"><i class="fas fa-border-style fa-xl text-muted"></i></td>
-                      <td>Bordering Countries</td>
-                      <td class="text-end" id="borderCs"></td>
-                    </tr>
-                    <tr>
-                      <td class="text-center"><i class="fas fa-road fa-xl text-dark"></i></td>
-                      <td>Driving Side</td>
-                      <td class="text-end" id="driveSide"></td>
-                    </tr>
-                  </table>
-                </div>
-                <div class="tab-pane fade" id="moreInfo" role="tabpanel" aria-labelledby="moreInfo-tab"></div>
-                  <!-- More Info Content -->
-                  <div id="moreInfoContent">
-                    <!-- Dynamic More Info Data Goes Here -->
-                  </div>
-                </div>
-              </div>
             
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
-                <!-- Add more buttons if needed -->
-              </div>
+      <!-- General Info Modal -->
+<div id="infoModal" class="modal fade" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white">
+        <i id="infoModalIcon" class="fas fa-info-circle fa-lg me-2"></i>
+        <h5 class="modal-title">General Information</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <!-- Country Flag and Name -->
+        <div class="text-center mb-3">
+          <img id="countryFlag" src="" alt="Country Flag" class="img-fluid rounded" style="max-width: 150px;">
+          <h3 id="cNameVal" class="mt-2"></h3>
+        </div>
+
+        <!-- Tab Navigation -->
+        <ul class="nav nav-tabs" id="countryInfoTab" role="tablist">
+          <li class="nav-item">
+            <button class="nav-link active" id="generalInfo-tab" data-bs-toggle="tab" data-bs-target="#generalInfo" role="tab" aria-controls="generalInfo" aria-selected="true">General Info</button>
+          </li>
+          <li class="nav-item">
+            <button class="nav-link" id="moreInfo-tab" data-bs-toggle="tab" data-bs-target="#moreInfo" role="tab" aria-controls="moreInfo" aria-selected="false">More Info</button>
+          </li>
+        </ul>
+
+        <!-- Tab Content -->
+        <div class="tab-content mt-3" id="countryInfoTabContent">
+          <!-- General Info Tab -->
+          <div class="tab-pane fade show active" id="generalInfo" role="tabpanel" aria-labelledby="generalInfo-tab">
+            <table class="table table-bordered table-hover">
+              <tbody>
+                <tr>
+                  <td><i class="fas fa-city text-info me-2"></i>Capital City</td>
+                  <td class="fw-bold text-end" id="capitalCityVal"></td>
+                </tr>
+                <tr>
+                  <td><i class="fas fa-globe text-warning me-2"></i>Continent</td>
+                  <td class="fw-bold text-end" id="continentVal"></td>
+                </tr>
+                <tr>
+                  <td><i class="fas fa-globe text-muted me-2"></i>Sub-Continent</td>
+                  <td class="fw-bold text-end" id="subcontinentVal"></td>
+                </tr>
+                <tr>
+                  <td><i class="fas fa-users text-primary me-2"></i>Population</td>
+                  <td class="fw-bold text-end" id="populationVal"></td>
+                </tr>
+                <tr>
+                  <td><i class="bi bi-arrows text-dark me-2"></i>Area</td>
+                  <td class="fw-bold text-end" id="areaVal"></td>
+                </tr>
+                <tr>
+                  <td><i class="bi bi-car-front text-success me-2"></i>Driving Side</td>
+                  <td class="fw-bold text-end" id="driveSideVal"></td>
+                </tr>
+              </tbody>
+            </table>
+
+            <!-- Currencies, Languages, and Borders -->
+            <table class="table table-bordered table-hover mt-4">
+              <tbody>
+                <tr>
+                  <td class="align-middle"><i class="bi bi-cash text-info me-2"></i>Currencies</td>
+                  <td class="fw-bold text-end align-middle"><ul class="list-unstyled" id="currenciesVal"></ul></td>
+                </tr>
+                <tr>
+                  <td class="align-middle"><i class="fas fa-language text-info me-2"></i>Languages</td>
+                  <td class="fw-bold text-end align-middle"><ul class="list-unstyled" id="languagesTable"></ul></td>
+                </tr>
+                <tr>
+                  <td class="align-middle"><i class="bi bi-globe-americas text-info me-2"></i>Neighbours</td>
+                  <td class="fw-bold text-end align-middle"><ul class="list-unstyled" id="borderCs"></ul></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- More Info Tab -->
+          <div class="tab-pane fade" id="moreInfo" role="tabpanel" aria-labelledby="moreInfo-tab">
+            <table class="table table-bordered table-hover">
+              <tbody>
+                  <td><i class="fas fa-scroll text-secondary me-2"></i>Official Name</td>
+                  <td class="fw-bold text-end" id="officialNameVal"></td>
+                  <td><i class="fas fa-user-tie text-secondary me-2"></i>Demonym(s)</td>
+                  <td class="fw-bold text-end" id="demonymsTable"></td>
+                  <td><i class="fas fa-globe-americas text-primary me-2"></i>Independent</td>
+                  <td class="fw-bold text-end" id="independentVal"></td>
+                <tr>
+                  <td><i class="fas fa-hashtag text-info me-2"></i>UN Member</td>
+                  <td class="fw-bold text-end" id="unm49Val"></td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
     
       <!-- Currency Modal -->
       <div id="currencyModal" class="modal fade" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">

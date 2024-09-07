@@ -17,23 +17,32 @@ $response = file_get_contents($apiUrl . $countryCode);
 $data = json_decode($response, true);
 
 if (isset($data[0])) {
-    // Extract relevant information
+
     $country = $data[0];
     $result = [
         'name' => $country['name']['common'],
+        'official-name' => $country['name']['official'],
         'capital' => $country['capital'][0],
         'continent' => $country['region'],
         'subcontinent' => $country['subregion'],
         'population' => $country['population'],
+        'languages' => isset($country['languages']) ? $country['languages'] : null,
         'currencies' => isset($country['currencies']) ? $country['currencies'] : null,
         'flag' => $country['flags']['svg'],
         'alt' => $country['flags']['alt'],
         'borders' => $country['borders'],
-        'driveSide' => $country['car']['side']
+        'driveSide' => $country['car']['side'],
+        'landlocked' => $country['landlocked'],
+        'area' => $country['area'],
+        'demonyms' => $country['demonyms'],
+        'independent' => $country['independent'],
+        'unm49' => $country['unMember'],
+
     ];
     echo json_encode($result);
 } else {
     echo json_encode(['error' => 'Country not found']);
 }
+
 
 ?>
