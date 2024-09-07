@@ -19,7 +19,7 @@
     <link rel="stylesheet" href="css/ui.css">
     <link rel="stylesheet" href="css/map-styles.css" defer>
     <link rel="stylesheet" href="css/modal-styles.css">
-
+    <link rel="stylesheet" href="css/currencies.css">
   </head>
   <body>
     <div id='nav-container' class="container-fluid">
@@ -38,7 +38,7 @@
         </div>
       </nav>
     </div>
-  
+    
     <div id="sidebar-container" class="container-fluid">
       <div class="col-sm-auto bg-light sticky-top sidebar collapse show cCollapse" id="sidebar">
         <div class="d-flex flex-sm-row flex-row flex-nowrap bg-light align-items-center sidebar">
@@ -77,9 +77,10 @@
         </div>
       </div>
     </div>
-
+    
     <!-- main content -->
     <div>
+      
       <div id="map">
         <span id="selectContainer">
           <select id="countrySelect" class="form-select shadow-sm">
@@ -265,26 +266,51 @@
                   </table>
                 </div>
                 <!-- Conversion Section -->
-                <h6>Currency Converter</h6>
+                <div class="currency-converter-container">
+                  <h6 class="text-center">Currency Converter</h6>
+                  <div id="conversionRate" class="conversion-rate">1 GBP equals 1.28 EUR</div>
+                
+                  <!-- Convert From -->
+                  <div class="currency-input-group">
+                    <div class="currency-input">
+                      <input type="number" id="fromAmount" value="1">
+                    </div>
+                    <div class="currency-select">
+                      <select id="fromCurrency"></select>
+                    </div>
+                  </div>
+                
+                  <!-- Convert To -->
+                  <div class="currency-input-group">
+                    <div class="currency-input">
+                      <input type="number" id="toAmount">
+                    </div>
+                    <div class="currency-select">
+                      <select id="toCurrency"></select>
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- <h6>Currency Converter</h6>
                 <div class="row">
                   <div class="col">
                     <input type="number" id="amountInput" class="form-control" placeholder="Amount">
                   </div>
                   <div class="col">
-                    <select id="fromCurrency" class="form-select">
+                    <select id="fromCurrency" class="form-select"> -->
                       <!-- Populate with currencies -->
-                    </select>
+                    <!-- </select>
                   </div>
                   <div class="col">
-                    <select id="toCurrency" class="form-select">
+                    <select id="toCurrency" class="form-select"> -->
                       <!-- Populate with currencies -->
-                    </select>
+                    <!-- </select>
                   </div>
                   <div class="col">
                     <button class="btn btn-primary" id="convertBtn">Convert</button>
                   </div>
                 </div>
-                <div id="conversionResult" class="mt-3"></div>
+                <div id="conversionResult" class="mt-3"></div> -->
                 <div class="tab-pane fade" id="cHistorical" role="tabpanel" aria-labelledby="c-historical-tab">
                   <h6 class="mt-4">Historical Data</h6>
                   <div id="historicalContent">

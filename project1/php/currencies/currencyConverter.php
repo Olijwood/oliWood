@@ -1,8 +1,8 @@
 <?php
 // Set the cache file location
-$cacheFile = __DIR__ . '/../../data/currency_cache.json';
-$cacheDuration = 3600; // 1 hour in seconds
-$apiKey = 'fca_live_rPWM7TFnHYkyU9Z2EfkH73acvjlY51bPzTFMIuhy'; 
+$cacheFile = '../../data/currency_cache.json';
+$cacheDuration = 86400; // 1 day in seconds change in production
+$apiKey = '5a77a192ac53ba466daee24d';
 
 // Get the currency codes from the request
 $fromCurrency = $_GET['from'];
@@ -14,8 +14,8 @@ if (file_exists($cacheFile) && (time() - filemtime($cacheFile)) < $cacheDuration
     // Use cached data
     $rates = json_decode(file_get_contents($cacheFile), true);
 } else {
-    // Fetch new data from FreeCurrencyAPI
-    $apiUrl = "https://api.freecurrencyapi.com/v1/latest?apikey=$apiKey";
+    // Fetch new data from ExchangeRate-API
+    $apiUrl = "https://v6.exchangerate-api.com/v6/$apiKey/latest/USD";
     $response = file_get_contents($apiUrl);
     
     if ($response === false) {
@@ -31,9 +31,9 @@ if (file_exists($cacheFile) && (time() - filemtime($cacheFile)) < $cacheDuration
 }
 
 // Perform the currency conversion
-if (isset($rates['data'][$fromCurrency]) && isset($rates['data'][$toCurrency])) {
-    $fromRate = $rates['data'][$fromCurrency];
-    $toRate = $rates['data'][$toCurrency];
+if (isset($rates['conversion_rates'][$fromCurrency]) && isset($rates['conversion_rates'][$toCurrency])) {
+    $fromRate = $rates['conversion_rates'][$fromCurrency];
+    $toRate = $rates['conversion_rates'][$toCurrency];
     $conversionRate = $toRate / $fromRate;
     $convertedAmount = $amount * $conversionRate;
 
@@ -48,3 +48,4 @@ if (isset($rates['data'][$fromCurrency]) && isset($rates['data'][$toCurrency])) 
     http_response_code(400);
     echo json_encode(['error' => 'Invalid currency code']);
 }
+?>

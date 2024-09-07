@@ -53,46 +53,38 @@ function loadCurrenciesForCountry(countryCode) {
   });
 };
 
-// Fetch currencies from the cache file and populate the dropdowns
 function populateCurrencyDropdowns() {
   $.ajax({
-    url: 'php/currencies/cacheCurrencies.php',
+    url: 'php/currencies/getSupportedCurrencies.php', // Use getCurrencies2.php
     type: 'GET',
     dataType: 'json',
     success: function(data) {
-      if (data && data.currenciesList) {
-        const currenciesList = data.currenciesList;
-        
-        // Prepare dropdowns
+      if (data && Array.isArray(data)) {
         const fromSelect = $('#fromCurrency');
         const toSelect = $('#toCurrency');
-
-        // Define default currencies
         const defaultCurrencies = ['USD', 'EUR', 'GBP'];
 
-        // Sort currencies alphabetically, but ensure default currencies come first
-        const sortedCurrencies = Object.keys(currenciesList).sort((a, b) => {
-          if (defaultCurrencies.includes(a) && !defaultCurrencies.includes(b)) {
-            return -1;
-          } else if (!defaultCurrencies.includes(a) && defaultCurrencies.includes(b)) {
-            return 1;
-          } else {
-            return a.localeCompare(b);
-          }
+        // Sort currencies
+        const sortedCurrencies = data.sort((a, b) => {
+          const aCode = a[0];
+          const bCode = b[0];
+          if (defaultCurrencies.includes(aCode) && !defaultCurrencies.includes(bCode)) return -1;
+          if (!defaultCurrencies.includes(aCode) && defaultCurrencies.includes(bCode)) return 1;
+          return aCode.localeCompare(bCode);
         });
 
         // Populate dropdowns
-        sortedCurrencies.forEach(currencyCode => {
-          const currency = currenciesList[currencyCode];
-          const option = new Option(`${currencyCode} - ${currency.name}`, currencyCode);
+        sortedCurrencies.forEach(([currencyCode, currencyName]) => {
+          const option = new Option(`${currencyCode} - ${currencyName}`, currencyCode);
           fromSelect.append(option);
           toSelect.append(option.cloneNode(true));
         });
-        
+
         const userCurr = selectedCurr.val();
         fromSelect.val(userCurr).change();
-        
-        }
+        toSelect.val('EUR').change();
+        updateConversion(); // Initial conversion display
+      }
     },
     error: function(jqXHR, textStatus, errorThrown) {
       console.error('Failed to fetch currency list:', textStatus, errorThrown);
@@ -100,13 +92,12 @@ function populateCurrencyDropdowns() {
   });
 }
 
-// Handle currency conversion
-$('#convertBtn').on('click', function() {
-  const amount = $('#amountInput').val();
+function updateConversion() {
   const fromCurrency = $('#fromCurrency').val();
   const toCurrency = $('#toCurrency').val();
+  const amount = $('#fromAmount').val() || 1;
 
-  if (amount && fromCurrency && toCurrency) {
+  if (fromCurrency && toCurrency && amount) {
     $.ajax({
       url: 'php/currencies/currencyConverter.php',
       type: 'GET',
@@ -118,35 +109,68 @@ $('#convertBtn').on('click', function() {
       dataType: 'json',
       success: function(response) {
         if (response.convertedAmount) {
-          $('#conversionResult').html(`
-            <p>${amount} ${fromCurrency} is approximately ${response.convertedAmount.toFixed(2)} ${toCurrency}</p>
-            <p>Conversion rate: 1 ${fromCurrency} = ${response.rate.toFixed(4)} ${toCurrency}</p>
+          $('#conversionRate').html(`
+              ${amount} ${fromCurrency} equals ${response.convertedAmount.toFixed(2)} ${toCurrency}
           `);
-        } else if (response.error) {
-          $('#conversionResult').html(`<p>Error: ${response.error}</p>`);
+          $('#toAmount').val(response.convertedAmount.toFixed(2));
         }
       },
       error: function(jqXHR, textStatus, errorThrown) {
-        console.error('Currency conversion failed:', textStatus, errorThrown);
-        $('#conversionResult').html(`<p>Error performing conversion. Please try again later.</p>`);
+        console.error('Conversion failed:', textStatus, errorThrown);
       }
     });
-  } else {
-    $('#conversionResult').html(`<p>Please enter a valid amount and select currencies.</p>`);
+  }
+}
+
+
+// Event listeners for inputs and dropdowns
+$('#fromCurrency, #toCurrency').on('change', updateConversion);
+
+$('#fromAmount').on('input', function() {
+  updateConversion();
+});
+
+$('#toAmount').on('input', function() {
+  const fromCurrency = $('#fromCurrency').val();
+  const toCurrency = $('#toCurrency').val();
+  const toValue = parseFloat($('#toAmount').val()) || 0;
+  
+  if (fromCurrency && toCurrency && toValue) {
+    $.ajax({
+      url: 'php/currencies/currencyConverter.php',
+      type: 'GET',
+      data: {
+        amount: toValue,
+        from: toCurrency,
+        to: fromCurrency
+      },
+      dataType: 'json',
+      success: function(response) {
+        if (response.convertedAmount) {
+          $('#fromAmount').val(response.convertedAmount.toFixed(2));
+          $('#conversionRate').html(`
+            ${toValue} ${toCurrency} equals ${response.convertedAmount.toFixed(2)} ${fromCurrency}
+          `);
+        }
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+        console.error('Conversion failed:', textStatus, errorThrown);
+      }
+    });
   }
 });
 
-
-
+// Populate the dropdowns on page load
 $('#currencyModal').on('shown.bs.modal', function () {
   populateCurrencyDropdowns();
+  updateConversion();
 });
 
-
+// Handle country selection change
 $('#hiddenCountrySelected').on('change', function() {
   const updatedCountryCode = $(this).val();
   if (updatedCountryCode) {
+    console.log("Updated country code:", updatedCountryCode);
     loadCurrenciesForCountry(updatedCountryCode);
   }
 });
-
