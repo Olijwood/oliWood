@@ -296,8 +296,70 @@
                     <td>Female Population (% of total)</td>
                     <td class="fw-bold text-end" id="femalePopulation"></td>
                   </tr>
+                  <tr></tr>
+                    <td>Male Population (% of total)</td>
+                    <td class="fw-bold text-end" id="malePopulation"></td>
+                  </tr>
+                  <tr>
+                    <td>Urban Population</td>
+                    <td class="fw-bold text-end" id="urbanPopulation"></td>
+                  </tr>
+                  <tr>
+                    <td>Rural Population</td>
+                    <td class="fw-bold text-end" id="ruralPopulation"></td>
+                  </tr>
                 </tbody>
               </table>
+
+                    <!-- Economic Data Section -->
+              <h6 class="mt-4"><i class="fas fa-chart-line me-2 text-success"></i>Economic Data</h6>
+              <table class="table table-bordered table-hover">
+                <tbody>
+                  <tr>
+                    <td>GDP (Current US$)</td>
+                    <td class="fw-bold text-end" id="gdpCurrent"></td>
+                  </tr>
+                  <tr>
+                    <td>GDP per Capita (US$)</td>
+                    <td class="fw-bold text-end" id="gdpPerCapita"></td>
+                  </tr>
+                  <tr>
+                    <td>Inflation Rate</td>
+                    <td class="fw-bold text-end" id="inflationRate"></td>
+                  </tr>
+                </tbody>
+              </table>
+
+                    <!-- Health and Life Section -->
+              <h6 class="mt-4"><i class="fas fa-heartbeat me-2 text-danger"></i>Health and Life</h6>
+              <table class="table table-bordered table-hover">
+                <tbody>
+                  <tr>
+                    <td>Life Expectancy</td>
+                    <td class="fw-bold text-end" id="lifeExpectancy"></td>
+                  </tr>
+                  <tr>
+                    <td>Fertility Rate (Births per Woman)</td>
+                    <td class="fw-bold text-end" id="fertilityRate"></td>
+                  </tr>
+                  <tr>
+                    <td>Health Expenditure per Capita (US$)</td>
+                    <td class="fw-bold text-end" id="healthExpenditure"></td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <!-- Environment Section -->
+              <h6 class="mt-4"><i class="fas fa-leaf me-2 text-warning"></i>Environment</h6>
+              <table class="table table-bordered table-hover">
+                <tbody>
+                  <tr>
+                    <td>CO2 Emissions (Metric Tons per Capita)</td>
+                    <td class="fw-bold text-end" id="co2Emissions"></td>
+                  </tr>
+                </tbody>
+              </table>
+
 
               <!-- Education Section -->
               <h6 class="mt-4"><i class="fas fa-book-reader me-2 text-warning"></i>Education</h6>
@@ -310,20 +372,7 @@
                 </tbody>
               </table>
 
-              <!-- Urban vs. Rural Section -->
-              <h6 class="mt-4"><i class="fas fa-city me-2 text-success"></i>Urban vs Rural Population</h6>
-              <table class="table table-bordered table-hover">
-                <tbody>
-                  <tr>
-                    <td>Urban Population</td>
-                    <td class="fw-bold text-end" id="urbanPopulation"></td>
-                  </tr>
-                  <tr>
-                    <td>Rural Population</td>
-                    <td class="fw-bold text-end" id="ruralPopulation"></td>
-                  </tr>
-                </tbody>
-              </table>
+              
 
               <!-- Employment Section -->
               <h6 class="mt-4"><i class="fas fa-briefcase me-2 text-primary"></i>Employment</h6>
@@ -402,27 +451,6 @@
                     </div>
                   </div>
                 </div>
-                
-                <!-- <h6>Currency Converter</h6>
-                <div class="row">
-                  <div class="col">
-                    <input type="number" id="amountInput" class="form-control" placeholder="Amount">
-                  </div>
-                  <div class="col">
-                    <select id="fromCurrency" class="form-select"> -->
-                      <!-- Populate with currencies -->
-                    <!-- </select>
-                  </div>
-                  <div class="col">
-                    <select id="toCurrency" class="form-select"> -->
-                      <!-- Populate with currencies -->
-                    <!-- </select>
-                  </div>
-                  <div class="col">
-                    <button class="btn btn-primary" id="convertBtn">Convert</button>
-                  </div>
-                </div>
-                <div id="conversionResult" class="mt-3"></div> -->
                 <div class="tab-pane fade" id="cHistorical" role="tabpanel" aria-labelledby="c-historical-tab">
                   <h6 class="mt-4">Historical Data</h6>
                   <div id="historicalContent">

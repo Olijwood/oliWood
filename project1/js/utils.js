@@ -3,5 +3,9 @@ const toTitleCase = (str) => str.replace(/\w\S*/g, (text) =>
     text.charAt(0).toUpperCase() + text.substring(1).toLowerCase()
 );
 
-// export { toTitleCase };
+ // Helper function for formatting percentage values
+ const formatPercentage = (value) => value !== null ? `${Number(value).toFixed(2)}%` : 'N/A';
+
+ // Helper function for formatting numbers with commas
+ const formatNumber = (value) => value !== null ? Number(value).toLocaleString() : 'N/A';
   
