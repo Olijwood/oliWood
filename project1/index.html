@@ -56,7 +56,7 @@
               </a>
             </li>
             <!-- Demographics -->
-            <li>
+            <li id="nav-demographics-li">
               <a href="#" class="nav-link" title="Demographics">
                 <i class="bi-bar-chart"></i>
               </a>
@@ -157,112 +157,193 @@
       </div>
 
             
-      <!-- General Info Modal -->
-<div id="infoModal" class="modal fade" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
-  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-    <div class="modal-content">
-      <div class="modal-header bg-primary text-white">
-        <i id="infoModalIcon" class="fas fa-info-circle fa-lg me-2"></i>
-        <h5 class="modal-title">General Information</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <!-- Country Flag and Name -->
-        <div class="text-center mb-3">
-          <img id="countryFlag" src="" alt="Country Flag" class="img-fluid rounded" style="max-width: 150px;">
-          <h3 id="cNameVal" class="mt-2"></h3>
-        </div>
+            <!-- General Info Modal -->
+      <div id="infoModal" class="modal fade" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+          <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+              <i id="infoModalIcon" class="fas fa-info-circle fa-lg me-2"></i>
+              <h5 class="modal-title">General Information</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <!-- Country Flag and Name -->
+              <div class="text-center mb-3">
+                <img id="countryFlag" src="" alt="Country Flag" class="img-fluid rounded" style="max-width: 150px;">
+                <h3 id="cNameVal" class="mt-2"></h3>
+              </div>
 
-        <!-- Tab Navigation -->
-        <ul class="nav nav-tabs" id="countryInfoTab" role="tablist">
-          <li class="nav-item">
-            <button class="nav-link active" id="generalInfo-tab" data-bs-toggle="tab" data-bs-target="#generalInfo" role="tab" aria-controls="generalInfo" aria-selected="true">General Info</button>
-          </li>
-          <li class="nav-item">
-            <button class="nav-link" id="moreInfo-tab" data-bs-toggle="tab" data-bs-target="#moreInfo" role="tab" aria-controls="moreInfo" aria-selected="false">More Info</button>
-          </li>
-        </ul>
+              <!-- Tab Navigation -->
+              <ul class="nav nav-tabs" id="countryInfoTab" role="tablist">
+                <li class="nav-item">
+                  <button class="nav-link active" id="generalInfo-tab" data-bs-toggle="tab" data-bs-target="#generalInfo" role="tab" aria-controls="generalInfo" aria-selected="true">General Info</button>
+                </li>
+                <li class="nav-item">
+                  <button class="nav-link" id="moreInfo-tab" data-bs-toggle="tab" data-bs-target="#moreInfo" role="tab" aria-controls="moreInfo" aria-selected="false">More Info</button>
+                </li>
+              </ul>
 
-        <!-- Tab Content -->
-        <div class="tab-content mt-3" id="countryInfoTabContent">
-          <!-- General Info Tab -->
-          <div class="tab-pane fade show active" id="generalInfo" role="tabpanel" aria-labelledby="generalInfo-tab">
-            <table class="table table-bordered table-hover">
-              <tbody>
-                <tr>
-                  <td><i class="fas fa-city text-info me-2"></i>Capital City</td>
-                  <td class="fw-bold text-end" id="capitalCityVal"></td>
-                </tr>
-                <tr>
-                  <td><i class="fas fa-globe text-warning me-2"></i>Continent</td>
-                  <td class="fw-bold text-end" id="continentVal"></td>
-                </tr>
-                <tr>
-                  <td><i class="fas fa-globe text-muted me-2"></i>Sub-Continent</td>
-                  <td class="fw-bold text-end" id="subcontinentVal"></td>
-                </tr>
-                <tr>
-                  <td><i class="fas fa-users text-primary me-2"></i>Population</td>
-                  <td class="fw-bold text-end" id="populationVal"></td>
-                </tr>
-                <tr>
-                  <td><i class="bi bi-arrows text-dark me-2"></i>Area</td>
-                  <td class="fw-bold text-end" id="areaVal"></td>
-                </tr>
-                <tr>
-                  <td><i class="bi bi-car-front text-success me-2"></i>Driving Side</td>
-                  <td class="fw-bold text-end" id="driveSideVal"></td>
-                </tr>
-              </tbody>
-            </table>
+              <!-- Tab Content -->
+              <div class="tab-content mt-3" id="countryInfoTabContent">
+                <!-- General Info Tab -->
+                <div class="tab-pane fade show active" id="generalInfo" role="tabpanel" aria-labelledby="generalInfo-tab">
+                  <table class="table table-bordered table-hover">
+                    <tbody>
+                      <tr>
+                        <td><i class="fas fa-city text-info me-2"></i>Capital City</td>
+                        <td class="fw-bold text-end" id="capitalCityVal"></td>
+                      </tr>
+                      <tr>
+                        <td><i class="fas fa-globe text-warning me-2"></i>Continent</td>
+                        <td class="fw-bold text-end" id="continentVal"></td>
+                      </tr>
+                      <tr>
+                        <td><i class="fas fa-globe text-muted me-2"></i>Sub-Continent</td>
+                        <td class="fw-bold text-end" id="subcontinentVal"></td>
+                      </tr>
+                      <tr>
+                        <td><i class="fas fa-users text-primary me-2"></i>Population</td>
+                        <td class="fw-bold text-end" id="populationVal"></td>
+                      </tr>
+                      <tr>
+                        <td><i class="bi bi-arrows text-dark me-2"></i>Area</td>
+                        <td class="fw-bold text-end" id="areaVal"></td>
+                      </tr>
+                      <tr>
+                        <td><i class="bi bi-car-front text-success me-2"></i>Driving Side</td>
+                        <td class="fw-bold text-end" id="driveSideVal"></td>
+                      </tr>
+                    </tbody>
+                  </table>
 
-            <!-- Currencies, Languages, and Borders -->
-            <table class="table table-bordered table-hover mt-4">
-              <tbody>
-                <tr>
-                  <td class="align-middle"><i class="bi bi-cash text-info me-2"></i>Currencies</td>
-                  <td class="fw-bold text-end align-middle"><ul class="list-unstyled" id="currenciesVal"></ul></td>
-                </tr>
-                <tr>
-                  <td class="align-middle"><i class="fas fa-language text-info me-2"></i>Languages</td>
-                  <td class="fw-bold text-end align-middle"><ul class="list-unstyled" id="languagesTable"></ul></td>
-                </tr>
-                <tr>
-                  <td class="align-middle"><i class="bi bi-globe-americas text-info me-2"></i>Neighbours</td>
-                  <td class="fw-bold text-end align-middle"><ul class="list-unstyled" id="borderCs"></ul></td>
-                </tr>
-              </tbody>
-            </table>
+                  <!-- Currencies, Languages, and Borders -->
+                  <table class="table table-bordered table-hover mt-4">
+                    <tbody>
+                      <tr>
+                        <td class="align-middle"><i class="bi bi-cash text-info me-2"></i>Currencies</td>
+                        <td class="fw-bold text-end align-middle"><ul class="list-unstyled" id="currenciesVal"></ul></td>
+                      </tr>
+                      <tr>
+                        <td class="align-middle"><i class="fas fa-language text-info me-2"></i>Languages</td>
+                        <td class="fw-bold text-end align-middle"><ul class="list-unstyled" id="languagesTable"></ul></td>
+                      </tr>
+                      <tr>
+                        <td class="align-middle"><i class="bi bi-globe-americas text-info me-2"></i>Neighbours</td>
+                        <td class="fw-bold text-end align-middle"><ul class="list-unstyled" id="borderCs"></ul></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <!-- More Info Tab -->
+                <div class="tab-pane fade" id="moreInfo" role="tabpanel" aria-labelledby="moreInfo-tab">
+                  <table class="table table-bordered table-hover">
+                    <tbody>
+                        <td><i class="fas fa-scroll text-secondary me-2"></i>Official Name</td>
+                        <td class="fw-bold text-end" id="officialNameVal"></td>
+                        <td><i class="fas fa-user-tie text-secondary me-2"></i>Demonym(s)</td>
+                        <td class="fw-bold text-end" id="demonymsTable"></td>
+                        <td><i class="fas fa-globe-americas text-primary me-2"></i>Independent</td>
+                        <td class="fw-bold text-end" id="independentVal"></td>
+                      <tr>
+                        <td><i class="fas fa-hashtag text-info me-2"></i>UN Member</td>
+                        <td class="fw-bold text-end" id="unm49Val"></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+            </div>
           </div>
+        </div>
+      </div>
 
-          <!-- More Info Tab -->
-          <div class="tab-pane fade" id="moreInfo" role="tabpanel" aria-labelledby="moreInfo-tab">
-            <table class="table table-bordered table-hover">
-              <tbody>
-                  <td><i class="fas fa-scroll text-secondary me-2"></i>Official Name</td>
-                  <td class="fw-bold text-end" id="officialNameVal"></td>
-                  <td><i class="fas fa-user-tie text-secondary me-2"></i>Demonym(s)</td>
-                  <td class="fw-bold text-end" id="demonymsTable"></td>
-                  <td><i class="fas fa-globe-americas text-primary me-2"></i>Independent</td>
-                  <td class="fw-bold text-end" id="independentVal"></td>
-                <tr>
-                  <td><i class="fas fa-hashtag text-info me-2"></i>UN Member</td>
-                  <td class="fw-bold text-end" id="unm49Val"></td>
-                </tr>
-              </tbody>
-            </table>
+      <!-- Demographics Modal -->
+
+       <div id="demographicsModal" class="modal fade" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">       <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+          <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+              <i id="demographicsModalIcon" class="fas fa-users fa-lg me-2"></i>
+              <h5 class="modal-title">Demographics</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <!-- Population Section -->
+              <h6><i class="fas fa-users me-2 text-info"></i>Population</h6>
+              <table class="table table-bordered table-hover">
+                <tbody>
+                  <tr>
+                    <td>Total Population</td>
+                    <td class="fw-bold text-end" id="totalPopulation"></td>
+                  </tr>
+                  <tr>
+                    <td>Population Growth Rate</td>
+                    <td class="fw-bold text-end" id="populationGrowth"></td>
+                  </tr>
+                  <tr>
+                    <td>Population Aged 0-14</td>
+                    <td class="fw-bold text-end" id="populationUnder14"></td>
+                  </tr>
+                  <tr>
+                    <td>Population Aged 65+</td>
+                    <td class="fw-bold text-end" id="populationOver65"></td>
+                  </tr>
+                  <tr>
+                    <td>Female Population (% of total)</td>
+                    <td class="fw-bold text-end" id="femalePopulation"></td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <!-- Education Section -->
+              <h6 class="mt-4"><i class="fas fa-book-reader me-2 text-warning"></i>Education</h6>
+              <table class="table table-bordered table-hover">
+                <tbody>
+                  <tr>
+                    <td>Adult Literacy Rate</td>
+                    <td class="fw-bold text-end" id="literacyRate"></td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <!-- Urban vs. Rural Section -->
+              <h6 class="mt-4"><i class="fas fa-city me-2 text-success"></i>Urban vs Rural Population</h6>
+              <table class="table table-bordered table-hover">
+                <tbody>
+                  <tr>
+                    <td>Urban Population</td>
+                    <td class="fw-bold text-end" id="urbanPopulation"></td>
+                  </tr>
+                  <tr>
+                    <td>Rural Population</td>
+                    <td class="fw-bold text-end" id="ruralPopulation"></td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <!-- Employment Section -->
+              <h6 class="mt-4"><i class="fas fa-briefcase me-2 text-primary"></i>Employment</h6>
+              <table class="table table-bordered table-hover">
+                <tbody>
+                  <tr>
+                    <td>Employment Rate</td>
+                    <td class="fw-bold text-end" id="employmentRate"></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+            </div>
           </div>
         </div>
       </div>
 
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
 
-    
       <!-- Currency Modal -->
       <div id="currencyModal" class="modal fade" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
@@ -379,6 +460,7 @@
     <script src="js/country-info.js" defer></script>
     <script src="js/weather.js" defer></script>
     <script src="js/currency-modal.js" defer></script>
+    <script src="js/demographics.js" defer></script>
     <script src="js/ui-handlers.js" defer></script>
   </body>
 </html>

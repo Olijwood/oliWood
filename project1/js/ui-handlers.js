@@ -11,3 +11,8 @@ $('#nav-weather-li').on('click', () => {
 $('#nav-currency-li').on('click', () => {
   $("#currencyModal").modal("show");
 });
+
+$('#nav-demographics-li').on('click', () => {
+  $("#demographicsModal").modal("show");
+});
+
