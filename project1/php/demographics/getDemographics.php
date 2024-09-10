@@ -3,7 +3,7 @@ if (isset($_GET['country'])) {
     $countryCode = $_GET['country'];
     
     // World Bank API endpoint with required indicators and format
-    $indicators = "SP.POP.TOTL;SP.POP.GROW;SP.POP.0014.TO.ZS;SP.POP.65UP.TO.ZS;SP.POP.TOTL.FE.ZS;SP.URB.TOTL.IN.ZS;SP.RUR.TOTL.ZS;SE.ADT.LITR.ZS;SL.EMP.TOTL.SP.ZS;NY.GDP.MKTP.CD;NY.GDP.PCAP.CD;FP.CPI.TOTL.ZG;SP.DYN.LE00.IN;SP.DYN.TFRT.IN;SH.XPD.CHEX.PC.CD;EN.ATM.CO2E.PC";
+    $indicators = "SP.POP.TOTL;SP.POP.GROW;SP.POP.0014.TO.ZS;SP.POP.1564.TO.ZS;SP.POP.65UP.TO.ZS;SP.POP.TOTL.FE.ZS;SP.URB.TOTL.IN.ZS;SP.RUR.TOTL.ZS;SE.ADT.LITR.ZS;SL.EMP.TOTL.SP.ZS;NY.GDP.MKTP.CD;NY.GDP.PCAP.CD;FP.CPI.TOTL.ZG;SP.DYN.LE00.IN;SP.DYN.TFRT.IN;SH.XPD.CHEX.PC.CD;EN.ATM.CO2E.PC";
     $apiUrl = "https://api.worldbank.org/v2/country/$countryCode/indicator/$indicators?format=json&source=2&mrv=5";
 
     // Initialize cURL session

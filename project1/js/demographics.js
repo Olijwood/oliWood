@@ -36,13 +36,10 @@ const updateDemographicsUI = (data) => {
   const totalPopulation = getMostRecentNonNullValue(demographicsData.filter(ind => ind.indicator.id === 'SP.POP.TOTL'));
   const popGrowthRate = getMostRecentNonNullValue(demographicsData.filter(ind => ind.indicator.id === 'SP.POP.GROW'));
   const popAged014 = getMostRecentNonNullValue(demographicsData.filter(ind => ind.indicator.id === 'SP.POP.0014.TO.ZS'));
+  const popAged1564 = getMostRecentNonNullValue(demographicsData.filter(ind => ind.indicator.id === 'SP.POP.1564.TO.ZS'));
   const popAged65Plus = getMostRecentNonNullValue(demographicsData.filter(ind => ind.indicator.id === 'SP.POP.65UP.TO.ZS'));
   const femalePopulation = getMostRecentNonNullValue(demographicsData.filter(ind => ind.indicator.id === 'SP.POP.TOTL.FE.ZS'));
-  console.log(femalePopulation);
   const malePopulation = femalePopulation ? (100 - Number(femalePopulation)).toFixed(2) : 'N/A';
-  console.log(malePopulation);
-
-  // const malePopulation = femalePopulation !== 'N/A' ? (100 - Number(femalePopulation)).toFixed(2) + '%' : 'N/A';
   const urbanPopulation = getMostRecentNonNullValue(demographicsData.filter(ind => ind.indicator.id === 'SP.URB.TOTL.IN.ZS'));
   const ruralPopulation = getMostRecentNonNullValue(demographicsData.filter(ind => ind.indicator.id === 'SP.RUR.TOTL.ZS'));
 
@@ -69,6 +66,7 @@ const updateDemographicsUI = (data) => {
   $('#totalPopulation').text(totalPopulation !== 'N/A' ? Number(totalPopulation).toLocaleString() : 'N/A');
   $('#populationGrowth').text(popGrowthRate !== 'N/A' ? `${Number(popGrowthRate).toFixed(2)}%` : 'N/A');
   $('#populationUnder14').text(popAged014 !== 'N/A' ? `${Number(popAged014).toFixed(2)}%` : 'N/A');
+  $('#population1564').text(popAged1564 !== 'N/A' ? `${Number(popAged1564).toFixed(2)}%` : 'N/A');
   $('#populationOver65').text(popAged65Plus !== 'N/A' ? `${Number(popAged65Plus).toFixed(2)}%` : 'N/A');
   $('#femalePopulation').text(femalePopulation !== 'N/A' ? `${Number(femalePopulation).toFixed(2)}%` : 'N/A');
   $('#malePopulation').text(malePopulation !== 'N/A' ? `${Number(malePopulation).toFixed(2)}%` : 'N/A');
@@ -93,6 +91,57 @@ const updateDemographicsUI = (data) => {
 
   // Update the Employment section
   $('#employmentRate').text(formatPercentage(employmentRate));
+
+  // Create Gender Distribution Chart
+  
+  createStackedHorizontalBarChart('populationAgeChart', [
+    {
+      // popualte function call to display age distribution
+      
+      label: '0-14',
+      data: [popAged014.toFixed(2)],
+      
+      backgroundColor: 'rgba(144, 238, 144, 0.8)'  // Softer green
+    },
+    {
+      label: '15-64',
+      data: [popAged1564.toFixed(2)],
+      backgroundColor: 'rgba(75, 192, 192, 0.8)'  // Softer blue
+    },
+    {
+      label: '65+',
+      data: [popAged65Plus.toFixed(2)],
+      backgroundColor: 'rgba(102, 217, 174, 0.8)'  // Softer teal
+    }
+  ], 'Age Distribution');
+  
+  // Create Gender Distribution Stacked Chart with title
+  createStackedHorizontalBarChart('genderChart', [
+    {
+      label: 'Male',
+      data: [malePopulation],
+      backgroundColor: 'rgba(78, 115, 223, 0.6)'  // Softer blue
+    },
+    {
+      label: 'Female',
+      data: [femalePopulation.toFixed(2)],
+      backgroundColor: 'rgba(231, 74, 59, 0.6)'  // Softer red
+    }
+  ], 'Gender Distribution');
+
+  // Create Urban vs Rural Population Chart with title
+  createStackedHorizontalBarChart('urbanRuralChart', [
+    {
+      label: 'Rural',
+      data: [ruralPopulation.toFixed(2)],
+      backgroundColor: 'rgba(100, 182, 118, 0.8)'  // Leafy green
+    },
+    {
+      label: 'Urban',
+      data: [urbanPopulation.toFixed(2)],
+      backgroundColor: 'rgba(164, 194, 212, 0.8)'  // Light blue grey
+    }
+  ], 'Urban vs Rural Population');
 };
 
 // Populate the demographics modal on page load
@@ -100,3 +149,54 @@ $('#demographicsModal').on('shown.bs.modal', function () {
   fetchDemographics();
 });
 
+// Ensure Bootstrap tabs work correctly with dynamic content loading
+$('#demographicsTabs button[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
+  const targetId = $(e.target).attr('data-bs-target');
+  if (targetId === '#populationDemoTab') {
+      fetchHistoricalData('population');
+  } else if (targetId === '#healthDemoTab') {
+      fetchHistoricalData('health');
+  } else if (targetId === '#economyDemoTab') {
+      fetchHistoricalData('economy');
+  } else if (targetId === '#environmentDemoTab') {
+      fetchHistoricalData('environment');
+  }
+});
+
+
+function fetchHistoricalData(type) {
+  $.ajax({
+    url: 'php/demographics/getHistoricalData.php',
+    type: 'GET',
+    data: { indicator: type },
+    success: (response) => {
+      const data = JSON.parse(response);
+      renderChart(type, data);
+    },
+    error: () => {
+      console.error('Failed to fetch historical data.');
+    }
+  });
+}
+
+function renderChart(type, data) {
+  const ctx = document.getElementById(`${type}Chart`).getContext('2d');
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: data.years,
+      datasets: [{
+        label: `${type.charAt(0).toUpperCase() + type.slice(1)} Data`,
+        data: data.values,
+        borderColor: '#3e95cd',
+        fill: false
+      }]
+    },
+    options: {
+      scales: {
+        x: { title: { display: true, text: 'Year' } },
+        y: { title: { display: true, text: `${type.charAt(0).toUpperCase() + type.slice(1)}` } }
+      }
+    }
+  });
+}
