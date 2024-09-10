@@ -25,7 +25,7 @@ const getMostRecentNonNullValue = (indicatorData) => {
     if (indicatorData[i].value !== null) {
       return indicatorData[i].value;
     }
-  }
+  }``
   return 'N/A'; // Return 'N/A' if no valid value is found
 };
 
@@ -144,59 +144,17 @@ const updateDemographicsUI = (data) => {
   ], 'Urban vs Rural Population');
 };
 
+
+
+
 // Populate the demographics modal on page load
 $('#demographicsModal').on('shown.bs.modal', function () {
   fetchDemographics();
 });
 
-// Ensure Bootstrap tabs work correctly with dynamic content loading
-$('#demographicsTabs button[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
-  const targetId = $(e.target).attr('data-bs-target');
-  if (targetId === '#populationDemoTab') {
-      fetchHistoricalData('population');
-  } else if (targetId === '#healthDemoTab') {
-      fetchHistoricalData('health');
-  } else if (targetId === '#economyDemoTab') {
-      fetchHistoricalData('economy');
-  } else if (targetId === '#environmentDemoTab') {
-      fetchHistoricalData('environment');
-  }
-});
 
 
-function fetchHistoricalData(type) {
-  $.ajax({
-    url: 'php/demographics/getHistoricalData.php',
-    type: 'GET',
-    data: { indicator: type },
-    success: (response) => {
-      const data = JSON.parse(response);
-      renderChart(type, data);
-    },
-    error: () => {
-      console.error('Failed to fetch historical data.');
-    }
-  });
-}
 
-function renderChart(type, data) {
-  const ctx = document.getElementById(`${type}Chart`).getContext('2d');
-  new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: data.years,
-      datasets: [{
-        label: `${type.charAt(0).toUpperCase() + type.slice(1)} Data`,
-        data: data.values,
-        borderColor: '#3e95cd',
-        fill: false
-      }]
-    },
-    options: {
-      scales: {
-        x: { title: { display: true, text: 'Year' } },
-        y: { title: { display: true, text: `${type.charAt(0).toUpperCase() + type.slice(1)}` } }
-      }
-    }
-  });
-}
+
+
+

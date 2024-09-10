@@ -35,3 +35,14 @@
     margin-right: 5px;
     border-radius: 50%;
 }
+
+@media (max-width: 768px) {
+    .chart-container {
+      height: 100px;
+    }
+    
+    .chartjs-size-monitor {
+      width: 100%; 
+    }
+  }
+  

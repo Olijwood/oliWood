@@ -274,25 +274,26 @@
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-              <!-- Tab Navigation -->
+            <!-- Tab Navigation -->
             <ul class="nav nav-tabs" id="demographicsTabs" role="tablist">
               <li class="nav-item">
                 <button class="nav-link active" id="d-current-tab" data-bs-toggle="tab" data-bs-target="#currentDemo" role="tab"
                   aria-controls="currentDemo" aria-selected="true">Overview</button>
               </li>
               <li class="nav-item">
-                <button class="nav-link" id="d-population-tab" data-bs-toggle="tab" href="#populationDemoTab" role="tab" aria-controls="populationDemoTab" aria-selected="false">Population</button>
+                <button class="nav-link" id="d-population-tab" data-bs-toggle="tab" data-bs-target="#populationDemoTab" role="tab" aria-controls="populationDemoTab" aria-selected="false">Population</button>
               </li>
               <li class="nav-item">
-                <button class="nav-link" id="d-health-tab" data-bs-toggle="tab" href="#healthDemoTab" role="tab" aria-controls="healthDemoTab" aria-selected="false">Health</button>
+                <button class="nav-link" id="d-health-tab" data-bs-toggle="tab" data-bs-target="#healthDemoTab" role="tab" aria-controls="healthDemoTab" aria-selected="false">Health</button>
               </li>
               <li class="nav-item">
-                <button class="nav-link" id="d-economy-tab" data-bs-toggle="tab" href="#economyDemoTab" role="tab" aria-controls="economyDemoTab" aria-selected="false">Economy</button>
+                <button class="nav-link" id="d-economy-tab" data-bs-toggle="tab" data-bs-target="#economyDemoTab" role="tab" aria-controls="economyDemoTab" aria-selected="false">Economy</button>
               </li>
               <li class="nav-item">
-                <button class="nav-link" id="d-environment-tab" data-bs-toggle="tab" href="#environmentDemoTab" role="tab" aria-controls="environmentDemoTab" aria-selected="false">Environment</button>
+                <button class="nav-link" id="d-environment-tab" data-bs-toggle="tab" data-bs-target="#environmentDemoTab" role="tab" aria-controls="environmentDemoTab" aria-selected="false">Environment</button>
               </li>
             </ul>
+              
 
              <!-- Overview Tab -->
             <div class="tab-content mt-3">
@@ -386,7 +387,19 @@
                 <!-- Population Tab -->
                 <div class="tab-pane fade" id="populationDemoTab" role="tabpanel" aria-labelledby="d-population-tab">
                   <h6>Population Overview</h6>
-                  <canvas id="populationChart"></canvas>
+                  <div class="chart-container">
+                    <div class="demographics-chart">
+                      <canvas id="totalPopulationChart"></canvas> 
+                    </div>
+                  </div><!-- Total Population Chart -->
+                  <div class="chart-container">
+                    <div class="demographics-chart">
+                      <canvas id="populationGrowthChart"></canvas> <!-- Population Growth Rate Chart -->
+                    </div>
+                  </div>
+                  <canvas id="populationGrowthChart"></canvas> <!-- Age Distribution Chart -->
+                  <canvas id="genderDistributionChart"></canvas> <!-- Gender Distribution Chart -->
+                  <canvas id="urbanRuralChart"></canvas> <!-- Urban vs Rural Chart -->
                 </div>
 
                 <!-- Health Tab -->
@@ -508,16 +521,17 @@
     <script src="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.js"></script>
     
     <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>    <!-- Custom Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>    <!-- Custom Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels" defer></script>
     
     <script src="js/utils.js" defer></script>
     <script src="js/map.js" defer></script>
     <script src="js/country-info.js" defer></script>
     <script src="js/weather.js" defer></script>
     <script src="js/currency-modal.js" defer></script>
-    <script src="js/charts-demographics.js"></script>
-    <script src="js/demographics.js" defer></script>
+    <script src="js/demographics/charts-demographics.js" defer></script>
+    <script src="js/demographics/demographics.js" defer></script>
+    <script src="js/demographics/histDemographics.js" defer></script>
     <script src="js/ui-handlers.js" defer></script>
   </body>
 </html>

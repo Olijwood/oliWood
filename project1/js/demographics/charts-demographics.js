@@ -1,7 +1,85 @@
+function destroyExistingChart(canvasId) {
+    const canvas = document.getElementById(canvasId);
+    if (canvas && canvas.chartInstance) {
+        canvas.chartInstance.destroy();  // Destroy any existing chart instance
+        canvas.chartInstance = null;     // Clear the reference to avoid memory leaks
+    }
+}
+
+
+function createLineChartWithKey(canvasId, labels, data, labelText, borderColor = '#3e95cd', minVal, maxVal) {
+    const ctx = document.getElementById(canvasId).getContext('2d');
+    // const existingChart = ctx.chartInstance;
+    // log params
+    console.log("id", canvasId);
+    console.log("labels", labels);
+    console.log("data", data);
+    console.log("labelText", labelText);
+    console.log("borderColor", borderColor);
+    // if (existingChart) {
+    //     existingChart.destroy();
+    // }
+
+    destroyExistingChart(canvasId);
+    const newChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels,
+            datasets: [{
+                label: labelText,
+                data,
+                borderColor,
+                fill: false,
+                tension: 0.4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            animation: false,
+            elements: {
+                point: {
+                    radius: 1
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    min: minVal,
+                    max: maxVal,
+                    ticks: {
+                        callback: (value) => value >= 1000000 ? (value / 1000000).toFixed(0) + 'M' : value.toLocaleString()
+                    }
+                }
+            },
+            plugins: {
+                title: {
+                    display: true,
+                    text: labelText,
+                    font: {
+                        size: 14,
+                        weight: 'bold'
+                    }
+                },
+                legend: {
+                    display: false
+                }
+            }
+        }
+    });
+
+    ctx.chartInstance = newChart;
+}
+
 // Function to create stacked horizontal bar charts
 function createStackedHorizontalBarChart(canvasId, datasets, chartTitle) {
-    const ctx = $(`#${canvasId}`)[0].getContext('2d'); // Use jQuery to select the canvas
-    new Chart(ctx, {
+    const ctx = document.getElementById(canvasId).getContext('2d');
+
+    // Destroy any existing chart before creating a new one
+    destroyExistingChart(canvasId);
+
+    // Create a new chart
+    const newChart = new Chart(ctx, {
         type: 'bar',
         data: {
             labels: [''],  // Empty label to avoid label overflow
@@ -17,7 +95,6 @@ function createStackedHorizontalBarChart(canvasId, datasets, chartTitle) {
                     max: 100,  // Since this is percentage based
                     stacked: true,  // Stack the bars
                     ticks: {
-                        // padding: 0,
                         display: false  // Hide the x-axis ticks
                     },
                     grid: {
@@ -41,7 +118,6 @@ function createStackedHorizontalBarChart(canvasId, datasets, chartTitle) {
                         weight: 'bold'
                     },
                     padding: {
-                        // top: 10,
                         bottom: 0
                     }
                 },
@@ -67,15 +143,13 @@ function createStackedHorizontalBarChart(canvasId, datasets, chartTitle) {
                             weight: 'bold'  // Bold font for the legend labels
                         },
                         usePointStyle: true  // Use small circles for legend
-                    },
-                    
+                    }
                 }
             },
             layout: {
-                // autoPadding: false,
                 padding: {
                     top: 5,    // Padding above the chart (below the title)
-                    bottom: 5, // Padding below the chart (above the legend// Adjust margin between the bars and the legend
+                    bottom: 5, // Padding below the chart (above the legend)
                 }
             },
             elements: {
@@ -86,43 +160,7 @@ function createStackedHorizontalBarChart(canvasId, datasets, chartTitle) {
         },
         plugins: [ChartDataLabels]
     });
-}
 
-// Function to create line charts (for historical data)
-function createLineChart(canvasId, labels, data, labelText, borderColor = '#3e95cd') {
-new Chart(document.getElementById(canvasId), {
-    type: 'line',
-    data: {
-    labels: labels,
-    datasets: [{
-        label: labelText,
-        data: data,
-        borderColor: borderColor,
-        fill: false
-    }]
-    },
-    options: {
-    scales: {
-        x: {
-        beginAtZero: true,
-        scaleLabel: {
-            display: true,
-            labelString: 'Year'
-        }
-        },
-        y: {
-        beginAtZero: true,
-        scaleLabel: {
-            display: true,
-            labelString: labelText
-        },
-        ticks: {
-            callback: function(value) {
-            return value.toLocaleString();
-            }
-        }
-        }
-    }
-    }
-});
+    // Store the chart instance on the canvas element for future cleanup
+    document.getElementById(canvasId).chartInstance = newChart;
 }
