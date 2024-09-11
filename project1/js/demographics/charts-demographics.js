@@ -7,25 +7,40 @@ function destroyExistingChart(canvasId) {
 }
 
 function createLineChartWithKey(
-  canvasId, labels, data, title, borderColor = '#3e95cd', 
-  minY, maxY, isFilled, isPercentage = false, isMultiDataset = false) {
+  canvasId, labels, data, title, borderColors = ['#3e95cd'], 
+  minY = null, maxY = null, isFilled = false, isPercentage = false, 
+  isMultiDataset = false, legendLabels = null) {
 
   const ctx = document.getElementById(canvasId).getContext('2d');
 
   // Destroy any existing chart before creating a new one
   destroyExistingChart(canvasId);
 
+  // Handling multiple datasets and legend labels
+  const datasets = Array.isArray(data) && Array.isArray(data[0]) ? 
+    data.map((d, i) => ({
+      label: legendLabels && legendLabels[i] ? legendLabels[i] : `Dataset ${i + 1}`,
+      data: d,
+      borderColor: borderColors[i] || '#3e95cd',
+    pointBackgroundColor: borderColors[i] || '#3e95cd', 
+      fill: isFilled ? 'start' : false,
+      tension: 0.4
+    })) : 
+    [{
+      label: legendLabels && legendLabels[0] ? legendLabels[0] : title,
+      data: data,
+      borderColor: borderColors[0],
+      backgroundColor: borderColors[0] || '#3e95cd',
+      pointBackgroundColor: borderColors[0] || '#3e95cd', 
+      fill: isFilled ? 'start' : false,
+      tension: 0.4
+    }];
+
   const newChart = new Chart(ctx, {
       type: 'line',
       data: {
-          labels,
-          datasets: [{
-              label: title,
-              data,
-              borderColor,
-              fill: isFilled ? 'start' : false,
-              tension: 0.4
-          }]
+          labels: labels[0], // asumming all datasets have the same labels (dates)
+          datasets
       },
       options: {
           responsive: true,
@@ -37,17 +52,17 @@ function createLineChartWithKey(
                   }
               },
               y: {
-                  suggestedMin: minY,
-                  suggestedMax: maxY,
+                  suggestedMin: minY ? minY : undefined,
+                  suggestedMax: maxY ? maxY : undefined,
                   ticks: {
-                      callback: (value) => value >= 1000000 ? (value / 1000000).toFixed(0) + 'M' : value.toLocaleString()
+                      callback: (value) => isPercentage ? `${value}%` : (value >= 1000000 ? (value / 1000000).toFixed(0) + 'M' : value.toLocaleString())
                   }
               }
           },
           plugins: {
               title: {
                   display: true,
-                  text: title,
+                  text: title,  
                   font: {
                       size: 18,
                       weight: 'bold'
@@ -61,7 +76,7 @@ function createLineChartWithKey(
                   display: isMultiDataset,
                   position: 'bottom',
                   labels: {
-                      boxWidth: 12,
+                      boxWidth: 8,
                       font: {
                           size: 12,
                           weight: 'bold'
