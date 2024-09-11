@@ -7,8 +7,7 @@ function destroyExistingChart(canvasId) {
 }
 
 function createLineChartWithKey(
-  canvasId, labels, data, title, borderColors = ['#3e95cd'], 
-  minY = null, maxY = null, isFilled = false, isPercentage = false, 
+  canvasId, labels, data, title, borderColors = ['#3e95cd'], isFilled = false, isPercentage = false, 
   isMultiDataset = false, legendLabels = null) {
 
   const ctx = document.getElementById(canvasId).getContext('2d');
@@ -52,10 +51,23 @@ function createLineChartWithKey(
                   }
               },
               y: {
-                  suggestedMin: minY ? minY : undefined,
-                  suggestedMax: maxY ? maxY : undefined,
+               
+                  // Custom y-axis tick callback to display large numbers with K, M, B, or T suffixes
+                  // and to display percentages with a % sign
                   ticks: {
-                      callback: (value) => isPercentage ? `${value}%` : (value >= 1000000 ? (value / 1000000).toFixed(0) + 'M' : value.toLocaleString())
+                    callback: (value) => {
+                      // Array of suffixes for large numbers
+                      const units = ['', 'K', 'M', 'B', 'T'];
+                      let i = 0;
+                      // Loop until the value is less than 1000 or we've reached the last suffix
+                      while (value >= 1000 && i < units.length) {
+                        // Divide the value by 1000 and increment the suffix index
+                        value /= 1000;
+                        ++i;
+                      }
+                      // Return the value with the appropriate suffix and/or percentage sign
+                      return isPercentage ? `${value}%` : `${value.toFixed(0)}${units[i]}`;
+                    }
                   }
               }
           },
