@@ -6,70 +6,93 @@ function destroyExistingChart(canvasId) {
     }
 }
 
+function createLineChartWithKey(
+  canvasId, labels, data, title, borderColor = '#3e95cd', 
+  minY, maxY, isFilled, isPercentage = false, isMultiDataset = false) {
 
-function createLineChartWithKey(canvasId, labels, data, labelText, borderColor = '#3e95cd', minVal, maxVal) {
-    const ctx = document.getElementById(canvasId).getContext('2d');
-    // const existingChart = ctx.chartInstance;
-    // log params
-    console.log("id", canvasId);
-    console.log("labels", labels);
-    console.log("data", data);
-    console.log("labelText", labelText);
-    console.log("borderColor", borderColor);
-    // if (existingChart) {
-    //     existingChart.destroy();
-    // }
+  const ctx = document.getElementById(canvasId).getContext('2d');
 
-    destroyExistingChart(canvasId);
-    const newChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels,
-            datasets: [{
-                label: labelText,
-                data,
-                borderColor,
-                fill: false,
-                tension: 0.4
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            animation: false,
-            elements: {
-                point: {
-                    radius: 1
-                }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    min: minVal,
-                    max: maxVal,
-                    ticks: {
-                        callback: (value) => value >= 1000000 ? (value / 1000000).toFixed(0) + 'M' : value.toLocaleString()
-                    }
-                }
-            },
-            plugins: {
-                title: {
-                    display: true,
-                    text: labelText,
-                    font: {
-                        size: 14,
-                        weight: 'bold'
-                    }
-                },
-                legend: {
-                    display: false
-                }
-            }
-        }
-    });
+  // Destroy any existing chart before creating a new one
+  destroyExistingChart(canvasId);
 
-    ctx.chartInstance = newChart;
+  const newChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+          labels,
+          datasets: [{
+              label: title,
+              data,
+              borderColor,
+              fill: isFilled ? 'start' : false,
+              tension: 0.4
+          }]
+      },
+      options: {
+          responsive: true,
+          maintainAspectRatio: true,
+          scales: {
+              x: {
+                  font: {
+                      size: 8
+                  }
+              },
+              y: {
+                  suggestedMin: minY,
+                  suggestedMax: maxY,
+                  ticks: {
+                      callback: (value) => value >= 1000000 ? (value / 1000000).toFixed(0) + 'M' : value.toLocaleString()
+                  }
+              }
+          },
+          plugins: {
+              title: {
+                  display: true,
+                  text: title,
+                  font: {
+                      size: 18,
+                      weight: 'bold'
+                  },
+                  padding: {
+                      top: 10,
+                      bottom: 10
+                  }
+              },
+              legend: {
+                  display: isMultiDataset,
+                  position: 'bottom',
+                  labels: {
+                      boxWidth: 12,
+                      font: {
+                          size: 12,
+                          weight: 'bold'
+                      },
+                      usePointStyle: true,
+                      pointStyle: 'circle'
+                  }
+              },
+              tooltip: {
+                  callbacks: {
+                      label: (tooltipItem) => isPercentage ? `${tooltipItem.formattedValue}%` : tooltipItem.formattedValue
+                  }
+              },
+              hover: {
+                  mode: 'nearest',
+                  intersect: true
+              }
+          },
+          elements: {
+              point: {
+                  radius: 3,
+                  hoverRadius: 6
+              }
+          }
+      }
+  });
+
+  // Store the chart instance on the canvas element for future cleanup
+  document.getElementById(canvasId).chartInstance = newChart;
 }
+
 
 // Function to create stacked horizontal bar charts
 function createStackedHorizontalBarChart(canvasId, datasets, chartTitle) {

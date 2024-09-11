@@ -13,11 +13,16 @@ const indicatorGroups = {
   ]
 };
 
-const maxPoints = window.innerWidth < 768 ? 10 : 20;
+const maxPoints = window.innerWidth < 768 ? 15 : 30;
 
 function downsampleData(data) {
   if (data.length > maxPoints) {
-    return data.filter((_, i) => i % Math.ceil(data.length / maxPoints) === 0);
+    const firstDate = data[0];
+    const lastDate = data[data.length - 1];
+    const middleDates = data.slice(1, -1);
+    const step = Math.ceil(middleDates.length / (maxPoints - 2));
+    const sampledMiddleDates = middleDates.filter((_, i) => i % step === 0);
+    return [firstDate, ...sampledMiddleDates, lastDate];
   }
   return data;
 }
@@ -26,44 +31,32 @@ async function fetchHistoricalData(type, countryCode) {
   const indicators = indicatorGroups[type].join(";");
   const response = await fetch(`php/demographics/getHistoricalData.php?country=${countryCode}&indicators=${indicators}`);
   const rawData = await response.json();
-
   const data = rawData[1];
-  console.log("data", data);
-  let totalPopulationData = data.filter(d => d.indicator === "SP.POP.TOTL");
-  // let populationGrowthData = data.filter(d => d.indicator === "SP.POP.GROW");
 
-  totalPopulationData.sort((a, b) => a.date - b.date);
-  // populationGrowthData.sort((a, b) => a.date - b.date);
+  let populationData = data.filter(d => d.indicator === "SP.POP.TOTL");
+  let growthData = data.filter(d => d.indicator === "SP.POP.GROW");
 
-  totalPopulationData = downsampleData(totalPopulationData);
-  // populationGrowthData = downsampleData(populationGrowthData);
+  populationData.sort((a, b) => a.date - b.date);
+  growthData.sort((a, b) => a.date - b.date);
 
-  const totalPopulationValues = totalPopulationData.map(d => d.value).filter(v => v !== null);
-  // const populationGrowthValues = populationGrowthData.map(d => d.value).filter(v => v !== null);
+  populationData = downsampleData(populationData);
+  growthData = downsampleData(growthData);
+  
+  const populationValues = populationData.map(d => d.value).filter(v => v !== null);
+  const growthValues = growthData.map(d => d.value).filter(v => v !== null);
 
-  const totalPopulationDates = totalPopulationData.map(d => d.date).filter((v, i) => totalPopulationValues[i] !== null);
-  // const populationGrowthDates = populationGrowthData.map(d => d.date).filter((v, i) => populationGrowthValues[i] !== null);
+  const populationDates = populationData.map(d => d.date).filter((v, i) => populationValues[i]);
+  const growthDates = growthData.map(d => d.date).filter((v, i) => growthValues[i]);
+  const minPopulation = Math.min(...populationValues) * 0.99;
+  const maxPopulation = Math.max(...populationValues) * 1.01;
+  const minGrowth = Math.min(...growthValues) * 0.999;
+  const maxGrowth = Math.max(...growthValues) * 1.001;
 
-  const minTotalPopulation = Math.min(...totalPopulationValues);
-  const maxTotalPopulation = Math.max(...totalPopulationValues);
-  // const minPopulationGrowth = Math.min(...populationGrowthValues);
-  // const maxPopulationGrowth = Math.max(...populationGrowthValues);
+  createLineChartWithKey('totalPopulationChart', populationDates, populationValues, 'Total Population Over Time', '#3e95cd', minPopulation, maxPopulation, true);
 
-  createLineChartWithKey('totalPopulationChart', 
-    totalPopulationDates,
-    totalPopulationValues,
-    'Total Population Over Time', 
-    '#3e95cd', 
-    minTotalPopulation, maxTotalPopulation);
-
-//   createLineChartWithKey('populationGrowthChart', 
-//     populationGrowthDates,
-//     populationGrowthValues, 
-//     'Population Growth Rate (%)', 
-//     '#8e5ea2',
-//     minPopulationGrowth, maxPopulationGrowth);
-// }
-  }
+  createLineChartWithKey('populationGrowthChart', growthDates, growthValues, 'Population Growth Rate (%)', '#8e5ea2', minGrowth, maxGrowth, isPct=true, isFill=false);
+}
+  
 
 $('#demographicsTabs button[data-bs-toggle="tab"]').on('shown.bs.tab', async function (e) {
   const targetId = $(e.target).attr('data-bs-target');

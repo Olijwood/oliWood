@@ -9,8 +9,14 @@
 }
 
 .demographics-chart canvas {
-    height: 100px;  /* Control the height of the canvas */
+    height: 100px;  
     width: 100%;
+}
+
+/* Historical Charts */
+.hist-demographics-chart canvas {
+  height: auto;  
+  width: 100%;
 }
 
 /* Legend styling */
@@ -36,13 +42,21 @@
     border-radius: 50%;
 }
 
+
+
 @media (max-width: 768px) {
     .chart-container {
       height: 100px;
     }
-    
+
     .chartjs-size-monitor {
       width: 100%; 
     }
+
+    .hist-chart-container {
+      height: auto;
+    }
+    
+   
   }
   
