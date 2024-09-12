@@ -18,38 +18,48 @@ const maxPoints = window.innerWidth < 768 ? 15 : 30;
 
 function downsampleData(data) {
   if (data.length > maxPoints) {
-      const firstDate = data[0];
-      const lastDate = data[data.length - 1];
-      const middleDates = data.slice(1, -1);
-      const step = Math.ceil(middleDates.length / (maxPoints - 2));
-      const sampledMiddleDates = middleDates.filter((_, i) => i % step === 0);
-      return [firstDate, ...sampledMiddleDates, lastDate];
-    }
-    return data;
+    const firstDate = data[0];
+    const lastDate = data[data.length - 1];
+    const middleDates = data.slice(1, -1);
+    const step = Math.ceil(middleDates.length / (maxPoints - 2));
+    const sampledMiddleDates = middleDates.filter((_, i) => i % step === 0);
+    return [firstDate, ...sampledMiddleDates, lastDate];
   }
+  return data;
+}
+
 
 const sortIndicatorData = (data, indicatorGroup) => {
   const sortedData = {};
   
   indicatorGroup.forEach(indicator => {
-    sortedData[indicator] = downsampleData(data.filter(d => d.indicator === indicator).sort((a, b) => a.date - b.date));
+    sortedData[indicator] = data
+      .filter(d => d.indicator === indicator)
+      .sort((a, b) => a.date - b.date);
   });
 
   return sortedData;
 };
 
 const mapIndicatorData = (sortedIndicatorData, indicatorGroup) => {
-  mappedData = {};
+  const mappedData = {};
 
   indicatorGroup.forEach(indicator => {
+    const indicatorData = sortedIndicatorData[indicator];
+
+    const filteredData = indicatorData.filter(d => d.value !== null);
+
+    const downsampledData = downsampleData(filteredData);
+
     mappedData[indicator] = {
-      values: sortedIndicatorData[indicator].map(d => d.value).filter(v => v !== null),
-      dates: sortedIndicatorData[indicator].map(d => d.date)
+      values: downsampledData.map(d => d.value),
+      dates: downsampledData.map(d => d.date)
     };
   });
 
   return mappedData;
-}
+};
+
 
 async function fetchHistoricalData(type, countryCode, indicatorGroup) {
   
@@ -58,61 +68,34 @@ async function fetchHistoricalData(type, countryCode, indicatorGroup) {
   const rawData = await response.json();
   const data = rawData[1];
 
+  const sortedData = sortIndicatorData(data, indicatorGroup);
+  const mappedData = mapIndicatorData(sortedData, indicatorGroup);
+
   if (type === 'population') {
-    
-    // Filter the data by each indicator
-    let populationData = data.filter(d => d.indicator === "SP.POP.TOTL");
-    let growthData = data.filter(d => d.indicator === "SP.POP.GROW");
-    let workingAgeData = data.filter(d => d.indicator === "SP.POP.1564.TO.ZS");
-    let elderlyData = data.filter(d => d.indicator === "SP.POP.65UP.TO.ZS");
-    let femalePopulationData = data.filter(d => d.indicator === "SP.POP.TOTL.FE.ZS");
-    let urbanPopulationData = data.filter(d => d.indicator === "SP.URB.TOTL.IN.ZS");
+    const population = mappedData['SP.POP.TOTL'];
+    const growth = mappedData['SP.POP.GROW'];
+    const workingAge = mappedData['SP.POP.1564.TO.ZS'];
+    const elderly = mappedData['SP.POP.65UP.TO.ZS'];
+    const femalePopulation = mappedData['SP.POP.TOTL.FE.ZS'];
+    const urbanPopulation = mappedData['SP.URB.TOTL.IN.ZS'];
 
+    const childPopulation = workingAge.values.map((w, i) => 100 - w - elderly.values[i]);
+    const malePopulation = femalePopulation.values.map(v => 100 - v);
 
-    // Sort the data by date
-    [populationData, growthData, workingAgeData, elderlyData, femalePopulationData, urbanPopulationData].forEach(dataset => {
-      dataset.sort((a, b) => a.date - b.date);
-    });
+    const ruralPopulation = urbanPopulation.values.map(v => 100 - v);
 
-    // Downsample data if needed
-    populationData = downsampleData(populationData);
-    growthData = downsampleData(growthData);
-    workingAgeData = downsampleData(workingAgeData);
-    elderlyData = downsampleData(elderlyData);
-    femalePopulationData = downsampleData(femalePopulationData);
-    urbanPopulationData = downsampleData(urbanPopulationData);
-    // console.log(urbanPopulationData);
-    // Map the values
-    const populationValues = populationData.map(d => d.value).filter(v => v !== null);
-    const growthValues = growthData.map(d => d.value).filter(v => v !== null);
-    const workingAgeValues = workingAgeData.map(d => d.value).filter(v => v !== null);
-    const elderlyValues = elderlyData.map(d => d.value).filter(v => v !== null);
-    const femalePopulationValues = femalePopulationData.map(d => d.value).filter(v => v !== null);
-    const urbanPopulationValues = urbanPopulationData.map(d => d.value).filter(v => v !== null);
+    const populationDates = population.dates.filter((v, i) => population.values[i]);
+    const growthDates = growth.dates.filter((v, i) => growth.values[i]);
+    const genderDates = femalePopulation.dates.filter((v, i) => femalePopulation.values[i]);
+    const residenceDates = urbanPopulation.dates.filter((v, i) => urbanPopulation.values[i]);
 
-    // Calculate child population values as 100 - working age - elderly percentage
-    const childPopulationValues = workingAgeValues.map((w, i) => 100 - w - elderlyValues[i]);
-    // Calculate male population values as 100 - female percentage
-    const malePopulationValues = femalePopulationValues.map(v => 100 - v);
-
-    // Calculate rural population values as 100 - urban percentage
-    const ruralPopulationValues = urbanPopulationValues.map(v => 100 - v);
-    
-    // Get dates for the charts
-    const populationDates = populationData.map(d => d.date).filter((v, i) => populationValues[i]);
-    const growthDates = growthData.map(d => d.date).filter((v, i) => growthValues[i]);
-    const genderDates = femalePopulationData.map(d => d.date).filter((v, i) => femalePopulationValues[i]);
-    const residenceDates = urbanPopulationData.map(d => d.date).filter((v, i) => urbanPopulationValues[i]);
-
-    const workingAgeDates = workingAgeData.map(d => d.date);
-    const elderlyDates = elderlyData.map(d => d.date);
+    const workingAgeDates = workingAge.dates;
+    const elderlyDates = elderly.dates;
     const childDates = elderlyDates; // Assuming children data is calculated indirectly
-
-    
 
     createLineChartWithKey(
       'totalPopulationChart', 
-      [populationDates], [populationValues], 
+      [populationDates], [population.values], 
       'Total Population Over Time', 
       ['#3e95cd'], 
       true, false, false
@@ -120,7 +103,7 @@ async function fetchHistoricalData(type, countryCode, indicatorGroup) {
 
     createLineChartWithKey(
       'populationGrowthChart', 
-      [growthDates], [growthValues], 
+      [growthDates], [growth.values], 
       'Population Growth (%)',
       ['#8e5ea2'], 
       true, true, false
@@ -129,7 +112,7 @@ async function fetchHistoricalData(type, countryCode, indicatorGroup) {
     createLineChartWithKey(
       'ageDistributionChart', 
       [childDates, workingAgeDates, elderlyDates], 
-      [childPopulationValues, workingAgeValues, elderlyValues], 
+      [childPopulation, workingAge.values, elderly.values], 
       'Age Distribution (%)', 
       ['#FF6384', '#36A2EB', '#FFCD56'], 
       false, true, true, 
@@ -139,7 +122,7 @@ async function fetchHistoricalData(type, countryCode, indicatorGroup) {
     createLineChartWithKey(
       'genderDistributionChart', 
       [genderDates, genderDates], 
-      [femalePopulationValues, malePopulationValues], 
+      [femalePopulation.values, malePopulation], 
       'Gender Distribution (%)', 
       ['rgba(231, 74, 59, 0.6)', 'rgba(78, 115, 223, 0.6)'],
       false, true, true, 
@@ -149,19 +132,15 @@ async function fetchHistoricalData(type, countryCode, indicatorGroup) {
     createLineChartWithKey(
       'urbanRuralHistChart', 
       [residenceDates, residenceDates], 
-      [urbanPopulationValues, ruralPopulationValues], 
+      [urbanPopulation.values, ruralPopulation], 
       'Urban vs Rural Distribution (%)', 
       ['rgba(164, 194, 212, 0.8)', 'rgba(100, 182, 118, 0.8)'], 
       false, true, true, 
       ['Urban', 'Rural']
     );
   }
+
   if (type === 'economy') {
-    const sortedEconomyData = sortIndicatorData(data, indicatorGroup);
-    
-    // Map the values and assign to destructured variables
-    const mappedData = mapIndicatorData(sortedEconomyData, indicatorGroup);
-    console.log(mappedData)
     const mappedGDP = mappedData['NY.GDP.MKTP.CD'];
     const mappedPerCapita = mappedData['NY.GDP.PCAP.CD'];
     const mappedInflation = mappedData['FP.CPI.TOTL.ZG'];
@@ -195,14 +174,10 @@ async function fetchHistoricalData(type, countryCode, indicatorGroup) {
   }
 
   if (type === 'environment') {
-    const sortedEnvironmentData = sortIndicatorData(data, indicatorGroup);
-    
-    // Map the values and assign to destructured variables
-    const mappedData = mapIndicatorData(sortedEnvironmentData, indicatorGroup);
     const mappedFossilFuel = mappedData['EN.ATM.CO2E.PC'];
     console.log(mappedFossilFuel);
     createLineChartWithKey(
-      'fossilFuelChart ',
+      'fossilFuelChart',
       [mappedFossilFuel.dates],
       [mappedFossilFuel.values],
       'Fossil Fuel Consumption Over Time (Tonnes per Capita)',
@@ -212,8 +187,6 @@ async function fetchHistoricalData(type, countryCode, indicatorGroup) {
   }
 
   if (type === 'health') {
-    const sortedHealthData = sortIndicatorData(data, indicatorGroup);
-    const mappedData = mapIndicatorData(sortedHealthData, indicatorGroup);
     const lifeExpectancy = mappedData['SP.DYN.LE00.IN'];
     const fertilityRate = mappedData['SP.DYN.TFRT.IN'];
     const healthExpenditure = mappedData['SH.XPD.CHEX.PC.CD'];
@@ -230,10 +203,11 @@ async function fetchHistoricalData(type, countryCode, indicatorGroup) {
     createLineChartWithKey(
       'fertilityRateChart',
       [fertilityRate.dates],
-      [fertilityRate.values],
+      // round all fertility rate vals to 1 decimal place including int to be ie 1.0
+      [fertilityRate.values.map(x => Math.round(x * 10) / 10)],
       'Fertility Rate Over Time',
       ['#8e5ea2'],
-      true, false, false
+      true, false, false, null, false, false
     );
 
     createLineChartWithKey(

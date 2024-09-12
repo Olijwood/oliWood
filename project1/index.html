@@ -385,88 +385,125 @@
                 </div>
               
                 <!-- Population Tab -->
-                <div class="tab-pane fade" id="populationDemoTab" role="tabpanel" aria-labelledby="d-population-tab">
-                  <h6>Population Overview</h6>
-                  <div class="hist-chart-container">
-                    <div class="hist-demographics-chart">
+                <div class="tab-pane fade demoHistTab" id="populationDemoTab" role="tabpanel" aria-labelledby="d-population-tab">
+                  <div class="card mb-3">
+                    <div class="card-header">
+                      <h6>Total Population Over Time</h6>
+                    </div>
+                    <div class="card-body">
                       <canvas id="totalPopulationChart"></canvas> 
                     </div>
-                  </div><!-- Total Population Chart -->
-                  <div class="hist-chart-container">
-                    <div class="hist-demographics-chart">
-                      <canvas id="populationGrowthChart"></canvas> <!-- Population Growth Rate Chart -->
+                  </div>
+                
+                  <div class="card mb-3">
+                    <div class="card-header">
+                      <h6>Population Growth Rate (%)</h6>
+                    </div>
+                    <div class="card-body">
+                      <canvas id="populationGrowthChart"></canvas>
                     </div>
                   </div>
-                  <div class="hist-chart-container">
-                    <div class="hist-demographics-chart">
-                      <canvas id="ageDistributionChart"></canvas> <!-- Population Growth Rate Chart -->
+                
+                  <div class="card mb-3">
+                    <div class="card-header">
+                      <h6>Age Distribution (%)</h6>
+                    </div>
+                    <div class="card-body">
+                      <canvas id="ageDistributionChart"></canvas>
                     </div>
                   </div>
-                  <div class="hist-chart-container">
-                    <div class="hist-demographics-chart">
-                      <canvas id="genderDistributionChart"></canvas> <!-- Population Growth Rate Chart -->
+                
+                  <div class="card mb-3">
+                    <div class="card-header">
+                      <h6>Gender Distribution (%)</h6>
+                    </div>
+                    <div class="card-body">
+                      <canvas id="genderDistributionChart"></canvas>
                     </div>
                   </div>
-                  <div class="hist-chart-container">
-                    <div class="hist-demographics-chart">
-                      <canvas id="urbanRuralHistChart"></canvas> 
+                
+                  <div class="card mb-3">
+                    <div class="card-header">
+                      <h6>Urban vs Rural Distribution (%)</h6>
+                    </div>
+                    <div class="card-body">
+                      <canvas id="urbanRuralHistChart"></canvas>
                     </div>
                   </div>
-                  
-                  <!-- <canvas id="genderDistributionChart"></canvas> 
-                  <canvas id="urbanRuralChart"></canvas>  -->
+                
+                 
                 </div>
 
                 <!-- Health Tab -->
-                <div class="tab-pane fade" id="healthDemoTab" role="tabpanel" aria-labelledby="d-health-tab">
-                  <h6>Health Overview</h6>
-                  <div class="hist-chart-container">
-                    <div class="hist-demographics-chart">
-                      <canvas id="lifeExpectancyChart"></canvas> <!-- Population Growth Rate Chart -->
+                <div class="tab-pane fade demoHistTab" id="healthDemoTab" role="tabpanel" aria-labelledby="d-health-tab">
+                  <div class="card mb-3">
+                    <div class="card-header">
+                      <h6>Life Expectancy Over Time (Y)</h6>
+                    </div>
+                    <div class="card-body">
+                      <canvas id="lifeExpectancyChart"></canvas>
                     </div>
                   </div>
-                  <div class="hist-chart-container">
-                    <div class="hist-demographics-chart">
-                      <canvas id="fertilityRateChart"></canvas> <!-- Population Growth Rate Chart -->
+
+                  <div class="card mb-3">
+                    <div class="card-header">
+                      <h6>Fertility Rate Over Time (Births per Woman)</h6>
+                    </div>
+                    <div class="card-body">
+                      <canvas id="fertilityRateChart"></canvas>
                     </div>
                   </div>
-                  <div class="hist-chart-container">
-                    <div class="hist-demographics-chart">
-                      <canvas id="healthExpenditureChart"></canvas> 
+
+                  <div class="card mb-3">
+                    <div class="card-header">
+                      <h6>Health Expenditure per Capita</h6>
+                    </div>
+                    <div class="card-body">
+                      <canvas id="healthExpenditureChart"></canvas>
                     </div>
                   </div>
                 </div>
 
                 <!-- Economy Tab -->
-                <div class="tab-pane fade" id="economyDemoTab" role="tabpanel" aria-labelledby="d-economy-tab">
-                  <h6>Economy Overview</h6>
-                  <div class="hist-chart-container">
-                    <div class="hist-demographics-chart">
-                      <canvas id="GDPChart"></canvas> <!-- Population Growth Rate Chart -->
+                <div class="tab-pane fade demoHistTab" id="economyDemoTab" role="tabpanel" aria-labelledby="d-economy-tab">
+                  <div class="card mb-3">
+                    <div class="card-header">
+                      <h6>GDP Over Time ($)</h6>
+                    </div>
+                    <div class="card-body">
+                      <canvas id="GDPChart"></canvas>
                     </div>
                   </div>
-                  <div class="hist-chart-container">
-                    <div class="hist-demographics-chart">
-                      <canvas id="GDPPerCapChart"></canvas> <!-- Population Growth Rate Chart -->
+
+                  <div class="card mb-3">
+                    <div class="card-header">
+                      <h6>GDP per Capita ($)</h6>
+                    </div>
+                    <div class="card-body">
+                      <canvas id="GDPPerCapChart"></canvas>
                     </div>
                   </div>
-                  <div class="hist-chart-container">
-                    <div class="hist-demographics-chart">
-                      <canvas id="InflationChart"></canvas> 
+
+                  <div class="card mb-3">
+                    <div class="card-header">
+                      <h6>Inflation Rate (%)</h6>
+                    </div>
+                    <div class="card-body">
+                      <canvas id="InflationChart"></canvas>
                     </div>
                   </div>
                 </div>
 
                 <!-- Environment Tab -->
-                <div class="tab-pane fade" id="environmentDemoTab" role="tabpanel" aria-labelledby="d-environment-tab">
-                  <h6>Environment Overview</h6>
-                  <div class="hist-chart-container">
-                    <div class="hist-demographics-chart">
-                      <canvas id="fossilFuelChart"></canvas> <!-- Population Growth Rate Chart -->
+                <div class="tab-pane fade demoHistTab" id="environmentDemoTab" role="tabpanel" aria-labelledby="d-environment-tab">
+                  <div class="card mb-3">
+                    <div class="card-header">
+                      <h6>Fossil Fuel Consumption (Tonnes per Capita)</h6>
+                    </div>
+                    <div class="card-body">
+                      <canvas id="fossilFuelChart"></canvas>
                     </div>
                   </div>
-                  
-                  
                 </div>
               </div>
             </div>

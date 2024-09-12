@@ -29,6 +29,8 @@
 
 .chartjs-legend li {
     list-style: none;
+    padding-left: 5px;
+    padding-right: 5px;
     margin: 0 10px;
     font-size: 12px;
     font-weight: bold;
@@ -61,3 +63,46 @@
    
   }
   
+  /* General Card Styling */
+.demoHistTab .card {
+  border: 1px solid #dee2e6;
+  border-radius: 0.25rem;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+.demoHistTab .card-header {
+  background-color: #f8f9fa;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.demoHistTab .card-body {
+  padding: 0.25rem;
+}
+
+/* Tabs */
+.nav-tabs {
+  margin-bottom: 20px;
+}
+
+.nav-tabs .nav-link {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.nav-tabs .nav-link.active {
+  color: #fff;
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
+/* Responsive Improvements */
+@media (max-width: 768px) {
+  .card-body {
+      padding: 0.75rem;
+  }
+}
+
+.demoHistTab h6{
+  text-align: center;
+}

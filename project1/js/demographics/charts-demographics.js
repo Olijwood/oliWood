@@ -8,7 +8,7 @@ function destroyExistingChart(canvasId) {
 
 function createLineChartWithKey(
   canvasId, labels, data, title, borderColors = ['#3e95cd'], isFilled = false, isPercentage = false, 
-  isMultiDataset = false, legendLabels = null) {
+  isMultiDataset = false, legendLabels = null, applyCustomTickFormat = true) {
 
   const ctx = document.getElementById(canvasId).getContext('2d');
 
@@ -56,6 +56,11 @@ function createLineChartWithKey(
                   // and to display percentages with a % sign
                   ticks: {
                     callback: (value) => {
+                      console.log(applyCustomTickFormat);
+                      if (!applyCustomTickFormat) {
+                        console.log(value);
+                        return value;  // Return the value without formatting
+                      }  
                       // Array of suffixes for large numbers
                       const units = ['', 'K', 'M', 'B', 'T'];
                       let i = 0;
@@ -73,7 +78,7 @@ function createLineChartWithKey(
           },
           plugins: {
               title: {
-                  display: true,
+                  display: false,
                   text: title,  
                   font: {
                       size: 18,
@@ -86,7 +91,8 @@ function createLineChartWithKey(
               },
               legend: {
                   display: isMultiDataset,
-                  position: 'bottom',
+                  position: 'top',
+                  padding: 5,
                   labels: {
                       boxWidth: 8,
                       font: {
