@@ -11,10 +11,16 @@ function createLineChartWithKey(
   isMultiDataset = false, legendLabels = null, applyCustomTickFormat = true) {
 
   const ctx = document.getElementById(canvasId).getContext('2d');
+  const canvas = document.getElementById(canvasId);
+  const spinnerId = `spinner-${canvasId}`;
+
+  // Show the spinner and hide the canvas
+  $(`#${spinnerId}`).show();
+  $(canvas).hide();
 
   // Destroy any existing chart before creating a new one
   destroyExistingChart(canvasId);
-
+  
   // Handling multiple datasets and legend labels
   const datasets = Array.isArray(data) && Array.isArray(data[0]) ? 
     data.map((d, i) => ({
@@ -56,9 +62,7 @@ function createLineChartWithKey(
                   // and to display percentages with a % sign
                   ticks: {
                     callback: (value) => {
-                      console.log(applyCustomTickFormat);
                       if (!applyCustomTickFormat) {
-                        console.log(value);
                         return value;  // Return the value without formatting
                       }  
                       // Array of suffixes for large numbers
@@ -69,6 +73,11 @@ function createLineChartWithKey(
                         // Divide the value by 1000 and increment the suffix index
                         value /= 1000;
                         ++i;
+                        if (value >= 100 && i === 3) {
+                          // If the value is greater than or equal to 100B, display as X.XT
+                          value /= 1000;
+                          return `${value.toFixed(1)}T`;
+                        }
                       }
                       // Return the value with the appropriate suffix and/or percentage sign
                       return isPercentage ? `${value}%` : `${value.toFixed(0)}${units[i]}`;
@@ -123,7 +132,10 @@ function createLineChartWithKey(
   });
 
   // Store the chart instance on the canvas element for future cleanup
-  document.getElementById(canvasId).chartInstance = newChart;
+  $(`#${canvasId}`).chartInstance = newChart;
+  // Hide the spinner and show the canvas
+  $(canvas).show();
+  $(`#${spinnerId}`).hide();
 }
 
 

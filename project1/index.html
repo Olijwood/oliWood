@@ -386,124 +386,36 @@
               
                 <!-- Population Tab -->
                 <div class="tab-pane fade demoHistTab" id="populationDemoTab" role="tabpanel" aria-labelledby="d-population-tab">
-                  <div class="card mb-3">
-                    <div class="card-header">
-                      <h6>Total Population Over Time</h6>
-                    </div>
-                    <div class="card-body">
-                      <canvas id="totalPopulationChart"></canvas> 
-                    </div>
-                  </div>
-                
-                  <div class="card mb-3">
-                    <div class="card-header">
-                      <h6>Population Growth Rate (%)</h6>
-                    </div>
-                    <div class="card-body">
-                      <canvas id="populationGrowthChart"></canvas>
-                    </div>
-                  </div>
-                
-                  <div class="card mb-3">
-                    <div class="card-header">
-                      <h6>Age Distribution (%)</h6>
-                    </div>
-                    <div class="card-body">
-                      <canvas id="ageDistributionChart"></canvas>
-                    </div>
-                  </div>
-                
-                  <div class="card mb-3">
-                    <div class="card-header">
-                      <h6>Gender Distribution (%)</h6>
-                    </div>
-                    <div class="card-body">
-                      <canvas id="genderDistributionChart"></canvas>
-                    </div>
-                  </div>
-                
-                  <div class="card mb-3">
-                    <div class="card-header">
-                      <h6>Urban vs Rural Distribution (%)</h6>
-                    </div>
-                    <div class="card-body">
-                      <canvas id="urbanRuralHistChart"></canvas>
-                    </div>
-                  </div>
-                
-                 
+                  <!-- Chart container placeholders -->
+                  <div class="chart-placeholder" id="totalPopulationChart-container"></div>
+                  <div class="chart-placeholder" id="populationGrowthChart-container"></div>
+                  <div class="chart-placeholder" id="ageDistributionChart-container"></div>
+                  <div class="chart-placeholder" id="genderDistributionChart-container"></div>
+                  <div class="chart-placeholder" id="urbanRuralHistChart-container"></div>
                 </div>
 
                 <!-- Health Tab -->
                 <div class="tab-pane fade demoHistTab" id="healthDemoTab" role="tabpanel" aria-labelledby="d-health-tab">
-                  <div class="card mb-3">
-                    <div class="card-header">
-                      <h6>Life Expectancy Over Time (Y)</h6>
-                    </div>
-                    <div class="card-body">
-                      <canvas id="lifeExpectancyChart"></canvas>
-                    </div>
-                  </div>
-
-                  <div class="card mb-3">
-                    <div class="card-header">
-                      <h6>Fertility Rate Over Time (Births per Woman)</h6>
-                    </div>
-                    <div class="card-body">
-                      <canvas id="fertilityRateChart"></canvas>
-                    </div>
-                  </div>
-
-                  <div class="card mb-3">
-                    <div class="card-header">
-                      <h6>Health Expenditure per Capita</h6>
-                    </div>
-                    <div class="card-body">
-                      <canvas id="healthExpenditureChart"></canvas>
-                    </div>
-                  </div>
+                  <!-- Chart container placeholders -->
+                  <div class="chart-placeholder" id="lifeExpectancyChart-container"></div>
+                  <div class="chart-placeholder" id="fertilityRateChart-container"></div>
+                  <div class="chart-placeholder" id="healthExpenditureChart-container"></div>
                 </div>
 
                 <!-- Economy Tab -->
                 <div class="tab-pane fade demoHistTab" id="economyDemoTab" role="tabpanel" aria-labelledby="d-economy-tab">
+                   <!-- Chart container placeholders -->
+                  <div class="chart-placeholder" id="GDPChart-container"></div>
+                  <div class="chart-placeholder" id="GDPPerCapChart-container"></div>
+                  <div class="chart-placeholder" id="InflationChart-container"></div>
                   <div class="card mb-3">
-                    <div class="card-header">
-                      <h6>GDP Over Time ($)</h6>
-                    </div>
-                    <div class="card-body">
-                      <canvas id="GDPChart"></canvas>
-                    </div>
-                  </div>
-
-                  <div class="card mb-3">
-                    <div class="card-header">
-                      <h6>GDP per Capita ($)</h6>
-                    </div>
-                    <div class="card-body">
-                      <canvas id="GDPPerCapChart"></canvas>
-                    </div>
-                  </div>
-
-                  <div class="card mb-3">
-                    <div class="card-header">
-                      <h6>Inflation Rate (%)</h6>
-                    </div>
-                    <div class="card-body">
-                      <canvas id="InflationChart"></canvas>
-                    </div>
-                  </div>
+                   
                 </div>
 
                 <!-- Environment Tab -->
                 <div class="tab-pane fade demoHistTab" id="environmentDemoTab" role="tabpanel" aria-labelledby="d-environment-tab">
-                  <div class="card mb-3">
-                    <div class="card-header">
-                      <h6>Fossil Fuel Consumption (Tonnes per Capita)</h6>
-                    </div>
-                    <div class="card-body">
-                      <canvas id="fossilFuelChart"></canvas>
-                    </div>
-                  </div>
+                  <!-- Chart container placeholder -->
+  <div class="chart-placeholder" id="fossilFuelChart-container"></div>
                 </div>
               </div>
             </div>
@@ -615,9 +527,12 @@
     <script src="js/country-info.js" defer></script>
     <script src="js/weather.js" defer></script>
     <script src="js/currency-modal.js" defer></script>
+
+    <script src="js/demographics/demo-ui.js" defer></script>
     <script src="js/demographics/charts-demographics.js" defer></script>
     <script src="js/demographics/demographics.js" defer></script>
-    <script src="js/demographics/histDemographics.js" defer></script>
+    <script src="js/demographics/hist-demographics.js" defer></script>
+
     <script src="js/ui-handlers.js" defer></script>
   </body>
 </html>

@@ -221,19 +221,34 @@ async function fetchHistoricalData(type, countryCode, indicatorGroup) {
   }
 }
 
-
 $('#demographicsTabs button[data-bs-toggle="tab"]').on('shown.bs.tab', async function (e) {
   const targetId = $(e.target).attr('data-bs-target');
   const countryCode = $('#hiddenCountrySelected').val();
+  const tabConfig = tabChartConfig[targetId];
 
-  if (targetId === '#populationDemoTab') {
-    await fetchHistoricalData('population', countryCode, indicatorGroups.population);
-  } else if (targetId === '#healthDemoTab') {
-    await fetchHistoricalData('health', countryCode, indicatorGroups.health);
-  } else if (targetId === '#economyDemoTab') {
-    await fetchHistoricalData('economy', countryCode, indicatorGroups.economy);
-  } else if (targetId === '#environmentDemoTab') {
-    await fetchHistoricalData('environment', countryCode,   indicatorGroups.environment);
-  }
+  injectChartsForTab(targetId);
+  
+  await fetchHistoricalData(tabConfig.indicatorGroup, countryCode, indicatorGroups[tabConfig.indicatorGroup]);
 });
+
+// $('#demographicsTabs button[data-bs-toggle="tab"]').on('shown.bs.tab', async function (e) {
+//   const targetId = $(e.target).attr('data-bs-target');
+//   const countryCode = $('#hiddenCountrySelected').val();
+
+//   if (targetId === '#populationDemoTab') {
+//     $('#totalPopulationChart-container').html(createChartContainer('totalPopulationChart', 'Total Population Over Time'));
+//     $('#populationGrowthChart-container').html(createChartContainer('populationGrowthChart', 'Population Growth (%)'));
+//     $('#ageDistributionChart-container').html(createChartContainer('ageDistributionChart', 'Age Distribution (%)'));
+//     $('#genderDistributionChart-container').html(createChartContainer('genderDistributionChart', 'Gender Distribution (%)'));
+//     $('#urbanRuralHistChart-container').html(createChartContainer('urbanRuralHistChart', 'Urban vs Rural Distribution (%)'));
+
+//     await fetchHistoricalData('population', countryCode, indicatorGroups.population);
+//   } else if (targetId === '#healthDemoTab') {
+//     await fetchHistoricalData('health', countryCode, indicatorGroups.health);
+//   } else if (targetId === '#economyDemoTab') {
+//     await fetchHistoricalData('economy', countryCode, indicatorGroups.economy);
+//   } else if (targetId === '#environmentDemoTab') {
+//     await fetchHistoricalData('environment', countryCode,   indicatorGroups.environment);
+//   }
+// });
 
