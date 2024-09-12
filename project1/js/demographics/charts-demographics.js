@@ -1,142 +1,142 @@
 function destroyExistingChart(canvasId) {
-    const canvas = document.getElementById(canvasId);
+    const canvas = $(`#${canvasId}`);
     if (canvas && canvas.chartInstance) {
         canvas.chartInstance.destroy();  // Destroy any existing chart instance
         canvas.chartInstance = null;     // Clear the reference to avoid memory leaks
     }
 }
 
-function createLineChartWithKey(
-  canvasId, labels, data, title, borderColors = ['#3e95cd'], isFilled = false, isPercentage = false, 
-  isMultiDataset = false, legendLabels = null, applyCustomTickFormat = true) {
+// function createLineChartWithKey(
+//   canvasId, labels, data, title, borderColors = ['#3e95cd'], isFilled = false, isPercentage = false, 
+//   isMultiDataset = false, legendLabels = null, applyCustomTickFormat = true) {
 
-  const ctx = document.getElementById(canvasId).getContext('2d');
-  const canvas = document.getElementById(canvasId);
-  const spinnerId = `spinner-${canvasId}`;
+//   const ctx = document.getElementById(canvasId).getContext('2d');
+//   const canvas = document.getElementById(canvasId);
+//   const spinnerId = `spinner-${canvasId}`;
 
-  // Show the spinner and hide the canvas
-  $(`#${spinnerId}`).show();
-  $(canvas).hide();
+//   // Show the spinner and hide the canvas
+//   $(`#${spinnerId}`).show();
+//   $(canvas).hide();
 
-  // Destroy any existing chart before creating a new one
-  destroyExistingChart(canvasId);
+//   // Destroy any existing chart before creating a new one
+//   destroyExistingChart(canvasId);
   
-  // Handling multiple datasets and legend labels
-  const datasets = Array.isArray(data) && Array.isArray(data[0]) ? 
-    data.map((d, i) => ({
-      label: legendLabels && legendLabels[i] ? legendLabels[i] : `Dataset ${i + 1}`,
-      data: d,
-      borderColor: borderColors[i] || '#3e95cd',
-    pointBackgroundColor: borderColors[i] || '#3e95cd', 
-      fill: isFilled ? 'start' : false,
-      tension: 0.4
-    })) : 
-    [{
-      label: legendLabels && legendLabels[0] ? legendLabels[0] : title,
-      data: data,
-      borderColor: borderColors[0],
-      backgroundColor: borderColors[0] || '#3e95cd',
-      pointBackgroundColor: borderColors[0] || '#3e95cd', 
-      fill: isFilled ? 'start' : false,
-      tension: 0.4
-    }];
+//   // Handling multiple datasets and legend labels
+//   const datasets = Array.isArray(data) && Array.isArray(data[0]) ? 
+//     data.map((d, i) => ({
+//       label: legendLabels && legendLabels[i] ? legendLabels[i] : `Dataset ${i + 1}`,
+//       data: d,
+//       borderColor: borderColors[i] || '#3e95cd',
+//     pointBackgroundColor: borderColors[i] || '#3e95cd', 
+//       fill: isFilled ? 'start' : false,
+//       tension: 0.4
+//     })) : 
+//     [{
+//       label: legendLabels && legendLabels[0] ? legendLabels[0] : title,
+//       data: data,
+//       borderColor: borderColors[0],
+//       backgroundColor: borderColors[0] || '#3e95cd',
+//       pointBackgroundColor: borderColors[0] || '#3e95cd', 
+//       fill: isFilled ? 'start' : false,
+//       tension: 0.4
+//     }];
 
-  const newChart = new Chart(ctx, {
-      type: 'line',
-      data: {
-          labels: labels[0], // asumming all datasets have the same labels (dates)
-          datasets
-      },
-      options: {
-          responsive: true,
-          maintainAspectRatio: true,
-          scales: {
-              x: {
-                  font: {
-                      size: 8
-                  }
-              },
-              y: {
+//   const newChart = new Chart(ctx, {
+//       type: 'line',
+//       data: {
+//           labels: labels[0], // asumming all datasets have the same labels (dates)
+//           datasets
+//       },
+//       options: {
+//           responsive: true,
+//           maintainAspectRatio: true,
+//           scales: {
+//               x: {
+//                   font: {
+//                       size: 8
+//                   }
+//               },
+//               y: {
                
-                  // Custom y-axis tick callback to display large numbers with K, M, B, or T suffixes
-                  // and to display percentages with a % sign
-                  ticks: {
-                    callback: (value) => {
-                      if (!applyCustomTickFormat) {
-                        return value;  // Return the value without formatting
-                      }  
-                      // Array of suffixes for large numbers
-                      const units = ['', 'K', 'M', 'B', 'T'];
-                      let i = 0;
-                      // Loop until the value is less than 1000 or we've reached the last suffix
-                      while (value >= 1000 && i < units.length) {
-                        // Divide the value by 1000 and increment the suffix index
-                        value /= 1000;
-                        ++i;
-                        if (value >= 100 && i === 3) {
-                          // If the value is greater than or equal to 100B, display as X.XT
-                          value /= 1000;
-                          return `${value.toFixed(1)}T`;
-                        }
-                      }
-                      // Return the value with the appropriate suffix and/or percentage sign
-                      return isPercentage ? `${value}%` : `${value.toFixed(0)}${units[i]}`;
-                    }
-                  }
-              }
-          },
-          plugins: {
-              title: {
-                  display: false,
-                  text: title,  
-                  font: {
-                      size: 18,
-                      weight: 'bold'
-                  },
-                  padding: {
-                      top: 10,
-                      bottom: 10
-                  }
-              },
-              legend: {
-                  display: isMultiDataset,
-                  position: 'top',
-                  padding: 5,
-                  labels: {
-                      boxWidth: 8,
-                      font: {
-                          size: 12,
-                          weight: 'bold'
-                      },
-                      usePointStyle: true,
-                      pointStyle: 'circle'
-                  }
-              },
-              tooltip: {
-                  callbacks: {
-                      label: (tooltipItem) => isPercentage ? `${tooltipItem.formattedValue}%` : tooltipItem.formattedValue
-                  }
-              },
-              hover: {
-                  mode: 'nearest',
-                  intersect: true
-              }
-          },
-          elements: {
-              point: {
-                  radius: 3,
-                  hoverRadius: 6
-              }
-          }
-      }
-  });
+//                   // Custom y-axis tick callback to display large numbers with K, M, B, or T suffixes
+//                   // and to display percentages with a % sign
+//                   ticks: {
+//                     callback: (value) => {
+//                       if (!applyCustomTickFormat) {
+//                         return value;  // Return the value without formatting
+//                       }  
+//                       // Array of suffixes for large numbers
+//                       const units = ['', 'K', 'M', 'B', 'T'];
+//                       let i = 0;
+//                       // Loop until the value is less than 1000 or we've reached the last suffix
+//                       while (value >= 1000 && i < units.length) {
+//                         // Divide the value by 1000 and increment the suffix index
+//                         value /= 1000;
+//                         ++i;
+//                         if (value >= 100 && i === 3) {
+//                           // If the value is greater than or equal to 100B, display as X.XT
+//                           value /= 1000;
+//                           return `${value.toFixed(1)}T`;
+//                         }
+//                       }
+//                       // Return the value with the appropriate suffix and/or percentage sign
+//                       return isPercentage ? `${value}%` : `${value.toFixed(0)}${units[i]}`;
+//                     }
+//                   }
+//               }
+//           },
+//           plugins: {
+//               title: {
+//                   display: false,
+//                   text: title,  
+//                   font: {
+//                       size: 18,
+//                       weight: 'bold'
+//                   },
+//                   padding: {
+//                       top: 10,
+//                       bottom: 10
+//                   }
+//               },
+//               legend: {
+//                   display: isMultiDataset,
+//                   position: 'top',
+//                   padding: 5,
+//                   labels: {
+//                       boxWidth: 8,
+//                       font: {
+//                           size: 12,
+//                           weight: 'bold'
+//                       },
+//                       usePointStyle: true,
+//                       pointStyle: 'circle'
+//                   }
+//               },
+//               tooltip: {
+//                   callbacks: {
+//                       label: (tooltipItem) => isPercentage ? `${tooltipItem.formattedValue}%` : tooltipItem.formattedValue
+//                   }
+//               },
+//               hover: {
+//                   mode: 'nearest',
+//                   intersect: true
+//               }
+//           },
+//           elements: {
+//               point: {
+//                   radius: 3,
+//                   hoverRadius: 6
+//               }
+//           }
+//       }
+//   });
 
-  // Store the chart instance on the canvas element for future cleanup
-  $(`#${canvasId}`).chartInstance = newChart;
-  // Hide the spinner and show the canvas
-  $(canvas).show();
-  $(`#${spinnerId}`).hide();
-}
+//   // Store the chart instance on the canvas element for future cleanup
+//   $(`#${canvasId}`).chartInstance = newChart;
+//   // Hide the spinner and show the canvas
+//   $(canvas).show();
+//   $(`#${spinnerId}`).hide();
+// }
 
 
 // Function to create stacked horizontal bar charts
@@ -230,5 +230,5 @@ function createStackedHorizontalBarChart(canvasId, datasets, chartTitle) {
     });
 
     // Store the chart instance on the canvas element for future cleanup
-    document.getElementById(canvasId).chartInstance = newChart;
+    $(`#${canvasId}`).chartInstance = newChart;
 }

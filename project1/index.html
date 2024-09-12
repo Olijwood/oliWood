@@ -298,126 +298,46 @@
              <!-- Overview Tab -->
             <div class="tab-content mt-3">
               <div class="tab-pane fade show active" id="currentDemo" role="tabpanel" aria-labelledby="overview-tab">
-                <!-- Content for the Overview Tab -->
-                <div class="container">
-                  <h6><i class="fas fa-users me-2 text-info"></i>Population</h6>
-                  <table class="table table-bordered table-hover">
-                    <tbody>
-                      <tr>
-                        <td>Total Population</td>
-                        <td class="fw-bold text-end" id="totalPopulation"></td>
-                      </tr>
-                      <tr>
-                        <td>Population Growth Rate</td>
-                        <td class="fw-bold text-end" id="populationGrowth"></td>
-                      </tr>
-                      <tr>
-                        <td colspan="2">
-                          <!-- Population Age Distribution Chart -->
-                          <div class="chart-container">
-                            <div class="demographics-chart">
-                              <canvas id="populationAgeChart"></canvas>
-                            </div>
-                          </div>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td colspan="2">
-                          <!-- Gender Distribution Chart -->
-                          <div class="chart-container">
-                            <div class="demographics-chart">
-                              <canvas id="genderChart"></canvas>
-                            </div>
-                          </div>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td colspan="2">
-                          <!-- Urban vs Rural Chart -->
-                          <div class="chart-container">
-                            <div class="demographics-chart">
-                              <canvas id="urbanRuralChart"></canvas>
-                            </div>
-                          </div>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-              
-                  <!-- Economic Data Section -->
-                  <h6 class="mt-4"><i class="fas fa-chart-line me-2 text-success"></i>Economic Data</h6>
-                  <table class="table table-bordered table-hover">
-                    <tbody>
-                      <tr>
-                        <td>GDP (Current US$)</td>
-                        <td class="fw-bold text-end" id="gdpCurrent"></td>
-                      </tr>
-                      <tr>
-                        <td>GDP per Capita (US$)</td>
-                        <td class="fw-bold text-end" id="gdpPerCapita"></td>
-                      </tr>
-                      <tr>
-                        <td>Inflation Rate</td>
-                        <td class="fw-bold text-end" id="inflationRate"></td>
-                      </tr>
-                    </tbody>
-                  </table>
-
-                    <!-- Health and Life Section -->
-                  <h6 class="mt-4"><i class="fas fa-heartbeat me-2 text-danger"></i>Health and Life</h6>
-                  <table class="table table-bordered table-hover">
-                    <tbody>
-                        <tr>
-                          <td>Life Expectancy</td>
-                          <td class="fw-bold text-end" id="lifeExpectancy"></td>
-                        </tr>
-                        <tr>
-                          <td>Fertility Rate (Births per Woman)</td>
-                          <td class="fw-bold text-end" id="fertilityRate"></td>
-                        </tr>
-                        <tr>
-                          <td>Health Expenditure per Capita (US$)</td>
-                          <td class="fw-bold text-end" id="healthExpenditure"></td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              
-                <!-- Population Tab -->
-                <div class="tab-pane fade demoHistTab" id="populationDemoTab" role="tabpanel" aria-labelledby="d-population-tab">
-                  <!-- Chart container placeholders -->
-                  <div class="chart-placeholder" id="totalPopulationChart-container"></div>
-                  <div class="chart-placeholder" id="populationGrowthChart-container"></div>
-                  <div class="chart-placeholder" id="ageDistributionChart-container"></div>
-                  <div class="chart-placeholder" id="genderDistributionChart-container"></div>
-                  <div class="chart-placeholder" id="urbanRuralHistChart-container"></div>
-                </div>
-
-                <!-- Health Tab -->
-                <div class="tab-pane fade demoHistTab" id="healthDemoTab" role="tabpanel" aria-labelledby="d-health-tab">
-                  <!-- Chart container placeholders -->
-                  <div class="chart-placeholder" id="lifeExpectancyChart-container"></div>
-                  <div class="chart-placeholder" id="fertilityRateChart-container"></div>
-                  <div class="chart-placeholder" id="healthExpenditureChart-container"></div>
-                </div>
-
-                <!-- Economy Tab -->
-                <div class="tab-pane fade demoHistTab" id="economyDemoTab" role="tabpanel" aria-labelledby="d-economy-tab">
-                   <!-- Chart container placeholders -->
-                  <div class="chart-placeholder" id="GDPChart-container"></div>
-                  <div class="chart-placeholder" id="GDPPerCapChart-container"></div>
-                  <div class="chart-placeholder" id="InflationChart-container"></div>
-                  <div class="card mb-3">
-                   
-                </div>
-
-                <!-- Environment Tab -->
-                <div class="tab-pane fade demoHistTab" id="environmentDemoTab" role="tabpanel" aria-labelledby="d-environment-tab">
-                  <!-- Chart container placeholder -->
-  <div class="chart-placeholder" id="fossilFuelChart-container"></div>
-                </div>
+                 <!-- Chart container placeholders for Overview tab -->
+                  <div class="overview-placeholder" id="populationOverview-container"></div>
+                  <div class="overview-placeholder" id="economicOverview-container"></div>
+                  <div class="overview-placeholder" id="healthOverview-container"></div>
               </div>
+              
+              <!-- Population Tab -->
+              <div class="tab-pane fade demoHistTab" id="populationDemoTab" role="tabpanel" aria-labelledby="d-population-tab">
+                <!-- Chart container placeholders -->
+                <div class="chart-placeholder" id="totalPopulationChart-container"></div>
+                <div class="chart-placeholder" id="populationGrowthChart-container"></div>
+                <div class="chart-placeholder" id="ageDistributionChart-container"></div>
+                <div class="chart-placeholder" id="genderDistributionChart-container"></div>
+                <div class="chart-placeholder" id="urbanRuralHistChart-container"></div>
+              </div>
+
+              <!-- Health Tab -->
+              <div class="tab-pane fade demoHistTab" id="healthDemoTab" role="tabpanel" aria-labelledby="d-health-tab">
+                <!-- Chart container placeholders -->
+                <div class="chart-placeholder" id="lifeExpectancyChart-container"></div>
+                <div class="chart-placeholder" id="fertilityRateChart-container"></div>
+                <div class="chart-placeholder" id="healthExpenditureChart-container"></div>
+              </div>
+
+              <!-- Economy Tab -->
+              <div class="tab-pane fade demoHistTab" id="economyDemoTab" role="tabpanel" aria-labelledby="d-economy-tab">
+                  <!-- Chart container placeholders -->
+                <div class="chart-placeholder" id="GDPChart-container"></div>
+                <div class="chart-placeholder" id="GDPPerCapChart-container"></div>
+                <div class="chart-placeholder" id="InflationChart-container"></div>
+                <div class="card mb-3">
+                  
+              </div>
+
+              <!-- Environment Tab -->
+              <div class="tab-pane fade demoHistTab" id="environmentDemoTab" role="tabpanel" aria-labelledby="d-environment-tab">
+                <!-- Chart container placeholder -->
+                <div class="chart-placeholder" id="fossilFuelChart-container"></div>
+              </div>
+              
             </div>
             
             <!-- Modal Footer -->

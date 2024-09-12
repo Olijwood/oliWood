@@ -1,18 +1,4 @@
-const indicatorGroups = {
-  population: [
-    "SP.POP.TOTL", "SP.POP.GROW", 
-    "SP.POP.1564.TO.ZS", "SP.POP.65UP.TO.ZS", "SP.POP.TOTL.FE.ZS", "SP.URB.TOTL.IN.ZS"
-  ],
-  health: [
-    "SP.DYN.LE00.IN", "SP.DYN.TFRT.IN", "SH.XPD.CHEX.PC.CD"
-  ],
-  economy: [
-    "NY.GDP.MKTP.CD", "NY.GDP.PCAP.CD", "FP.CPI.TOTL.ZG"
-  ],
-  environment: [
-    "EN.ATM.CO2E.PC"
-  ]
-};
+
 
 const maxPoints = window.innerWidth < 768 ? 15 : 30;
 
