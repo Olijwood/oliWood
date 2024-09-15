@@ -60,7 +60,7 @@ if (isset($_GET['country']) && isset($_GET['indicators'])) {
     header('Content-Type: application/json');
 
     // Return the combined data
-    echo json_encode([['pages' => $totalPages], $allData]);
+    echo json_encode($allData);
 
 } else {
     echo json_encode(['error' => 'Missing parameters']);

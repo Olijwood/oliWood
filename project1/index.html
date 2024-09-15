@@ -298,15 +298,14 @@
              <!-- Overview Tab -->
             <div class="tab-content mt-3">
               <div class="tab-pane fade show active" id="currentDemo" role="tabpanel" aria-labelledby="overview-tab">
-                 <!-- Chart container placeholders for Overview tab -->
                   <div class="overview-placeholder" id="populationOverview-container"></div>
                   <div class="overview-placeholder" id="economicOverview-container"></div>
                   <div class="overview-placeholder" id="healthOverview-container"></div>
+                  <div class="overview-placeholder" id="enviromentOverview-container"></div>
               </div>
               
               <!-- Population Tab -->
               <div class="tab-pane fade demoHistTab" id="populationDemoTab" role="tabpanel" aria-labelledby="d-population-tab">
-                <!-- Chart container placeholders -->
                 <div class="chart-placeholder" id="totalPopulationChart-container"></div>
                 <div class="chart-placeholder" id="populationGrowthChart-container"></div>
                 <div class="chart-placeholder" id="ageDistributionChart-container"></div>
@@ -316,7 +315,6 @@
 
               <!-- Health Tab -->
               <div class="tab-pane fade demoHistTab" id="healthDemoTab" role="tabpanel" aria-labelledby="d-health-tab">
-                <!-- Chart container placeholders -->
                 <div class="chart-placeholder" id="lifeExpectancyChart-container"></div>
                 <div class="chart-placeholder" id="fertilityRateChart-container"></div>
                 <div class="chart-placeholder" id="healthExpenditureChart-container"></div>
@@ -324,18 +322,15 @@
 
               <!-- Economy Tab -->
               <div class="tab-pane fade demoHistTab" id="economyDemoTab" role="tabpanel" aria-labelledby="d-economy-tab">
-                  <!-- Chart container placeholders -->
-                <div class="chart-placeholder" id="GDPChart-container"></div>
-                <div class="chart-placeholder" id="GDPPerCapChart-container"></div>
-                <div class="chart-placeholder" id="InflationChart-container"></div>
-                <div class="card mb-3">
+                <div class="chart-placeholder" id="gdpChart-container"></div>
+                <div class="chart-placeholder" id="gdpPerCapChart-container"></div>
+                <div class="chart-placeholder" id="inflationChart-container"></div>
                   
               </div>
 
               <!-- Environment Tab -->
               <div class="tab-pane fade demoHistTab" id="environmentDemoTab" role="tabpanel" aria-labelledby="d-environment-tab">
-                <!-- Chart container placeholder -->
-                <div class="chart-placeholder" id="fossilFuelChart-container"></div>
+                <div class="chart-placeholder" id="co2EmissionsChart-container"></div>
               </div>
               
             </div>
@@ -411,14 +406,13 @@
                 <div class="tab-pane fade" id="cHistorical" role="tabpanel" aria-labelledby="c-historical-tab">
                   <h6 class="mt-4">Historical Data</h6>
                   <div id="historicalContent">
-                    <!-- Dynamic hISORICALt Data Goes Here -->
+                    <!-- Dynamic Historical Data Goes Here -->
                   </div>
                 </div>
               </div>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
-              <!-- Add more buttons if needed -->
             </div>
           </div>
         </div>
@@ -448,11 +442,12 @@
     <script src="js/weather.js" defer></script>
     <script src="js/currency-modal.js" defer></script>
 
-    <script src="js/demographics/demo-ui.js" defer></script>
+    <!-- <script src="js/demographics/demo-ui.js" defer></script>
     <script src="js/demographics/charts-demographics.js" defer></script>
     <script src="js/demographics/demographics.js" defer></script>
-    <script src="js/demographics/hist-demographics.js" defer></script>
-
+    <script src="js/demographics/hist-demographics.js" defer></script> -->
+    <script src="js/demographics/demographics.js" type="module" ></script>
+    
     <script src="js/ui-handlers.js" defer></script>
   </body>
 </html>
