@@ -2,62 +2,80 @@ export const defaultStackedHorizontalBarChartOptions = {
   indexAxis: 'y',
   responsive: true,
   maintainAspectRatio: false,
+  align: 'center',
+  datasets: {
+    bar: {
+      maxBarThickness: 30,
+      borderRadius: 5,
+      borderSkipped: 'middle'
+    }
+  },
   scales: {
-      x: {
-          beginAtZero: true,
-          max: 100,  // Percentage-based data
-          stacked: true,
-          ticks: { display: false },
-          grid: { display: false },
-          border: { display: false }
-      },
-      y: { stacked: true, display: false }
+    x: {
+      beginAtZero: true,
+      max: 100,
+      stacked: true,
+      ticks: { display: false },
+      grid: { display: false },
+      border: { display: false }
+    },
+    y: { stacked: true, display: false }
   },
   plugins: {
-      title: {
-          display: true,
-          font: { size: 14, weight: 'bold' },
-          padding: { y: 2 }
-      },
-      datalabels: {
-          display: true,
-          color: 'black',
-          anchor: 'center',
-          align: 'center',
-          formatter: (value) => `${value}%`,  // Show percentage on the bar
-          font: { size: 12, weight: 'bold' }
-      },
-      legend: {
-          display: true,
-          position: 'right' ,
-          align: 'center',  // Move the legend below the chart
-          labels: {
-              boxWidth: 12,
-              padding: 10,
-              font: { size: 12, weight: 'bold' },  // Bold font for the legend labels
-              usePointStyle: true  // Use small circles for legend
-          }
+    title: {
+      display: true,
+      font: { size: 14, weight: 'bold' },
+      padding: { top: 15, bottom: 0 },
+      color: 'rgb(33, 37, 41)'
+    },
+    datalabels: {
+      display: true,
+      color: 'black',
+      anchor: 'center',
+      align: 'center',
+      formatter: (value) => `${value}%`,
+      font: { size: 12, weight: 'bold' }
+    },
+    legend: {
+      display: true,
+      position: 'right',
+      align: 'right',
+      padding: { top: 0 },
+      labels: {
+        boxWidth: 12,
+        padding: 10,
+        font: { size: 12, weight: 'bold', color: 'rgb(33, 37, 41)' },
+        usePointStyle: true
       }
+    }
   },
   layout: {
-      padding: {
-          top: 2,    // Padding above the chart (below the title)
-          bottom: 0, // Padding below the chart (above the legend)
-          left: 5,   // Padding to the left of the chart
-      }
+    autoPadding: false,
+    padding: {
+      top: 0,
+      bottom: 0,
+      left: 5
+    }
   },
   elements: {
-      bar: {
-          borderWidth: 0,  // No borders to avoid adding unnecessary space,
-          barThickness: 5
-      }
-  },
+    bar: {
+      borderWidth: 0
+    }
+  }
 };
 // Default chart options for stacked horizontal bar charts
 export const defaultHorizontalBarChartOptions = {
   indexAxis: 'y',
   responsive: true,
   maintainAspectRatio: false,
+  datasets: {
+    bar: {
+      barPercentage: 0.98,
+      borderRadius: 5,
+      // barWeight: 5
+
+    }
+  },
   scales: {
     x: {
         display: false,
@@ -75,88 +93,41 @@ export const defaultHorizontalBarChartOptions = {
   plugins: {
       title: {
           display: true,
+          color: 'rgb(33, 37, 41)',
           font: { size: 14, weight: 'bold' },
-          padding: { y: 0 }
+          padding: { top: 5, bottom: 5}
       },
       datalabels: {
         display: true,
-        color: 'black',
-        anchor: 'end',
-        align: 'right',
-        font: { size: 10, weight: 'bold' },
-        formatter: (value, context) => `${context.dataset.label}: ${value}%`},
+        color: 'rgb(33, 37, 41)',
+        anchor: 'center',
+        align: 'center',
+        formatter: (value, context) => `${context.dataset.label}: ${value}`,
+        font: { size: 14, weight: 'bold', color: 'rgb(33, 37, 41)' },
+      },
       legend: {
-          display: false,
+        display: true,
+        position: 'right',
+        align: 'bottom',
+        padding: 10,
+        labels: {
+          boxWidth: 12,
+          padding: 10,
+          font: { size: 12, weight: 'bold', color: 'rgb(33, 37, 41)' },
+          usePointStyle: true
+        }
       }
   },
   layout: {
-      padding: {
-          top: 0,    
-          bottom: 0, 
-      }
-  },
-  elements: {
-      bar: {
-          borderWidth: 0,  // No borders to avoid adding unnecessary space,
-          barThickness: 5
-      }
+    autoPadding: false,
+    padding: {
+      top: 0,
+      bottom: 0,
+      left: 5
+    }
   }
-};
+  };
   
-export const defaultLineChartOptions2 = {
-  responsive: true,
-  maintainAspectRatio: false,
-  scales: {
-    x: {
-      font: { size: 8 }
-    },
-    y: {
-      ticks: {
-        callback: (value, index, ticks) => {
-          // Use custom formatting logic for large numbers
-          const units = ['', 'K', 'M', 'B', 'T'];
-          let i = 0;
-          while (value >= 1000 && i < units.length) {
-            value /= 1000;
-            i++;
-          }
-          return `${value.toFixed(0)}${units[i]}`;
-        }
-      }
-    }
-  },
-  plugins: {
-    title: {
-      display: false,
-    },
-    legend: {
-      display: true,
-      position: 'top',
-      padding: 5,
-      labels: {
-        boxWidth: 8,
-        font: { size: 12, weight: 'bold' },
-        usePointStyle: true,
-        pointStyle: 'circle'
-      }
-    },
-    tooltip: {
-      callbacks: {
-        label: (tooltipItem) => `${tooltipItem.formattedValue}` // Format tooltip labels
-      }
-    },
-    hover: {
-      mode: 'nearest',
-      intersect: true
-    }
-  },
-  elements: {
-    point: {
-      radius: 3,
-      hoverRadius: 6
-    }
-  }
-};
 
 
 export const defaultLineChartOptions = {

@@ -25,20 +25,31 @@ export const updatePopulationSection = (population) => {
 
     // Create charts
     createStackedHorizontalBarChart('populationAgeChart', [
-      { label: '0-14', data: [popAged014], backgroundColor: 'rgba(255, 192, 203, 0.8)' },
-      { label: '15-64', data: [popAged1564], backgroundColor: 'rgba(173, 216, 230, 0.8)' },
-      { label: '65+', data: [popAged65Plus], backgroundColor: 'rgba(121, 85, 72, 0.6)' }
+      { label: '0-14', data: [popAged014], backgroundColor:  'rgba(100, 182, 118, 0.2)'},
+      { label: '15-64', data: [popAged1564], backgroundColor: 'rgba(255, 217, 64, 0.2)' },
+      { label: '65+', data: [popAged65Plus], backgroundColor: 'rgba(255, 204, 121, 0.7)' }
     ], 'Age distribution');
 
     createStackedHorizontalBarChart('genderChart', [
-      { label: 'Female', data: [femalePopulation], backgroundColor: 'rgba(194, 24, 91, 0.5)' },
-      { label: 'Male', data: [malePopulation], backgroundColor: 'rgba(0, 122, 255, 0.5)' }
+      { label: 'Female', data: [femalePopulation], backgroundColor: 'rgba(255, 192, 203, 0.5)' },
+      { label: 'Male', data: [malePopulation], backgroundColor: 'rgba(135, 206, 235, 0.5)'}
     ], 'Gender distribution');
 
     createStackedHorizontalBarChart('urbanRuralChart', [
-      { label: 'Rural', data: [ruralPopulation], backgroundColor: 'rgba(100, 182, 118, 0.8)' },
-      { label: 'Urban', data: [urbanPopulation], backgroundColor: 'rgba(164, 194, 212, 0.8)' }
+      { label: 'Rural', data: [ruralPopulation], backgroundColor: 'rgba(100, 182, 118, 0.5)' },
+      { label: 'Urban', data: [urbanPopulation], backgroundColor: 'rgba(164, 194, 212, 0.5)' }
     ], 'Rural vs Urban population');
+
+    createStackedHorizontalBarChart('sexLifeExpectancyChart', [
+      
+      { label: 'Female', data: [femaleLifeExpectancy], backgroundColor: 'rgba(255, 192, 203, 0.5)' },
+      { label: 'Male', data: [maleLifeExpectancy], backgroundColor: 'rgba(135, 206, 235, 0.5)' },
+    ], 'Life expectancy (Years)', false);
+    
+    createStackedHorizontalBarChart('birthDeathChart', [ 
+      { label: 'Births', data: [birthRate], backgroundColor: 'rgba(255, 217, 64, 0.2)' },
+      { label: 'Deaths', data: [deathRate], backgroundColor: 'rgba(201, 203, 207, 0.5)' },
+    ], 'Births vs Deaths (per Capita / Year)', false);
 };
 
 

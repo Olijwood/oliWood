@@ -27,22 +27,29 @@
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
-    padding: 0;
+    margin-top: -100 !important;
+    padding-top: -100 !important;
 }
+
+
 
 .chartjs-legend li {
     list-style: none;
+    padding: 0;
     padding-left: 5px;
     padding-right: 5px;
-    margin: 0 10px;
+    
     font-size: 12px;
     font-weight: bold;
 }
 
 .chartjs-legend li span {
     display: inline-block;
+    padding: 0;
     width: 8px;
     height: 8px;
+    margin-top: -10;
+    padding-top: -10;
     margin-right: 5px;
     border-radius: 50%;
    

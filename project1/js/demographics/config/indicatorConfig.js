@@ -45,7 +45,8 @@ export const overviewConfig = [
       dataLabel: ['Population', 'Population Growth', 'Population Density '],
       
       dataId: ['totalPopulation', 'populationGrowth', 'populationDensity'], 
-      chartId: ['populationAgeChart', 'genderChart', 'urbanRuralChart'],
+      chartId: ['populationAgeChart', 'urbanRuralChart', 'genderChart', 
+        'sexLifeExpectancyChart', 'birthDeathChart'],
       dataUnit: ['', '', 'per km&sup2;']
     },
     { 
