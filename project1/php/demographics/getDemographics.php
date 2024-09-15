@@ -2,14 +2,12 @@
 if (isset($_GET['country'])) {
     $countryCode = $_GET['country'];
     $indicators = $_GET['indicators'];
-
-    // $indicators = "SP.POP.TOTL;SP.POP.GROW;SP.POP.1564.TO.ZS;SP.POP.65UP.TO.ZS;SP.POP.TOTL.FE.ZS;SP.URB.TOTL.IN.ZS;NY.GDP.MKTP.CD;NY.GDP.PCAP.CD;FP.CPI.TOTL.ZG;SP.DYN.LE00.IN;SP.DYN.TFRT.IN;SH.XPD.CHEX.PC.CD;EN.ATM.CO2E.PC";
-    // $indicators = "SP.POP.TOTL;SP.POP.GROW";
+    
     // URL-encode the indicators to ensure the semicolon is properly handled
     $encodedIndicators = urlencode($indicators);
 
     // World Bank API endpoint
-    $apiUrl = "https://api.worldbank.org/v2/country/$countryCode/indicator/$encodedIndicators?format=json&source=2&mrv=3";
+    $apiUrl = "https://api.worldbank.org/v2/country/$countryCode/indicator/$encodedIndicators?format=json&source=2&mrnev=1";
 
     // Initialize cURL session
     $allData = [];

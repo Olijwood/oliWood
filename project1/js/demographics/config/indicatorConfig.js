@@ -3,15 +3,28 @@ export const indicatorGroups = {
     population: {
         totalPopulation: "SP.POP.TOTL",
         populationGrowth: "SP.POP.GROW",
+        populationDensity: "EN.POP.DNST",
         workingAgePopulation: "SP.POP.1564.TO.ZS",
         elderlyPopulation: "SP.POP.65UP.TO.ZS",
         femalePopulation: "SP.POP.TOTL.FE.ZS",
-        urbanPopulation: "SP.URB.TOTL.IN.ZS"
+        dependencyRatio: "SP.POP.DPND.YG",
+        urbanPopulation: "SP.URB.TOTL.IN.ZS",
+        netMigration: "SM.POP.NETM",
+        birthRate: "SP.DYN.CBRT.IN",
+        deathRate: "SP.DYN.CDRT.IN",
+        householdSize: "SL.UEM.TOTL.ZS",
+        maleLifeExpectancy: "SP.DYN.LE00.MA.IN",
+        femaleLifeExpectancy: "SP.DYN.LE00.FE.IN"
+
     },
     economy: {
         gdpCurrent: "NY.GDP.MKTP.CD",
         gdpPerCapita: "NY.GDP.PCAP.CD",
-        inflationRate: "FP.CPI.TOTL.ZG"
+        inflationRate: "FP.CPI.TOTL.ZG",
+        // unemploymentRate: "SL.UEM.TOTL.ZS",
+        // govermentExpenditure: "NE.CON.GOVT.ZS",
+        // externalDebt: "DT.DOD.TOTL.GD.ZS",
+
     },
     health: {
         lifeExpectancy: "SP.DYN.LE00.IN",
@@ -28,9 +41,12 @@ export const overviewConfig = [
       id: 'populationOverview-container', 
       title: 'Population', 
       icon: 'fas fa-users text-info', 
-      dataLabel: ['Population', 'Population Growth'],
-      dataId: ['totalPopulation', 'populationGrowth'], 
-      chartId: ['populationAgeChart', 'genderChart', 'urbanRuralChart'] 
+      // use boostrap class for way smalle text
+      dataLabel: ['Population', 'Population Growth', 'Population Density '],
+      
+      dataId: ['totalPopulation', 'populationGrowth', 'populationDensity'], 
+      chartId: ['populationAgeChart', 'genderChart', 'urbanRuralChart'],
+      dataUnit: ['', '', 'per km&sup2;']
     },
     { 
       id: 'economicOverview-container', 
@@ -38,7 +54,8 @@ export const overviewConfig = [
       icon: 'fas fa-chart-line text-success',
       dataLabel: ['GDP', 'GDP Per Capita', 'Inflation Rate'],
       dataId: ['gdpCurrent', 'gdpPerCapita', 'inflationRate'], 
-      chartId: [] 
+      chartId: [],
+      dataUnit: ['USD', 'USD', '']
     },
     { 
       id: 'healthOverview-container', 
@@ -46,7 +63,8 @@ export const overviewConfig = [
       icon: 'fas fa-heartbeat text-danger', 
       dataLabel: ['Life Expectancy', 'Fertility Rate', 'Health Expenditure per Capita'],
       dataId: ['lifeExpectancy', 'fertilityRate', 'healthExpenditure'], 
-      chartId: [] 
+      chartId: [],
+      dataUnit: ['years', 'births', 'USD']
     },
     { 
       id: 'enviromentOverview-container', 
@@ -54,7 +72,8 @@ export const overviewConfig = [
       icon: 'fas fa-heartbeat text-danger', 
       dataLabel: ['CO2 emittions (Tons)'],
       dataId: ['co2EmissionsPerCapita'], 
-      chartId: [] 
+      chartId: [],
+      dataUnit: ['tons']
     }
   ];
 

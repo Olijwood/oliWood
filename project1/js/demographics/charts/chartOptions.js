@@ -1,6 +1,4 @@
-
-// Default chart options for stacked horizontal bar charts
-export const defaultHorizontalBarChartOptions = {
+export const defaultStackedHorizontalBarChartOptions = {
   indexAxis: 'y',
   responsive: true,
   maintainAspectRatio: false,
@@ -19,7 +17,7 @@ export const defaultHorizontalBarChartOptions = {
       title: {
           display: true,
           font: { size: 14, weight: 'bold' },
-          padding: { bottom: 0 }
+          padding: { y: 2 }
       },
       datalabels: {
           display: true,
@@ -27,11 +25,12 @@ export const defaultHorizontalBarChartOptions = {
           anchor: 'center',
           align: 'center',
           formatter: (value) => `${value}%`,  // Show percentage on the bar
-          font: { size: 14, weight: 'bold' }
+          font: { size: 12, weight: 'bold' }
       },
       legend: {
           display: true,
-          position: 'bottom',  // Move the legend below the chart
+          position: 'right' ,
+          align: 'center',  // Move the legend below the chart
           labels: {
               boxWidth: 12,
               padding: 10,
@@ -42,13 +41,64 @@ export const defaultHorizontalBarChartOptions = {
   },
   layout: {
       padding: {
-          top: 5,    // Padding above the chart (below the title)
-          bottom: 5, // Padding below the chart (above the legend)
+          top: 2,    // Padding above the chart (below the title)
+          bottom: 0, // Padding below the chart (above the legend)
+          left: 5,   // Padding to the left of the chart
       }
   },
   elements: {
       bar: {
-          borderWidth: 0  // No borders to avoid adding unnecessary space
+          borderWidth: 0,  // No borders to avoid adding unnecessary space,
+          barThickness: 5
+      }
+  },
+};
+// Default chart options for stacked horizontal bar charts
+export const defaultHorizontalBarChartOptions = {
+  indexAxis: 'y',
+  responsive: true,
+  maintainAspectRatio: false,
+  scales: {
+    x: {
+        display: false,
+        beginAtZero: true,
+        stacked: false,
+        ticks: { display: false },
+        grid: { display: false },
+        border: { display: false }
+    },
+    y: {
+        stacked: false,
+        display: false
+    }
+},
+  plugins: {
+      title: {
+          display: true,
+          font: { size: 14, weight: 'bold' },
+          padding: { y: 0 }
+      },
+      datalabels: {
+        display: true,
+        color: 'black',
+        anchor: 'end',
+        align: 'right',
+        font: { size: 10, weight: 'bold' },
+        formatter: (value, context) => `${context.dataset.label}: ${value}%`},
+      legend: {
+          display: false,
+      }
+  },
+  layout: {
+      padding: {
+          top: 0,    
+          bottom: 0, 
+      }
+  },
+  elements: {
+      bar: {
+          borderWidth: 0,  // No borders to avoid adding unnecessary space,
+          barThickness: 5
       }
   }
 };

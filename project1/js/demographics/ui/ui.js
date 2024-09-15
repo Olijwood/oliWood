@@ -2,7 +2,7 @@ import { overviewConfig, tabChartConfig } from "../config/indicatorConfig.js";
 import { injectOverviewSection, createChartContainer } from "./genHtml.js";
 import DemographicsFetcher from "../data/fetchDemographics.js";
 import DemographicsDataProcessor from "../data/dataProcessing.js";
-import { updateEconomySection, updateHealthSection, updatePopulationSection } from "./updateOverviewSection.js";
+import { updateEconomySection, updateEnvironmentSection, updateHealthSection, updatePopulationSection } from "./updateOverviewSection.js";
 import { updateEconomyTab, updateEnvironmentTab, updateHealthTab, updatePopulationTab } from "./updateHistorical.js";
 class DemographicsUI {
   constructor(countryCode) {
@@ -12,7 +12,7 @@ class DemographicsUI {
   
   injectOverview = () => {
     overviewConfig.forEach(config => {
-      injectOverviewSection(config.id, config.title, config.icon, config.dataId, config.chartId);
+      injectOverviewSection(config.id, config.title, config.icon, config.dataLabel, config.dataId, config.chartId, config.dataUnit);
     });
   }
 
@@ -27,6 +27,7 @@ class DemographicsUI {
     updatePopulationSection(mappedRecentData.population);
     updateEconomySection(mappedRecentData.economy);
     updateHealthSection(mappedRecentData.health);
+    updateEnvironmentSection(mappedRecentData.environment);
   }
 
   // Historical Demographics

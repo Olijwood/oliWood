@@ -20,7 +20,7 @@ class DemographicsDataProcessor {
   }
 
   // Map recent data with the first non-null value
-  static mapNotNullRecentData(data) {
+  static mapNotNullRecentData2(data) {
     return Object.fromEntries(
       Object.entries(indicatorGroups).map(([section, sectionData]) => [
         section,
@@ -34,16 +34,35 @@ class DemographicsDataProcessor {
     );
   }
 
+  static mapNotNullRecentData(data) {
+    return Object.fromEntries(
+      Object.entries(indicatorGroups).map(([section, sectionData]) => [
+        section,
+        Object.fromEntries(
+          Object.entries(sectionData).map(([indicator, indicatorId]) => {
+            // Find the corresponding entry directly using find()
+            const indicatorData = data.find(d => d.indicator === indicatorId && d.value !== null);
+            return [indicator, indicatorData ? indicatorData.value : 'N/A'];
+          })
+        )
+      ])
+    );
+  }
+
+  // Map sorted historical data and downsample if necessary
   static mapHistoricalIndicatorData(data, section) {
     const indicatorGroup = indicatorGroups[section];
     
     const mappedData = Object.fromEntries(
       Object.entries(indicatorGroup).map(([indicatorKey, indicatorId]) => {
+        // Process data for this indicator
         const indicatorData = data
           .filter(d => d.indicator === indicatorId && d.value !== null && d.date !== null)
           .sort((a, b) => a.date - b.date);  // Ascending order by date
 
         const downsampledData = downsampleData(indicatorData);
+
+        // Map the values and dates
         return [
           indicatorKey,
           {

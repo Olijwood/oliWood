@@ -11,7 +11,7 @@ export const generateTableRow = (dataLabel, dataId) => `
 // Generates chart row HTML for displaying charts
 export const generateChartRow = (chartId) => {`
   <tr>
-    <td colspan="2">
+    <td colspan="2" >
       <div class="chart-container">
         <div class="demographics-chart">
           <canvas id="${chartId}"></canvas>
@@ -21,7 +21,7 @@ export const generateChartRow = (chartId) => {`
   </tr>
 `};
 
-export const injectOverviewSection = (containerId, title, icon, dataIds = [], chartIds = []) => {
+export const injectOverviewSection = (containerId, title, icon, dataLabels = [], dataIds = [], chartIds = [], dataUnits = []) => {
   let content = `
       <div class="card mb-3">
           <div class="card-header">
@@ -34,9 +34,14 @@ export const injectOverviewSection = (containerId, title, icon, dataIds = [], ch
 
   // Inject data fields
   dataIds.forEach((dataId, i) => {
+      const dataLabel = dataLabels[i];
+      const dataUnit = dataUnits[i];
+      const unitCite = dataUnit != '' ? `<cite class="text-muted small">(${dataUnit})</cite>` : '';
+
+      
       content += `
           <tr>
-              <td>${overviewConfig.find(c => c.dataId.includes(dataId)).dataLabel[i]}</td>
+              <td>${dataLabel} ${unitCite}</td>
               <td class="fw-bold text-end" id="${dataId}"></td>
           </tr>
       `;
@@ -46,7 +51,7 @@ export const injectOverviewSection = (containerId, title, icon, dataIds = [], ch
   chartIds.forEach(chartId => {
       content += `
           <tr>
-              <td colspan="2">
+              <td colspan="2" class="chart-td">
                   <div class="chart-container">
                       <div class="demographics-chart">
                           <canvas id="${chartId}"></canvas>

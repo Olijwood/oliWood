@@ -4,6 +4,8 @@ import { indicatorGroups } from '../config/indicatorConfig.js';
 
 const DEMOGRAPHICS_ENDPOINT = 'php/demographics/getDemographics.php';
 const HISTORICAL_DATA_ENDPOINT = 'php/demographics/getHistoricalData.php';
+const test_url_mrv = 'php/demographics/getDemographics.php/country=GB&indicators=EN.ATM.CO2E.PC&mrvMrenv=mrv'
+const test_url_mrnev = 'php/demographics/getDemographics.php/country=GB&indicators=EN.ATM.CO2E.PC&mrvMrenv=mrnev'
 
 class DemographicsFetcher {
   constructor(countryCode) {

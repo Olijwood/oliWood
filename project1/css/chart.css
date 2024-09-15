@@ -19,6 +19,9 @@
   width: 100%;
 }
 
+.chart-td {
+  padding: 0.1rem 0.2rem !important;
+}
 /* Legend styling */
 .chartjs-legend {
     display: flex;

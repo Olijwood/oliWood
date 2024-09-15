@@ -3,6 +3,7 @@ import { createStackedHorizontalBarChart } from "../charts/chartDemographics.js"
 export const updatePopulationSection = (population) => {
     const totalPopulation = formatNumber(population.totalPopulation);
     const popGrowthRate = formatPercentage(population.populationGrowth);
+    const populationDensity = population.populationDensity;
     const popAged1564 = rndTwo(population.workingAgePopulation);
     const popAged65Plus = rndTwo(population.elderlyPopulation);
     const popAged014 = rndTwo(100 - population.workingAgePopulation - population.elderlyPopulation);
@@ -10,10 +11,17 @@ export const updatePopulationSection = (population) => {
     const malePopulation = rndTwo(100 - population.femalePopulation);
     const urbanPopulation = rndTwo(population.urbanPopulation);
     const ruralPopulation = rndTwo(100 - population.urbanPopulation);
+    const housholdSize = population.housholdSize;
+    const maleLifeExpectancy = population.maleLifeExpectancy;
+    const femaleLifeExpectancy = population.femaleLifeExpectancy;
+    const birthRate = population.birthRate;
+    const deathRate = population.deathRate;
 
     // Inject population data into the UI
     $('#totalPopulation').text(totalPopulation);
     $('#populationGrowth').text(popGrowthRate);
+    $('#populationDensity').text(populationDensity);
+    $('#housholdSize').text(housholdSize);
 
     // Create charts
     createStackedHorizontalBarChart('populationAgeChart', [
@@ -55,3 +63,10 @@ export const updateEconomySection = (economy) => {
   $('#gdpPerCapita').text(gdpPerCapita);
   $('#inflationRate').text(inflationRate);
 };
+
+export const updateEnvironmentSection = (environment) => {
+  const co2EmissionsPerCap = formatNumber(environment.co2EmissionsPerCapita);
+  console.log(environment, co2EmissionsPerCap)
+  $('#co2EmissionsPerCapita').text(co2EmissionsPerCap);
+
+}
