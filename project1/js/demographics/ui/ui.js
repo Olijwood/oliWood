@@ -12,7 +12,9 @@ class DemographicsUI {
   
   injectOverview = () => {
     overviewConfig.forEach(config => {
-      injectOverviewSection(config.id, config.title, config.icon, config.dataLabel, config.dataId, config.chartId, config.dataUnit);
+      injectOverviewSection(
+        config.id, config.title, config.icon, config.dataLabel, config.dataId, 
+        config.chartId, config.dataUnit, config.chartTitle, config.chartUnit);
     });
   }
 

@@ -47,7 +47,9 @@ export const overviewConfig = [
       dataId: ['totalPopulation', 'populationGrowth', 'populationDensity'], 
       chartId: ['populationAgeChart', 'urbanRuralChart', 'genderChart', 
         'sexLifeExpectancyChart', 'birthDeathChart'],
-      dataUnit: ['', '', 'per km&sup2;']
+      dataUnit: ['', '', 'per km&sup2;'],
+      chartTitle: ['Age Distribution', 'Rural/Urban Distribution', 'Sex Distribution', 'Life Expectancy', 'Births/Deaths'],
+      chartUnit: ['', '', '', 'years', 'per 1000/year']
     },
     { 
       id: 'economicOverview-container', 

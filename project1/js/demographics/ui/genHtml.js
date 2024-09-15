@@ -21,7 +21,8 @@ export const generateChartRow = (chartId) => {`
   </tr>
 `};
 
-export const injectOverviewSection = (containerId, title, icon, dataLabels = [], dataIds = [], chartIds = [], dataUnits = []) => {
+export const injectOverviewSection = (containerId, title, icon, dataLabels = [], 
+  dataIds = [], chartIds = [], dataUnits = [], chartTitles = [], chartUnits = []) => {
   let content = `
       <div class="card mb-3">
           <div class="card-header">
@@ -48,10 +49,13 @@ export const injectOverviewSection = (containerId, title, icon, dataLabels = [],
   });
 
   // Inject chart placeholders if any
-  chartIds.forEach(chartId => {
+  chartIds.forEach((chartId, i) => {
+      const chartUnit = chartUnits[i];
+      const unitCite = chartUnit != '' ? `<cite class="text-muted small">(${chartUnit})</cite>` : '';
       content += `
           <tr>
               <td colspan="2" class="chart-td">
+                  <h4 class="text-center">${chartTitles[i]} ${unitCite}</h4>
                   <div class="chart-container">
                       <div class="demographics-chart">
                           <canvas id="${chartId}"></canvas>

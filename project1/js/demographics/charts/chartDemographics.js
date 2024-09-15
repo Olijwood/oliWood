@@ -2,42 +2,42 @@ import { defaultStackedHorizontalBarChartOptions, defaultHorizontalBarChartOptio
 import { destroyExistingChart, buildChartDatasets } from './chartUtils.js'; // Assuming you have this utility
 
 // Helper to create horizontal bar charts (stacked or non-stacked)
-export const createStackedHorizontalBarChart = (canvasId, datasets, chartTitle, stacked = true) => {
+export const createStackedHorizontalBarChart = (
+  canvasId, datasets, chartTitle, isStacked = true
+) => {
   const canvasElement = document.getElementById(canvasId);
- 
+
   const ctx = canvasElement.getContext('2d');
- 
+
   // Destroy any existing chart before creating a new one
   destroyExistingChart(canvasId);
 
   // Determine the correct options based on stacked or non-stacked configuration
-  const chartOptions = stacked
-      ? defaultStackedHorizontalBarChartOptions
-      : defaultHorizontalBarChartOptions;
+  const chartOptions = isStacked
+    ? defaultStackedHorizontalBarChartOptions
+    : defaultHorizontalBarChartOptions;
 
   // Chart configuration with default options, merging in dynamic chart title
   const chartConfig = {
-      type: 'bar',
-      data: {
-          labels: [''],  // Empty label to avoid label overflow
-          datasets: datasets  
+    type: 'bar',
+    data: {
+      labels: [''],
+      datasets,
+    },
+    options: {
+      ...chartOptions,
+      plugins: {
+        ...chartOptions.plugins,
+        tooltip: {
+          ...chartOptions.tooltip,     
+          callbacks: {
+            label: (tooltipItem) =>
+              isStacked ? `${tooltipItem.formattedValue}%` : tooltipItem.formattedValue,
+          },
+        },
       },
-      options: {
-          ...chartOptions, 
-          plugins: {
-              ...chartOptions.plugins,
-              title: {
-                  ...chartOptions.plugins.title,
-                  text: chartTitle  // Set dynamic chart title
-              },
-              tooltip: {
-                  callbacks: {
-                      label: (tooltipItem) => stacked ? `${tooltipItem.formattedValue}%` : tooltipItem.formattedValue
-                  }
-              }
-          }
-      },
-      plugins: [ChartDataLabels]  // Include ChartDataLabels plugin
+    },
+    plugins: [ChartDataLabels],
   };
 
   // Create the new chart
