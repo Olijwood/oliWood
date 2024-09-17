@@ -11,7 +11,10 @@ export const updatePopulationSection = (population) => {
     const malePopulation = rndTwo(100 - population.femalePopulation);
     const urbanPopulation = rndTwo(population.urbanPopulation);
     const ruralPopulation = rndTwo(100 - population.urbanPopulation);
-    const housholdSize = population.housholdSize;
+    
+    const householdSize = population.householdSize;
+    const netMigration = population.netMigration;
+    const dependencyRatio = population.dependencyRatio;
     const maleLifeExpectancy = population.maleLifeExpectancy;
     const femaleLifeExpectancy = population.femaleLifeExpectancy;
     const birthRate = population.birthRate;
@@ -21,7 +24,9 @@ export const updatePopulationSection = (population) => {
     $('#totalPopulation').text(totalPopulation);
     $('#populationGrowth').text(popGrowthRate);
     $('#populationDensity').text(populationDensity);
-    $('#housholdSize').text(housholdSize);
+    $('#householdSize').text(householdSize);
+    $('#netMigration').text(netMigration);
+    $('#dependencyRatio').text(`1:${dependencyRatio}`);
 
     // Create charts
     createStackedHorizontalBarChart('populationAgeChart', [
@@ -65,14 +70,30 @@ export const updateHealthSection = (health) => {
 };
 
 // Updates the Economy section of the UI
+ 
 export const updateEconomySection = (economy) => {
-  const gdpCurrent = formatNumber(economy.gdpCurrent);
-  const gdpPerCapita = formatNumber(economy.gdpPerCapita);
+  console.log(economy);
+  const gdpCurrent = strIntDollar(economy.gdpCurrent);
+  const gdpPerCapita = strIntDollar(economy.gdpPerCapita);
   const inflationRate = formatPercentage(economy.inflationRate);
-  
+  const unemploymentRate = formatPercentage(economy.unemploymentRate);
+  const povertyPct = formatPercentage(economy.povertyPct);
+  const govermentExpenditure = formatPercentage(economy.govermentExpenditure);
+  const foreignInvestment = formatPercentage(economy.foreignInvestment);
+  const trade = formatPercentage(economy.trade);
+  const totalReserves = strIntDollar(economy.totalReserves);
+  const giniIndex = formatNumber(economy.giniIndex);
+
   $('#gdpCurrent').text(gdpCurrent);
   $('#gdpPerCapita').text(gdpPerCapita);
   $('#inflationRate').text(inflationRate);
+  $('#unemploymentRate').text(unemploymentRate);
+  $('#povertyPct').text(povertyPct);
+  $('#govermentExpenditure').text(govermentExpenditure);
+  $('#foreignInvestment').text(foreignInvestment);
+  $('#trade').text(trade);
+  $('#totalReserves').text(totalReserves);
+  $('#giniIndex').text(giniIndex);
 };
 
 export const updateEnvironmentSection = (environment) => {

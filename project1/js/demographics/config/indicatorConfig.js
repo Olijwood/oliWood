@@ -18,13 +18,16 @@ export const indicatorGroups = {
 
     },
     economy: {
-        gdpCurrent: "NY.GDP.MKTP.CD",
-        gdpPerCapita: "NY.GDP.PCAP.CD",
-        inflationRate: "FP.CPI.TOTL.ZG",
-        // unemploymentRate: "SL.UEM.TOTL.ZS",
-        // govermentExpenditure: "NE.CON.GOVT.ZS",
-        // externalDebt: "DT.DOD.TOTL.GD.ZS",
-
+      gdpCurrent: "NY.GDP.MKTP.CD",
+      gdpPerCapita: "NY.GDP.PCAP.CD",
+      inflationRate: "FP.CPI.TOTL.ZG",
+      unemploymentRate: "SL.UEM.TOTL.ZS",
+      povertyPct: "SI.POV.NAHC",
+      govermentExpenditure: "NE.CON.GOVT.ZS",
+      foreignInvestment: "BX.KLT.DINV.WD.GD.ZS",
+      trade: "NE.TRD.GNFS.ZS",
+      totalReserves: "FI.RES.TOTL.CD",
+      giniIndex: "SI.POV.GINI" 
     },
     health: {
         lifeExpectancy: "SP.DYN.LE00.IN",
@@ -41,13 +44,11 @@ export const overviewConfig = [
       id: 'populationOverview-container', 
       title: 'Population', 
       icon: 'fas fa-users text-info', 
-      // use boostrap class for way smalle text
-      dataLabel: ['Population', 'Population Growth', 'Population Density '],
-      
-      dataId: ['totalPopulation', 'populationGrowth', 'populationDensity'], 
+      dataLabel: ['Population', 'Population Growth', 'Population Density', 'Household Size', 'Net Migration', 'Dependency Ratio'],
+      dataId: ['totalPopulation', 'populationGrowth', 'populationDensity', 'householdSize', 'netMigration', 'dependencyRatio'], 
       chartId: ['populationAgeChart', 'urbanRuralChart', 'genderChart', 
         'sexLifeExpectancyChart', 'birthDeathChart'],
-      dataUnit: ['', '', 'per km&sup2;'],
+      dataUnit: ['', '', 'per km&sup2;', '', '', ''],
       chartTitle: ['Age Distribution', 'Rural/Urban Distribution', 'Sex Distribution', 'Life Expectancy', 'Births/Deaths'],
       chartUnit: ['', '', '', 'years', 'per 1000/year']
     },
@@ -55,10 +56,12 @@ export const overviewConfig = [
       id: 'economicOverview-container', 
       title: 'Economic Data', 
       icon: 'fas fa-chart-line text-success',
-      dataLabel: ['GDP', 'GDP Per Capita', 'Inflation Rate'],
-      dataId: ['gdpCurrent', 'gdpPerCapita', 'inflationRate'], 
+      dataLabel: ['GDP', 'GDP Per Capita', 'Inflation Rate', 'Unemployment Rate', 'Poverty', 'Government Expenditure', 'Foreign Investment', 'Trade', 'Total Reserves', 'Gini Index'],
+      dataId: ['gdpCurrent', 'gdpPerCapita', 'inflationRate', 'unemploymentRate', 'povertyPct', 'govermentExpenditure', 'foreignInvestment', 'trade', 'totalReserves', 'giniIndex'], 
       chartId: [],
-      dataUnit: ['USD', 'USD', '']
+      
+      
+      dataUnit: ['USD', 'USD', '', '', '% of Pop', '% of GDP', '% of GDP', '% of GDP', 'USD', 'Income Inequality']
     },
     { 
       id: 'healthOverview-container', 

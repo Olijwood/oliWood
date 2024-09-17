@@ -7,6 +7,7 @@ class DemographicsDataProcessor {
   
   // Helper: Find the first non-null value for a given indicator data
   static findFirstNonNullValue(indicatorData) {
+    console.log(indicatorData);
     const firstNonNull = indicatorData.find(d => d.value !== null && d.date !== null);
     return firstNonNull ? firstNonNull.value : 'N/A';
   }
@@ -35,6 +36,7 @@ class DemographicsDataProcessor {
   }
 
   static mapNotNullRecentData(data) {
+    console.log(data);
     return Object.fromEntries(
       Object.entries(indicatorGroups).map(([section, sectionData]) => [
         section,

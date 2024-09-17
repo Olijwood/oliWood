@@ -12,3 +12,5 @@ const toTitleCase = (str) => str.replace(/\w\S*/g, (text) =>
  const strRoundTwo = (value) => value !== null ? `${Number(value).toFixed(2)}` : 'N/A';
 
  const rndTwo = (value) => value !== null ? Number(value).toFixed(2) : 'N/A';
+
+ const strIntDollar = (value) => value !== null ? `$${Number(value).toLocaleString()}` : 'N/A';
