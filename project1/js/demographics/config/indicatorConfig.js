@@ -40,48 +40,66 @@ export const indicatorGroups = {
 };
 
 export const overviewConfig = [
-    { 
-      id: 'populationOverview-container', 
-      title: 'Population', 
-      icon: 'fas fa-users text-info', 
-      dataLabel: ['Population', 'Population Growth', 'Population Density', 'Household Size', 'Net Migration', 'Dependency Ratio'],
-      dataId: ['totalPopulation', 'populationGrowth', 'populationDensity', 'householdSize', 'netMigration', 'dependencyRatio'], 
-      chartId: ['populationAgeChart', 'urbanRuralChart', 'genderChart', 
-        'sexLifeExpectancyChart', 'birthDeathChart'],
-      dataUnit: ['', '', 'per km&sup2;', '', '', ''],
-      chartTitle: ['Age Distribution', 'Rural/Urban Distribution', 'Sex Distribution', 'Life Expectancy', 'Births/Deaths'],
-      chartUnit: ['', '', '', 'years', 'per 1000/year']
-    },
-    { 
-      id: 'economicOverview-container', 
-      title: 'Economic Data', 
-      icon: 'fas fa-chart-line text-success',
-      dataLabel: ['GDP', 'GDP Per Capita', 'Inflation Rate', 'Unemployment Rate', 'Poverty', 'Government Expenditure', 'Foreign Investment', 'Trade', 'Total Reserves', 'Gini Index'],
-      dataId: ['gdpCurrent', 'gdpPerCapita', 'inflationRate', 'unemploymentRate', 'povertyPct', 'govermentExpenditure', 'foreignInvestment', 'trade', 'totalReserves', 'giniIndex'], 
-      chartId: [],
-      
-      
-      dataUnit: ['USD', 'USD', '', '', '% of Pop', '% of GDP', '% of GDP', '% of GDP', 'USD', 'Income Inequality']
-    },
-    { 
-      id: 'healthOverview-container', 
-      title: 'Health Data', 
-      icon: 'fas fa-heartbeat text-danger', 
-      dataLabel: ['Life Expectancy', 'Fertility Rate', 'Health Expenditure per Capita'],
-      dataId: ['lifeExpectancy', 'fertilityRate', 'healthExpenditure'], 
-      chartId: [],
-      dataUnit: ['years', 'births', 'USD']
-    },
-    { 
-      id: 'enviromentOverview-container', 
-      title: 'Enviromental Data', 
-      icon: 'fas fa-heartbeat text-danger', 
-      dataLabel: ['CO2 emittions (Tons)'],
-      dataId: ['co2EmissionsPerCapita'], 
-      chartId: [],
-      dataUnit: ['tons']
-    }
-  ];
+  { 
+    id: 'populationOverview-container', 
+    title: 'Population', 
+    icon: 'fas fa-users text-info',
+    data: [
+      { label: 'Population', id: 'totalPopulation', unit: '' },
+      { label: 'Population Growth', id: 'populationGrowth', unit: '' },
+      { label: 'Population Density', id: 'populationDensity', unit: 'per km&sup2;' },
+      { label: 'Household Size', id: 'householdSize', unit: '' },
+      { label: 'Net Migration', id: 'netMigration', unit: '' },
+      { label: 'Dependency Ratio', id: 'dependencyRatio', unit: '' }
+    ],
+    charts: [
+      { id: 'populationAgeChart', title: 'Age Distribution', unit: '' },
+      { id: 'urbanRuralChart', title: 'Rural/Urban Distribution', unit: '' },
+      { id: 'genderChart', title: 'Sex Distribution', unit: '' },
+      { id: 'sexLifeExpectancyChart', title: 'Life Expectancy', unit: 'years' },
+      { id: 'birthDeathChart', title: 'Births/Deaths', unit: 'per 1000/year' }
+    ]
+  },
+  { 
+    id: 'economicOverview-container', 
+    title: 'Economic Data', 
+    icon: 'fas fa-chart-line text-success',
+    data: [
+      { label: 'GDP', id: 'gdpCurrent', unit: 'USD' },
+      { label: 'GDP Per Capita', id: 'gdpPerCapita', unit: 'USD' },
+      { label: 'Inflation Rate', id: 'inflationRate', unit: '' },
+      { label: 'Unemployment Rate', id: 'unemploymentRate', unit: '' },
+      { label: 'Poverty', id: 'povertyPct', unit: '% of Pop' },
+      { label: 'Government Expenditure', id: 'govermentExpenditure', unit: '% of GDP' },
+      { label: 'Foreign Investment', id: 'foreignInvestment', unit: '% of GDP' },
+      { label: 'Trade', id: 'trade', unit: '% of GDP' },
+      { label: 'Total Reserves', id: 'totalReserves', unit: 'USD' },
+      { label: 'Gini Index', id: 'giniIndex', unit: 'Income Inequality' }
+    ],
+    charts: []  // No charts for this section
+  },
+  { 
+    id: 'healthOverview-container', 
+    title: 'Health Data', 
+    icon: 'fas fa-heartbeat text-danger', 
+    data: [
+      { label: 'Life Expectancy', id: 'lifeExpectancy', unit: 'years' },
+      { label: 'Fertility Rate', id: 'fertilityRate', unit: 'births' },
+      { label: 'Health Expenditure per Capita', id: 'healthExpenditure', unit: 'USD' }
+    ],
+    charts: []
+  },
+  { 
+    id: 'enviromentOverview-container', 
+    title: 'Environmental Data', 
+    icon: 'fas fa-leaf text-success', 
+    data: [
+      { label: 'CO2 Emissions (Tons)', id: 'co2EmissionsPerCapita', unit: 'tons' }
+    ],
+    charts: []
+  }
+];
+
 
 export const tabChartConfig = {
   '#populationDemoTab': {

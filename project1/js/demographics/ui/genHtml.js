@@ -21,8 +21,7 @@ export const generateChartRow = (chartId) => {`
   </tr>
 `};
 
-export const injectOverviewSection = (containerId, title, icon, dataLabels = [], 
-  dataIds = [], chartIds = [], dataUnits = [], chartTitles = [], chartUnits = []) => {
+export const injectOverviewSection = (containerId, title, icon, data = [], charts = []) => {
   let content = `
       <div class="card mb-3">
           <div class="card-header">
@@ -34,31 +33,26 @@ export const injectOverviewSection = (containerId, title, icon, dataLabels = [],
   `;
 
   // Inject data fields
-  dataIds.forEach((dataId, i) => {
-      const dataLabel = dataLabels[i];
-      const dataUnit = dataUnits[i];
-      const unitCite = dataUnit != '' ? `<cite class="text-muted small">(${dataUnit})</cite>` : '';
-
-      
+  data.forEach(item => {
+      const unitCite = item.unit ? `<cite class="text-muted small">(${item.unit})</cite>` : '';
       content += `
           <tr>
-              <td>${dataLabel} ${unitCite}</td>
-              <td class="fw-bold text-end" id="${dataId}"></td>
+              <td>${item.label} ${unitCite}</td>
+              <td class="fw-bold text-end" id="${item.id}"></td>
           </tr>
       `;
   });
 
   // Inject chart placeholders if any
-  chartIds.forEach((chartId, i) => {
-      const chartUnit = chartUnits[i];
-      const unitCite = chartUnit != '' ? `<cite class="text-muted small">(${chartUnit})</cite>` : '';
+  charts.forEach(chart => {
+      const unitCite = chart.unit ? `<cite class="text-muted small">(${chart.unit})</cite>` : '';
       content += `
           <tr>
               <td colspan="2" class="chart-td">
-                  <h4 class="text-center">${chartTitles[i]} ${unitCite}</h4>
+                  <h4 class="text-center">${chart.title} ${unitCite}</h4>
                   <div class="chart-container">
                       <div class="demographics-chart">
-                          <canvas id="${chartId}"></canvas>
+                          <canvas id="${chart.id}"></canvas>
                       </div>
                   </div>
               </td>
@@ -75,6 +69,7 @@ export const injectOverviewSection = (containerId, title, icon, dataLabels = [],
 
   $(`#${containerId}`).html(content);
 };
+
 
 
 export const createChartContainer = (chartId, title) => {
