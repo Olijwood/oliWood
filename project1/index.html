@@ -298,45 +298,53 @@
              <!-- Overview Tab -->
             <div class="tab-content mt-3">
               <div class="tab-pane fade show active" id="currentDemo" role="tabpanel" aria-labelledby="overview-tab">
-                  <div class="overview-placeholder" id="populationOverview-container"></div>
+                  <!-- <div class="overview-placeholder" id="populationOverview-container"></div>
                   <div class="overview-placeholder" id="economicOverview-container"></div>
                   <div class="overview-placeholder" id="healthOverview-container"></div>
-                  <div class="overview-placeholder" id="enviromentOverview-container"></div>
+                  <div class="overview-placeholder" id="enviromentOverview-container"></div> -->
+                <div id="populationOverview"></div>
+                <div id="economicOverview"></div>
+                <div id="healthOverview"></div>
+                <div id="environmentOverview"></div>
               </div>
               
               <!-- Population Tab -->
               <div class="tab-pane fade demoHistTab" id="populationDemoTab" role="tabpanel" aria-labelledby="d-population-tab">
-                <div class="chart-placeholder" id="totalPopulationChart-container"></div>
-                <div class="chart-placeholder" id="populationGrowthChart-container"></div>
-                <div class="chart-placeholder" id="ageDistributionChart-container"></div>
-                <div class="chart-placeholder" id="genderDistributionChart-container"></div>
-                <div class="chart-placeholder" id="urbanRuralHistChart-container"></div>
-              </div>
+                <div id="popGeneral"></div>
+                <div id="popDistributions"></div>
+                <div id="popEducation"></div>
+                <div id="popMoreInfo"></div>
+              </div>  
 
               <!-- Health Tab -->
               <div class="tab-pane fade demoHistTab" id="healthDemoTab" role="tabpanel" aria-labelledby="d-health-tab">
-                <div class="chart-placeholder" id="lifeExpectancyChart-container"></div>
-                <div class="chart-placeholder" id="fertilityRateChart-container"></div>
-                <div class="chart-placeholder" id="healthExpenditureChart-container"></div>
+                <div id="mortalityLifeExpectancy"></div>
+                <div id="healthcareAccess"></div>
+                <div id="immunizationCoverage"></div>
+                <div id="healthPrevelance"></div>
+               
               </div>
 
               <!-- Economy Tab -->
               <div class="tab-pane fade demoHistTab" id="economyDemoTab" role="tabpanel" aria-labelledby="d-economy-tab">
-                <div class="chart-placeholder" id="gdpChart-container"></div>
-                <div class="chart-placeholder" id="gdpPerCapChart-container"></div>
-                <div class="chart-placeholder" id="inflationChart-container"></div>
+               <div id="econGeneral"></div>
+               <div id="incomeInequality"></div>
+               <div id="econMoreInfo"></div>
                   
               </div>
 
               <!-- Environment Tab -->
               <div class="tab-pane fade demoHistTab" id="environmentDemoTab" role="tabpanel" aria-labelledby="d-environment-tab">
-                <div class="chart-placeholder" id="co2EmissionsChart-container"></div>
+                <div id="airQuality"></div>
+                <div id="energySustainability"></div>
+                <div id="landUse"></div>
+                <div id="waterResources"></div>
               </div>
               
             </div>
             
             <!-- Modal Footer -->
-
+            </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
             </div>

@@ -30,7 +30,7 @@ export const defaultStackedHorizontalBarChartOptions = {
       color: 'black',
       anchor: 'center',
       align: 'center',
-      formatter: (value) => `${value}%`,
+      formatter: (value) => `${value.toFixed(2)}%`,
       font: { size: 12, weight: 'bold' }
     },
     legend: {
@@ -96,18 +96,11 @@ export const defaultHorizontalBarChartOptions = {
     }
   },
   plugins: {
-    title: {
-      display: false,
-      color: 'rgb(33, 37, 41)',
-      font: { size: 14, weight: 'bold' },
-      padding: { top: 5, bottom: 5}
-    },
     datalabels: {
       display: true,
       color: 'rgb(33, 37, 41)',
       anchor: 'right',
       align: 'center',
-      formatter: (value) => `${value}`,
       font: { size: 14, weight: 'bold', color: 'rgb(33, 37, 41)' },
     },
     legend: {

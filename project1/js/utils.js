@@ -4,7 +4,7 @@ const toTitleCase = (str) => str.replace(/\w\S*/g, (text) =>
 );
 
  // Helper function for formatting percentage values
- const formatPercentage = (value) => value !== null ? `${Number(value).toFixed(2)}%` : 'N/A';
+ const formatPercentage = (value) => value !== null || value !== 'N/A'? `${Number(value).toFixed(2)}%` : 'N/A';
 
  // Helper function for formatting numbers with commas
  const formatNumber = (value) => value !== null ? Number(value).toLocaleString() : 'N/A';

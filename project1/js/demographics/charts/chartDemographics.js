@@ -3,15 +3,18 @@ import { destroyExistingChart, buildChartDatasets } from './chartUtils.js'; // A
 
 // Helper to create horizontal bar charts (stacked or non-stacked)
 export const createStackedHorizontalBarChart = (
-  canvasId, datasets, chartTitle, isStacked = true
+  canvasId, datasets, chartTitle, isStacked = true, isPct = false, dataMaxD3 = 0
 ) => {
-  const canvasElement = document.getElementById(canvasId);
-
-  const ctx = canvasElement.getContext('2d');
+  
 
   // Destroy any existing chart before creating a new one
   destroyExistingChart(canvasId);
+  const chartContainer = $(`#${canvasId}`);
 
+  const ctx = chartContainer[0].getContext('2d');
+  const spinnerId = `spinner-${canvasId}`;
+
+  // find max data value in dataset s
   // Determine the correct options based on stacked or non-stacked configuration
   const chartOptions = isStacked
     ? defaultStackedHorizontalBarChartOptions
@@ -28,11 +31,17 @@ export const createStackedHorizontalBarChart = (
       ...chartOptions,
       plugins: {
         ...chartOptions.plugins,
+        datalabels: {
+          ...chartOptions.plugins.datalabels,
+          align: isStacked ? 'center' : (context) => context.dataset.data[0] < dataMaxD3 ? 'end' : 'center',
+          anchor: isStacked ? 'center' : (context) => context.dataset.data[0] < dataMaxD3 ? 'end' : 'center',
+          formatter: (value) => (isPct ? `${Number(value).toFixed(2)}%` : value),
+        },
         tooltip: {
           ...chartOptions.tooltip,     
           callbacks: {
             label: (tooltipItem) =>
-              isStacked ? `${tooltipItem.formattedValue}%` : tooltipItem.formattedValue,
+              isPct ? `${tooltipItem.formattedValue}%` : tooltipItem.formattedValue,
           },
         },
       },
@@ -43,8 +52,11 @@ export const createStackedHorizontalBarChart = (
   // Create the new chart
   const newChart = new Chart(ctx, chartConfig);
 
+ 
   // Store the chart instance on the canvas element for future cleanup
-  canvasElement.chartInstance = newChart;
+  chartContainer.chartInstance = newChart;
+  $(`#${spinnerId}`).hide();  // Hide the spinner
+  chartContainer.show();  // Show the chart canvas
 };
 
 
