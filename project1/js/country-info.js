@@ -1,4 +1,6 @@
-const updateCountryInfo = (countryData) => {
+import { toTitleCase } from "./utils.js";
+
+export const updateCountryInfo = (countryData) => {
   const {
     name,
     officialName,
@@ -81,7 +83,7 @@ const updateCountryInfo = (countryData) => {
 };
 
 // Fetch country info via AJAX
-const fetchCountryInfo = (countryCode) => {
+export const fetchCountryInfo = (countryCode) => {
   $.ajax({
     url: 'php/getCountryInfo.php',
     type: 'GET',
@@ -98,3 +100,15 @@ const fetchCountryInfo = (countryCode) => {
     },
   });
 };
+
+
+
+
+$('#infoModal').on('shown.bs.modal', () => {
+  const countryCode = $('#hiddenCountrySelected').val();
+  if (!countryCode) {
+    console.log('no country selected');
+    return;
+  }
+  fetchCountryInfo(countryCode);
+});

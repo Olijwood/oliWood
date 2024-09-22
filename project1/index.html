@@ -5,70 +5,49 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Global Country Profiler</title>
     <meta name="description" content="">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-    <link rel="stylesheet" href="vendors/css/all.min.css"> <!-- Font Awesome -->
+    
+    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"> -->
+
+    <!-- <link rel="stylesheet" href="vendors/css/all.min.css">
     <link rel="stylesheet" href="vendors/leaflet/leaflet.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.css"> -->
     
     <!-- Custom CSS -->
     
     <link rel="stylesheet" href="css/ui.css">
-    <link rel="stylesheet" href="css/map-styles.css" defer>
+    <link rel="stylesheet" href="css/map-styles.css">
     <link rel="stylesheet" href="css/modal-styles.css">
     <link rel="stylesheet" href="css/currencies.css">
     <link rel="stylesheet" href="css/chart.css">
   </head>
   <body>
-    <div id='nav-container' class="container-fluid">
-      <nav class="navbar navbar-expand-lg navbar-dark top-navbar">
-        <div class="container-fluid d-flex justify-content-between align-items-center">
-          <button id="sidebarToggle" type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#sidebar" aria-controls="sidebar" aria-expanded="true" aria-label="Toggle sidebar">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="top-nav">
-            <ul class="nav">
-              <li><a href="#" class="nav-link">About</a></li>
-              <li><a href="#" class="nav-link">Test</a></li>
-            </ul>
-            <a href="#" class="navbar-brand">Global Profiler</a>
-          </div>
-        </div>
-      </nav>
-    </div>
-    
-    <div id="sidebar-container" class="container-fluid">
+    <!-- <div id="sidebar-container" class="container-fluid">
       <div class="col-sm-auto bg-light sticky-top sidebar collapse show cCollapse" id="sidebar">
         <div class="d-flex flex-sm-row flex-row flex-nowrap bg-light align-items-center sidebar">
-          <ul id="sidebar-ul" class="nav nav-pills nav-flush flex-sm-row flex-row flex-nowrap mx-auto text-center align-items-center sidebar-nav">
-            <!-- Country Information -->
-            <li id="nav-info-li">
+          <ul id="sidebar-ul" class="nav nav-pills nav-flush flex-sm-row flex-row flex-nowrap mx-auto text-center align-items-center sidebar-nav"> -->
+            <!-- <li id="nav-info-li">
               <a href="#" class="nav-link" title="Country Information">
                 <i class="bi-info-circle"></i>
               </a>
             </li>
-            <!-- Weather -->
             <li id="nav-weather-li">
               <a href="#" class="nav-link" title="Local Weather">
                 <i class="bi-cloud-sun"></i>
               </a>
             </li>
-            <!-- Demographics -->
             <li id="nav-demographics-li">
               <a href="#" class="nav-link" title="Demographics">
                 <i class="bi-bar-chart"></i>
               </a>
             </li>
-            <!-- Geography -->
             <li>
               <a href="#" class="nav-link" title="Geography">
                 <i class="bi-globe-europe-africa"></i>
               </a>
             </li>
-            <!-- Currency -->
             <li id="nav-currency-li">
               <a href="#" class="nav-link" title="Currency">
                 <i class="bi-cash"></i>
@@ -78,7 +57,7 @@
         </div>
       </div>
     </div>
-    
+     -->
     <!-- main content -->
     <div>
       
@@ -429,33 +408,10 @@
     </div>
     <input type="hidden" value="" id='hiddenCountrySelected' />
     <input type="hidden" value="" id='hiddenCurrSelected' />
-    <!-- JQuery -->
-    <script
-    src="https://code.jquery.com/jquery-3.7.1.min.js"
-    integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
-    crossorigin="anonymous"></script>    
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
-    
-    <!-- Leaflet -->
-    <script src="vendors/leaflet/leaflet.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.js"></script>
-    
-    <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>    <!-- Custom Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels" defer></script>
-    
-    <script src="js/utils.js" defer></script>
-    <script src="js/map.js" defer></script>
-    <script src="js/country-info.js" defer></script>
-    <script src="js/weather.js" defer></script>
-    <script src="js/currency-modal.js" defer></script>
+   
+    <!-- Webpack Bundle -->
+    <script src="dist/bundle.js" defer></script>
 
-    <!-- <script src="js/demographics/demo-ui.js" defer></script>
-    <script src="js/demographics/charts-demographics.js" defer></script>
-    <script src="js/demographics/demographics.js" defer></script>
-    <script src="js/demographics/hist-demographics.js" defer></script> -->
-    <script src="js/demographics/demographics.js" type="module" ></script>
-    
-    <script src="js/ui-handlers.js" defer></script>
+   
   </body>
 </html>

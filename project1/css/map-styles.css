@@ -5,22 +5,16 @@ html, body {
 
 #map {
   width: 100%;
-  height: calc(100vh - 50px ); 
-  margin: 0;
-  padding: 0;
-  position: fixed;
-  top: 0px; 
-  
-  overflow: hidden;
-  transition: top 0.35s ease ;
-  z-index: 900; 
+  height: 100vh;
+  position: relative
+
 }
 
 #selectContainer {
   position: absolute;
   left: 50%;
   transform: translateX(-50%); 
-  z-index: 900; 
+  z-index: 899; 
   padding: 0; 
   margin-top: 10px;
 }
@@ -28,4 +22,19 @@ html, body {
 #countrySelect {
   width: 200px;
   margin: 0 auto;
+}
+
+.leaflet-radar {
+  /* Customize styles for the radar */
+  position: absolute;
+  width: 100px; /* Adjust to your needs */
+  height: 100px; /* Adjust to your needs */
+  background-color: rgba(0, 255, 0, 0.5); /* Radar color and transparency */
+  border-radius: 50%;
+  animation: radar-scan 2s infinite linear;
+}
+
+@keyframes radar-scan {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }

@@ -1,3 +1,4 @@
+import { toTitleCase } from './utils.js';
 
 let selectedCurr = $('#hiddenCurrSelected');
 

@@ -1,3 +1,5 @@
+import { toTitleCase } from './utils.js';
+import { userlat, userlon } from './map.js';
 
 const updateWeatherUI = (data) => {
   // Update weather elements
@@ -16,12 +18,10 @@ const updateWeatherUI = (data) => {
   $('#humidityVal').html(`${humidity}%`);
   $('#windspeedVal').html(`${windSpeed} m/s`);
 
-  userCountryCode = data.sys.country;
-  userCountryCodeInput.val(userCountryCode).trigger('change');
-  fetchCountryInfo(data.sys.country);
 };
+  
 
-const fetchWeather = (lat, lon) => {
+export const fetchWeather = (lat, lon) => {
   $.ajax({
     url: 'php/getWeather.php',
     type: 'GET',
@@ -38,3 +38,15 @@ const fetchWeather = (lat, lon) => {
     }
   });
 };
+
+
+$('#weatherModal').on('shown.bs.modal', () => {
+  const countryCode = $('#hiddenCountrySelected').val();
+  if (!countryCode) {
+    console.log('no country selected');
+    return;
+  }
+  fetchWeather(userlat, userlon);
+});
+
+
