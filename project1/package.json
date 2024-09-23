@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "Country Profiler Web Application",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    
+  },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.6.0",
     "@fortawesome/free-solid-svg-icons": "^6.6.0",

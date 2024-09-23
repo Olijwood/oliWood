@@ -29,9 +29,9 @@ dom.watch();
 
 // Import your custom scripts
 import './utils.js';
+import './userCountry.js';
 import './map.js';
 import './country-info.js';
 import './weather.js';
 import './currency-modal.js';
 import './demographics/demographics.js';
-import './ui-handlers.js';
