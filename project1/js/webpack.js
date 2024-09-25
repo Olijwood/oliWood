@@ -23,8 +23,8 @@ import 'leaflet.markercluster/dist/MarkerCluster.css';
 
 // Font Awesome
 import { library, dom } from '@fortawesome/fontawesome-svg-core';
-import { faCloud, faStar, faTemperatureHigh, faSun, faCloudSun, faWind, faTint, faCity, faGlobe, faUsers, faHashtag, faInfoCircle, faLanguage, faScroll, faUserTie, faPlaneDeparture, faBellConcierge, faLandmark, faGlobeAmericas } from '@fortawesome/free-solid-svg-icons';
-library.add(faCloud, faStar, faTemperatureHigh, faSun, faWind, faCloudSun, faTint, faCity, faGlobe, faUsers, faHashtag, faInfoCircle, faLanguage, faScroll, faUserTie, faPlaneDeparture, faBellConcierge, faLandmark);
+import { faCloud, faStar, faTemperatureHigh, faSun, faCloudSun, faWind, faTint, faCity, faGlobe, faUsers, faHashtag, faInfoCircle, faLanguage, faScroll, faUserTie, faPlaneDeparture, faBellConcierge, faLandmark, faGlobeAmericas, faChartLine, faHeartbeat, faLeaf } from '@fortawesome/free-solid-svg-icons';
+library.add(faCloud, faStar, faTemperatureHigh, faSun, faWind, faCloudSun, faTint, faCity, faGlobe, faUsers, faHashtag, faInfoCircle, faLanguage, faScroll, faUserTie, faPlaneDeparture, faBellConcierge, faLandmark, faGlobeAmericas, faChartLine, faHeartbeat, faLeaf);
 dom.watch();
 
 // Import your custom scripts
