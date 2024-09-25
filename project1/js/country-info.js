@@ -1,36 +1,65 @@
 import { toTitleCase } from "./utils.js";
+import { currentCountry } from "./map.js";
 
-export const updateCountryInfo = (countryData) => {
+const countryInfoConfig = [
+  { id: 'countryName', label: 'Country Name', format: ''},
+  { id: 'officialName', label: 'Official Name', format: ''},
+  { id: 'capitalCity', label: 'Capital City', format: ''},
+  { id: 'continent', label: 'Continent', format: ''},
+  { id: 'subcontinent', label: 'Sub-Continent', format: ''},
+  { id: 'populationVal', label: 'Population', format: 'int'},
+  { id: 'driveSide', label: 'Driving Side', format: 'title'},
+  { id: 'area', label: 'Area km²', format: 'int'},
+  { id: 'landlocked', label: 'Land-Locked', format: 'yesNo'},
+  { id: 'independent', label: 'Independent', format: 'yesNo'},
+  { id: 'unm49', label: 'UMN Member', format: 'yesNo'},
+]
+
+
+const injectDataIntoModal = (data, config) => {
+  config.forEach(({ id: key, format}) => {
+    const val = data[key];
+    let element = $(`#${key}`);
+    let formattedValue;
+    if (val === undefined) {
+      element.text("N/A");
+    } else {
+      switch (format) {
+        case "":
+          formattedValue = val;
+          break;
+        case "int":
+          formattedValue = val.toLocaleString();
+          break;
+        case "title":
+          formattedValue = toTitleCase(val);
+          break;
+        case "yesNo":
+          formattedValue = val ? "Yes" : "No";
+          break;
+        default:
+          formattedValue = val;
+      }
+      element.text(formattedValue);
+    }
+  });
+};
+
+export const updateCountryInfo = (countryData, countryInfoConfig) => {
+  injectDataIntoModal(countryData, countryInfoConfig);
   const {
-    name,
-    officialName,
-    capital,
-    continent,
-    subcontinent,
-    population,
+    countryName,
     languages,
     currencies,
     flag,
     alt,
     borders,
-    driveSide,
-    landlocked,
-    area,
     demonyms,
-    independent,
-    unm49,
   } = countryData;
 
   // Set country flag
-  $('#countryFlag').attr('src', flag).attr('alt', alt || `${name} Flag`);
+  $('#countryFlag').attr('src', flag).attr('alt', alt || `${countryName} Flag`);
 
-  // General Info
-  $('#cNameVal').text(name);
-  $('#officialNameVal').text(officialName);
-  $('#capitalCityVal').text(capital);
-  $('#continentVal').text(continent);
-  $('#subcontinentVal').text(subcontinent);
-  $('#populationVal').text(population.toLocaleString());
 
   // Bordering countries
   $('#borderCs').empty();
@@ -41,9 +70,6 @@ export const updateCountryInfo = (countryData) => {
   } else {
     $('#borderCs').append(`<li>No bordering countries</li>`);
   }
-
-  // Driving side
-  $('#driveSideVal').text(toTitleCase(driveSide));
 
   // Languages
   $('#languagesTable').empty();
@@ -65,50 +91,19 @@ export const updateCountryInfo = (countryData) => {
     $('#currenciesVal').html('<li>N/A</li>');
   }
 
-  // More Info
-  $('#areaVal').text(`${area.toLocaleString()} km²`);
-  $('#landlockedVal').text(landlocked ? 'Yes' : 'No');
-  $('#independentVal').text(independent ? 'Yes' : 'No');
-  $('#unm49Val').text(unm49 ? 'Yes' : 'No');
-
   // Demonyms
   $('#demonymsTable').empty();
   if (demonyms && Object.keys(demonyms).length) {
     Object.entries(demonyms).forEach(([lang, { m, f }]) => {
-      $('#demonymsTable').append(`<tr><td>${lang}</td><td>${m} / ${f}</td></tr>`);
+      $('#demonymsTable').append(`<tr><td>${lang}:  ${m} / ${f}</td></tr>`);
     });
   } else {
     $('#demonymsTable').html('<tr><td colspan="2">N/A</td></tr>');
   }
 };
 
-// Fetch country info via AJAX
-export const fetchCountryInfo = (countryCode) => {
-  $.ajax({
-    url: 'php/getCountryInfo.php',
-    type: 'GET',
-    data: { code: countryCode },
-    success: (response) => {
-      if (response.error) {
-        alert(response.error);
-      } else {
-        updateCountryInfo(response);
-      }
-    },
-    error: (xhr, status, error) => {
-      console.error('Error fetching country info:', error);
-    },
-  });
-};
-
-
-
 
 $('#infoModal').on('shown.bs.modal', () => {
-  const countryCode = $('#hiddenCountrySelected').val();
-  if (!countryCode) {
-    console.log('no country selected');
-    return;
-  }
-  fetchCountryInfo(countryCode);
+  const countryInfoData = currentCountry.info;
+  updateCountryInfo(countryInfoData, countryInfoConfig);
 });

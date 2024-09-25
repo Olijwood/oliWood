@@ -20,12 +20,14 @@ if (isset($data[0])) {
 
     $country = $data[0];
     $result = [
-        'name' => $country['name']['common'],
-        'official-name' => $country['name']['official'],
-        'capital' => $country['capital'][0],
+        'countryName' => $country['name']['common'],
+        'lat' => $country['latlng'][0],
+        'lon' => $country['latlng'][1],
+        'officialName' => $country['name']['official'],
+        'capitalCity' => $country['capital'][0],
         'continent' => $country['region'],
         'subcontinent' => $country['subregion'],
-        'population' => $country['population'],
+        'populationVal' => $country['population'],
         'languages' => isset($country['languages']) ? $country['languages'] : null,
         'currencies' => isset($country['currencies']) ? $country['currencies'] : null,
         'flag' => $country['flags']['svg'],

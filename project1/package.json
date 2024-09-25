@@ -4,7 +4,7 @@
   "description": "Country Profiler Web Application",
   "main": "index.js",
   "scripts": {
-    
+    "build": "npm install && npm run build"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.6.0",
@@ -17,6 +17,7 @@
     "leaflet": "^1.9.4",
     "leaflet-easybutton": "^2.4.0",
     "leaflet-providers": "^2.0.0",
+    "leaflet.markercluster": "^1.5.3",
     "leaflet.tilelayer.pouchdbcached": "^1.0.0",
     "pouchdb": "^9.0.0"
   },

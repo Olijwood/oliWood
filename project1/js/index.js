@@ -16,20 +16,19 @@ L.Icon.Default.mergeOptions({
   shadowUrl: 'marker-shadow.png'
 });
 import 'leaflet/dist/leaflet.css'; 
-
+import 'leaflet.markercluster';
+import 'leaflet.markercluster/dist/MarkerCluster.css';
 
 
 
 // Font Awesome
 import { library, dom } from '@fortawesome/fontawesome-svg-core';
-import { faCloud, faTemperatureHigh, faSun, faWind, faTint, faCity, faGlobe, faUsers, faHashtag, faInfoCircle, faLanguage, faScroll, faUserTie } from '@fortawesome/free-solid-svg-icons';
-library.add(faCloud, faTemperatureHigh, faSun, faWind, faTint, faCity, faGlobe, faUsers, faHashtag, faInfoCircle, faLanguage, faScroll, faUserTie);
+import { faCloud, faStar, faTemperatureHigh, faSun, faCloudSun, faWind, faTint, faCity, faGlobe, faUsers, faHashtag, faInfoCircle, faLanguage, faScroll, faUserTie, faPlaneDeparture, faBellConcierge, faLandmark, faGlobeAmericas } from '@fortawesome/free-solid-svg-icons';
+library.add(faCloud, faStar, faTemperatureHigh, faSun, faWind, faCloudSun, faTint, faCity, faGlobe, faUsers, faHashtag, faInfoCircle, faLanguage, faScroll, faUserTie, faPlaneDeparture, faBellConcierge, faLandmark);
 dom.watch();
-
 
 // Import your custom scripts
 import './utils.js';
-import './userCountry.js';
 import './map.js';
 import './country-info.js';
 import './weather.js';

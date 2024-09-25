@@ -1,52 +1,55 @@
 import { toTitleCase } from './utils.js';
-import { userlat, userlon } from './map.js';
+import { currentCountry } from './map.js';
+
+const weatherConfig = [
+  { id: 'wDescription', label: 'Weather', format: 'title', unit: ''},
+  { id: 'feelsLike', label: 'Feels Like', format: '', unit: '°C'},
+  { id: 'humidity', label: 'Humidity', format: '', unit: '%'},
+  { id: 'windSpeed', label: 'Wind Speed', format: '', unit: 'm/s'},
+];
+
+const injectWeatherVals = (data, weatherConfig) => {
+  weatherConfig.forEach((config) => {
+    if (config.format === '') {
+      $(`#${config.id}`).html(`${data[config.id]}<span class="text-muted"> ${config.unit}</span>`);
+    } else {
+      $(`#${config.id}`).html(`${toTitleCase(data[config.id])}`);
+    };
+  });
+}
+
+const format12HourTime = (time) => {
+  return new Date(time * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+};
 
 const updateWeatherUI = (data) => {
-  // Update weather elements
-  const weatherDescription = toTitleCase(data.weather[0].description);
-  const temperature = data.main.temp;
-  const feelsLike = data.main.feels_like;
-  const humidity = data.main.humidity;
-  const windSpeed = data.wind.speed;
+  injectWeatherVals(data, weatherConfig);
+  
+  const sunrise = format12HourTime(data.sunrise);
+  const sunset = format12HourTime(data.sunset);
 
-  const sunrise = new Date(data.sys.sunrise * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-  const sunset = new Date(data.sys.sunset * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
-  $('#weatherVal').html(weatherDescription);
-  $('#tempVal').html(`${temperature} °C (Feels like ${feelsLike} °C)`);
-  $('#sunriseSunsetVal').html(`${sunrise} | ${sunset}`);
-  $('#humidityVal').html(`${humidity}%`);
-  $('#windspeedVal').html(`${windSpeed} m/s`);
+  $('#temperature').html(`${data.temperature}<span class="text-muted"> °C</span> <span class="text-muted small">(${data.feelsLike} °C)</span>`);
+  $('#sunriseSunset').html(`${sunrise} | ${sunset}`);
 
 };
   
 
 export const fetchWeather = (lat, lon) => {
-  $.ajax({
-    url: 'php/getWeather.php',
-    type: 'GET',
-    data: { lat, lon },
-    success: (response) => {
+  $.getJSON('php/getWeather.php', { lat, lon })
+    .done((response) => {
       if (response.error) {
         console.error('Error fetching weather data:', response.error);
       } else {
         updateWeatherUI(response);
       }
-    },
-    error: () => {
+    })
+    .fail(() => {
       console.error('Failed to fetch weather data.');
-    }
-  });
+    });
 };
 
-
 $('#weatherModal').on('shown.bs.modal', () => {
-  const countryCode = $('#hiddenCountrySelected').val();
-  if (!countryCode) {
-    console.log('no country selected');
-    return;
-  }
-  fetchWeather(userlat, userlon);
+  updateWeatherUI(currentCountry.weather);
 });
 
 

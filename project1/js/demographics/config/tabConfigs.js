@@ -1,3 +1,5 @@
+import { formatNumber } from "../../utils";
+
 export const overviewSectionsConfig = [
   { 
     id: 'populationOverview', 
@@ -155,6 +157,20 @@ export const populationSectionsConfig = [
     ]
   }
 ];
+
+const countryInfoConfig = [
+  { id: 'countryName', label: 'Country Name', format: ''},
+  { id: 'officalName', label: 'Official Name', format: ''},
+  { id: 'capitalCity', label: 'Capital City', format: ''},
+  { id: 'continent', label: 'Continent', format: ''},
+  { id: 'subcontinent', label: 'Sub-Continent', format: ''},
+  { id: 'populationVal', label: 'Population', format: 'int'},
+  { id: 'driveSide', label: 'Driving Side', format: 'title'},
+  { id: 'area', label: 'Area km²', format: 'int'},
+  { id: 'landlocked', label: 'Land-Locked', format: 'yesNo'},
+  { id: 'independant', label: 'Independant', format: 'yesNo'},
+  { id: 'umn49', label: 'UMN Member', format: 'yesNo'},
+]
 
 export const economicSectionsConfig = [
   {
