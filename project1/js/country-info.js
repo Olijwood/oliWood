@@ -92,7 +92,6 @@ export const updateCountryInfo = (countryData, countryInfoConfig) => {
 
 
 $('#infoModal').on('shown.bs.modal', () => {
-  if (_.isEmpty(currentCountry.info)) {currentCountry.fetchInfo()};
   
   const countryInfoData = currentCountry.info;
  

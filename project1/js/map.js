@@ -276,6 +276,7 @@ function initializeSelectedCountry(countryCode) {
 
   currentCountry = new SelectedCountry(countryCode);
   currentCountry.fetchInfo();
+  currentCountry.fetchWeather();
   currentCountry.fetchCities();
   currentCountry.fetchAirports();
   currentCountry.fetchPOIs('HTL', currentCountry.hotelLayer, 'fa-bell-concierge', '#dc4d8d');

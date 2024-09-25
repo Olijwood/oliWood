@@ -43,7 +43,6 @@ export const fetchWeather = (lat, lon) => {
 };
 
 $('#weatherModal').on('shown.bs.modal', () => {
-  currentCountry.fetchWeather();
   updateWeatherUI(currentCountry.weather);
 });
 
