@@ -24,17 +24,63 @@ html, body {
   margin: 0 auto;
 }
 
-.leaflet-radar {
-  /* Customize styles for the radar */
-  position: absolute;
-  width: 100px; /* Adjust to your needs */
-  height: 100px; /* Adjust to your needs */
-  background-color: rgba(0, 255, 0, 0.5); /* Radar color and transparency */
-  border-radius: 50%;
-  animation: radar-scan 2s infinite linear;
+
+/* Markers */
+
+.marker-city div {
+  background-color: #6d6c6c;
+  color: white;
+  width: 28px;
+  height: 28px;
 }
 
-@keyframes radar-scan {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+.marker-capital div {
+  background-color: black;
+  color: white;
+  width: 28px;
+  height: 28px;
+  font-size: 0.85rem;
+}
+
+.marker-airport div {
+  background-color: #78bfeb;
+  color: white;
+  width: 28px;
+  height: 28px;
+}
+
+
+.custom-div-icon div {
+  color: white;
+  font-size: 0.8rem;
+  width: 28px;
+  height: 28px;
+}
+
+.marker-mus div {
+  color: black;
+  background-color: #fff4c4;
+  border: 2px solid rgb(0, 0, 0, 0.7);
+  font-size: 0.86rem;
+  /* font-weight: bold; */
+  height: 25px;
+  width: 25px;
+}
+
+.marker-htl div {
+  color: black;
+  background-color: #f0a7a7;
+  border: 2px solid rgb(0, 0, 0, 0.7);
+  font-size: 0.9rem;
+  height: 25px;
+  width: 25px;
+}
+
+ 
+
+.custom-cluster-icon div {
+  background-color: #f08080;
+  border: 2px solid rgb(0, 0, 0, 0.7);
+  font-weight: bold;
+  font-size: 1rem;
 }
