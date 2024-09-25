@@ -1,6 +1,6 @@
-import { healthSectionsConfig, populationSectionsConfig, economicSectionsConfig, environmentSectionsConfig, overviewSectionsConfig } from "../config/tabConfigs.js";
+import { healthSectionsConfig, populationSectionsConfig, economicSectionsConfig, environmentSectionsConfig, overviewSectionsConfig } from "../../configs/tabConfigs.js";
 import { createStackedHorizontalBarChart } from "../charts/chartDemographics.js";
-import { injectNumericDataForTab, labelPlacementMax, chartColours, rndDTwo} from "../utils.js";
+import { injectNumericDataForTab, labelPlacementMax, chartColours, rndTwo} from "../../utils.js";
 
 export const updateOverviewTab = (overview) => {
   injectNumericDataForTab(overview, overviewSectionsConfig);
@@ -32,7 +32,7 @@ export const updateHealthTab = (health) => {
 export const updatePopulationTab = (population) => {
   injectNumericDataForTab(population, populationSectionsConfig);
   
-  const workingAgePopulation = rndDTwo(population.workingAgePopulation);
+  const workingAgePopulation = rndTwo(population.workingAgePopulation);
   const elderlyPopulation = population.elderlyPopulation;
   const childPopulation = 100 - workingAgePopulation - elderlyPopulation;
   createStackedHorizontalBarChart('populationAgeChart', [
@@ -41,28 +41,28 @@ export const updatePopulationTab = (population) => {
     { label: '65+', data: [elderlyPopulation], backgroundColor: 'rgba(255, 204, 121, 0.7)' }
   ], 'Age distribution', true, true);
 
-  const femalePopulation = rndDTwo(population.femalePopulation);
+  const femalePopulation = rndTwo(population.femalePopulation);
   const malePopulation = 100 - femalePopulation;
   createStackedHorizontalBarChart('genderChart', [
     { label: 'Female', data: [femalePopulation], backgroundColor: chartColours.female },
     { label: 'Male', data: [malePopulation], backgroundColor: chartColours.male},
   ], 'Gender distribution', true, true);
 
-  const urbanPopulation = rndDTwo(population.urbanPopulation);
+  const urbanPopulation = rndTwo(population.urbanPopulation);
   const ruralPopulation = 100 - urbanPopulation;
   createStackedHorizontalBarChart('urbanRuralChart', [
     { label: 'Rural', data: [ruralPopulation], backgroundColor: 'rgba(100, 182, 118, 0.5)' },
     { label: 'Urban', data: [urbanPopulation], backgroundColor: 'rgba(164, 194, 212, 0.5)' }
   ], 'Rural vs Urban population', true, true);
 
-  const womenInParliamentPct = rndDTwo(population.womenInParliamentPct);
+  const womenInParliamentPct = rndTwo(population.womenInParliamentPct);
   const menInParliamentPct = 100 - womenInParliamentPct;
   createStackedHorizontalBarChart('parliamentChart', [
     { label: 'Female', data: [womenInParliamentPct], backgroundColor: chartColours.female },
     { label: 'Male', data: [menInParliamentPct], backgroundColor: chartColours.male }
   ], 'Women in Parliament (%)', true, true);
 
-  const womenInManagementPct = rndDTwo(population.womenInManagementPct);
+  const womenInManagementPct = rndTwo(population.womenInManagementPct);
   const menInManagementPct = 100 - womenInManagementPct;
   createStackedHorizontalBarChart('managementChart', [
     { label: 'Female', data: [womenInManagementPct], backgroundColor: chartColours.female },

@@ -5,7 +5,7 @@ Chart.register(ChartDataLabels);
 
 
 import { defaultStackedHorizontalBarChartOptions, defaultHorizontalBarChartOptions, defaultLineChartOptions } from "./chartOptions.js";
-import { destroyExistingChart, buildChartDatasets } from './chartUtils.js'; // Assuming you have this utility
+import { destroyExistingChart, buildChartDatasets } from './chartUtils.js'; 
 
 // Helper to create horizontal bar charts (stacked or non-stacked)
 export const createStackedHorizontalBarChart = (

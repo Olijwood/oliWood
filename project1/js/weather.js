@@ -1,12 +1,6 @@
 import { toTitleCase } from './utils.js';
 import { currentCountry } from './map.js';
-
-const weatherConfig = [
-  { id: 'wDescription', label: 'Weather', format: 'title', unit: ''},
-  { id: 'feelsLike', label: 'Feels Like', format: '', unit: '°C'},
-  { id: 'humidity', label: 'Humidity', format: '', unit: '%'},
-  { id: 'windSpeed', label: 'Wind Speed', format: '', unit: 'm/s'},
-];
+import { weatherConfig } from './configs/modalConfigs.js';
 
 const injectWeatherVals = (data, weatherConfig) => {
   weatherConfig.forEach((config) => {
@@ -49,6 +43,7 @@ export const fetchWeather = (lat, lon) => {
 };
 
 $('#weatherModal').on('shown.bs.modal', () => {
+  currentCountry.fetchWeather();
   updateWeatherUI(currentCountry.weather);
 });
 

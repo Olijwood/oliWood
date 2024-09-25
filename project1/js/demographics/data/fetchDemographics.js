@@ -1,5 +1,5 @@
-import { getGroupIndicatorIdsString } from '../utils.js';
-import { indicatorGroups } from '../config/indicatorConfig.js';
+import { getGroupIndicatorIdsString } from '../../utils.js';
+import { indicatorGroups } from '../../configs/indicatorConfig.js';
 
 const DEMOGRAPHICS_ENDPOINT = 'php/demographics/getDemographics.php';
 const HISTORICAL_DATA_ENDPOINT = 'php/demographics/getHistoricalData.php';

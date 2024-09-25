@@ -1,5 +1,5 @@
-import { downsampleData } from '../utils.js';
-import { indicatorGroups } from '../config/indicatorConfig.js';
+import { downsampleData } from '../../utils.js';
+import { indicatorGroups } from '../../configs/indicatorConfig.js';
 
 class DemographicsDataProcessor {
 

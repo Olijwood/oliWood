@@ -275,9 +275,7 @@ function initializeSelectedCountry(countryCode) {
   if (currentCountry) currentCountry.removeLayersFromMap();
 
   currentCountry = new SelectedCountry(countryCode);
-  // showCapitalIcon(countryCode);
   currentCountry.fetchInfo();
-  currentCountry.fetchWeather();
   currentCountry.fetchCities();
   currentCountry.fetchAirports();
   currentCountry.fetchPOIs('HTL', currentCountry.hotelLayer, 'fa-bell-concierge', '#dc4d8d');

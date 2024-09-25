@@ -1,19 +1,7 @@
 import { toTitleCase } from "./utils.js";
 import { currentCountry } from "./map.js";
-
-const countryInfoConfig = [
-  { id: 'countryName', label: 'Country Name', format: ''},
-  { id: 'officialName', label: 'Official Name', format: ''},
-  { id: 'capitalCity', label: 'Capital City', format: ''},
-  { id: 'continent', label: 'Continent', format: ''},
-  { id: 'subcontinent', label: 'Sub-Continent', format: ''},
-  { id: 'populationVal', label: 'Population', format: 'int'},
-  { id: 'driveSide', label: 'Driving Side', format: 'title'},
-  { id: 'area', label: 'Area km²', format: 'int'},
-  { id: 'landlocked', label: 'Land-Locked', format: 'yesNo'},
-  { id: 'independent', label: 'Independent', format: 'yesNo'},
-  { id: 'unm49', label: 'UMN Member', format: 'yesNo'},
-]
+import { countryInfoConfig } from "./configs/modalConfigs.js";
+import { _adapters } from "chart.js";
 
 
 const injectDataIntoModal = (data, config) => {
@@ -104,6 +92,9 @@ export const updateCountryInfo = (countryData, countryInfoConfig) => {
 
 
 $('#infoModal').on('shown.bs.modal', () => {
+  if (_.isEmpty(currentCountry.info)) {currentCountry.fetchInfo()};
+  
   const countryInfoData = currentCountry.info;
+ 
   updateCountryInfo(countryInfoData, countryInfoConfig);
 });

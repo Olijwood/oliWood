@@ -33,4 +33,4 @@ import './map.js';
 import './country-info.js';
 import './weather.js';
 import './currency-modal.js';
-import './demographics/demographics.js';
+import './demographics.js';

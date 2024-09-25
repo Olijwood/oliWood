@@ -1,5 +1,5 @@
-import { indicatorGroups } from "../config/indicatorConfig.js";
-import { healthSectionsConfig, populationSectionsConfig, economicSectionsConfig, environmentSectionsConfig, overviewSectionsConfig } from "../config/tabConfigs.js";
+import { indicatorGroups } from "../../configs/indicatorConfig.js";
+import { healthSectionsConfig, populationSectionsConfig, economicSectionsConfig, environmentSectionsConfig, overviewSectionsConfig } from "../../configs/tabConfigs.js";
 import { injectSection } from "./genHtml.js";
 import DemographicsFetcher from "../data/fetchDemographics.js";
 import DemographicsDataProcessor from "../data/dataProcessing.js";
