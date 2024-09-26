@@ -14,12 +14,20 @@ class SelectedCountry {
     this.airports = [];
     this.hotels = [];
     this.museums = [];
+    this.railwayStations = [];
+
+    // Flags to track if data has been fetched
+    this.hasFetchedHotels = false;
+    this.hasFetchedMuseums = false;
+    this.hasFetchedRailwayStations = false;
 
     // Create marker cluster groups
     this.cityLayer = createClusterGroup();
     this.airportLayer = createClusterGroup();
-    this.hotelLayer = createCustomClusterGroup('#f08080', 40, 15); // Custom clustering for hotels
-    this.museumLayer = createCustomClusterGroup('#dccd8b', 20, 14); // Custom clustering for museums
+    this.railwayStationLayer = createCustomClusterGroup('#ff3131', 50, 16, 24, false);
+    this.hotelLayer = createCustomClusterGroup('#f08080', 40, 15); 
+    this.museumLayer = createCustomClusterGroup('#dccd8b', 20, 14); 
+    
   }
 
   setCountryDetails(name, lat, lon, flag, alt) {
@@ -129,24 +137,69 @@ class SelectedCountry {
   }
   
 
+  // Fetch POIs only if they haven't been fetched yet
+  fetchHotels() {
+    if (!this.hasFetchedHotels) {
+      this.fetchPOIs('HTL', this.hotelLayer, 'fa-bell-concierge', '#dc4d8d').then(() => {
+        this.hasFetchedHotels = true;
+      });
+    }
+  }
+
+  fetchMuseums() {
+    if (!this.hasFetchedMuseums) {
+      this.fetchPOIs('MUS', this.museumLayer, 'fa-landmark', '#dccd8b').then(() => {
+        this.hasFetchedMuseums = true;
+      });
+    }
+  }
+
+  fetchRailwayStations() {
+    if (!this.hasFetchedRailwayStations) {
+      this.fetchPOIs('RSTN', this.railwayStationLayer, 'fa-train', '#ff0000').then(() => {
+        this.hasFetchedRailwayStations = true;
+      });
+    }
+  }
+
+  // Modified getLayers to set up event listeners for first-time fetches
   getLayers() {
-    return {
+    const layers = {
       'Cities': this.cityLayer,
       'Airports': this.airportLayer,
+      'Train Stations': this.railwayStationLayer,
       'Hotels': this.hotelLayer,
-      'Museums': this.museumLayer
+      'Museums': this.museumLayer,
+      
     };
+
+     // Attach layeradd event listeners for first-time fetching of POIs
+    this.hotelLayer.on('add', () => {
+      this.fetchHotels();
+      this.hotelLayer.off('add'); // Remove listener after first call
+    });
+    this.museumLayer.on('add', () => {
+        this.fetchMuseums();
+        this.museumLayer.off('add'); // Remove listener after first call
+    });
+    this.railwayStationLayer.on('add', () => {
+        this.fetchRailwayStations();
+        this.railwayStationLayer.off('add'); // Remove listener after first call
+    });
+
+
+    return layers;
   }
 
   removeLayersFromMap() {
-    [this.cityLayer, this.airportLayer, this.hotelLayer, this.museumLayer].forEach(layer => {
+    [this.cityLayer, this.airportLayer, this.hotelLayer, this.museumLayer, this.railwayStationLayer].forEach(layer => {
       map.removeLayer(layer);
     });
   }
 }
 
 // Factory functions for creating marker clusters and custom icons
-function createClusterGroup() {
+function createClusterGroup(maxRadius = 22, disZoomAt = 8) {
   return L.markerClusterGroup({
     maxClusterRadius: 22,
     disableClusteringAtZoom: 8,
@@ -160,17 +213,18 @@ function createClusterGroup() {
   });
 }
 
-function createCustomClusterGroup(markerColor, maxRadius = 30, disZoomAt = 16) {
+function createCustomClusterGroup(markerColor, maxRadius = 30, disZoomAt = 16, size = 30, borderBlack = true) {
   return L.markerClusterGroup({
     maxClusterRadius: maxRadius,
     disableClusteringAtZoom: disZoomAt,
     iconCreateFunction: cluster => {
       const count = cluster.getChildCount();
       const adjustedColor = adjustColorBrightness(markerColor, -Math.min(100, count * 2));
+      const borderStyle = borderBlack ? '2px solid rgb(0, 0, 0, 0.7);' : '';
       return L.divIcon({
-        html: `<div style="background-color: ${adjustedColor}; color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center;">${count}</div>`,
+        html: `<div style="background-color: ${adjustedColor}; ${borderStyle}; color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center;">${count}</div>`,
         className: 'custom-cluster-icon',
-        iconSize: [30, 30],
+        iconSize: [size, size],
         popupAnchor: [0, -20]
       });
     }
@@ -279,10 +333,14 @@ function initializeSelectedCountry(countryCode) {
   currentCountry.fetchWeather();
   currentCountry.fetchCities();
   currentCountry.fetchAirports();
-  currentCountry.fetchPOIs('HTL', currentCountry.hotelLayer, 'fa-bell-concierge', '#dc4d8d');
-  currentCountry.fetchPOIs('MUS', currentCountry.museumLayer, 'fa-landmark', '#dccd8b');
+  // currentCountry.fetchPOIs('HTL', currentCountry.hotelLayer, 'fa-bell-concierge', '#dc4d8d');
+  // currentCountry.fetchPOIs('MUS', currentCountry.museumLayer, 'fa-landmark', '#dccd8b');
+  // currentCountry.fetchPOIs('RSTN', currentCountry.restaurantLayer, 'fa-utensils', '#ff6347');
 
-  if (currentControlLayers) map.removeControl(currentControlLayers);
+  if (currentControlLayers) { 
+    map.removeControl(currentControlLayers);
+  }
+
   currentControlLayers = L.control.layers(null, currentCountry.getLayers()).addTo(map);
 }
 
