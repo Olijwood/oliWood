@@ -15,7 +15,7 @@ export const formatPercentage = (value) => value !== null || value !== 'N/A'? `$
 export const formatNumber = (value) => value !== null ? Number(value).toLocaleString() : 'N/A';
 
 export const strRoundTwo = (value) => value !== null ? `${Number(value).toFixed(2)}` : 'N/A';
-
+export const round1d = (value) => value !== null ? Math.round(Number(value) * 10) / 10 : value;
 export const rndTwo = (value) => value !== null ? Number(value).toFixed(2) : 'N/A';
 
 export const strIntDollar = (value) => value !== null ? `$${Number(value).toLocaleString()}` : 'N/A';

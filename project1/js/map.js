@@ -1,5 +1,5 @@
 import { adjustColorBrightness, toTitleCase } from "./utils";
-
+import { fetchEarthquakes, calcEarthquakesInCountry, earthquakesGeoJSON} from "./earthquakes.js";
 class SelectedCountry {
   constructor(countryCode) {
     this.countryCode = countryCode.toUpperCase();
@@ -15,6 +15,9 @@ class SelectedCountry {
     this.hotels = [];
     this.museums = [];
     this.railwayStations = [];
+    this.borderData = {};
+    this.nEarthquakesDay = 0;
+    // Create a map object
 
     // Flags to track if data has been fetched
     this.hasFetchedHotels = false;
@@ -36,6 +39,15 @@ class SelectedCountry {
     this.lon = lon;
     this.flag.src = flag;
     this.flag.alt = alt || `${name}: Flag`;
+  }
+
+  fetchCountryBorderData() {
+    return $.getJSON(`php/getCountryBorders.php?code=${this.countryCode}`)
+      .done(data => {
+        // Save the entire GeoJSON data into borderData
+        this.borderData = data;
+      })
+      .fail((_, status, error) => console.error('Error fetching country border data:', error));
   }
 
   fetchInfo() {
@@ -100,8 +112,23 @@ class SelectedCountry {
   fetchPOIs(featureCode, layer, iconClass, markerColor) {
     return this.fetchData(`php/fetchPOIs.php?code=${this.countryCode}&fCode=${featureCode}`, 'POIs')
       .then(pois => {
-        this.populateLayer(layer, pois.results, iconClass, markerColor, `marker-${featureCode.toLowerCase()}`);
-      });
+ // Clear the layer before adding new markers
+ layer.clearLayers();
+
+ // Add markers in small batches
+ let batchSize = 50; // Adjust batch size as needed
+ for (let i = 0; i < pois.results.length; i += batchSize) {
+     const batch = pois.results.slice(i, i + batchSize);
+
+     // Populate the layer without clearing it
+     batch.forEach(item => {
+         const icon = createCustomIcon(iconClass, markerColor, `marker-${featureCode.toLowerCase()}`);
+         const marker = L.marker([item.lat, item.lon], { icon })
+             .bindPopup(`<strong>${toTitleCase(item.name)}</strong>`);
+         layer.addLayer(marker);
+        });
+      }
+    });
   }
 
   fetchData(url, type) {
@@ -111,6 +138,7 @@ class SelectedCountry {
         throw new Error(`No ${type} found for this country.`);
       })
       .fail((_, status, error) => {
+        console.error(`Failed to fetch ${type} from ${url}: ${status}, ${error}`);
         throw new Error(`Failed to fetch ${type}: ${status}, ${error}`);
       });
   }
@@ -170,22 +198,23 @@ class SelectedCountry {
       'Train Stations': this.railwayStationLayer,
       'Hotels': this.hotelLayer,
       'Museums': this.museumLayer,
-      
     };
 
-     // Attach layeradd event listeners for first-time fetching of POIs
+    // Attach layeradd event listeners for first-time fetching of POIs
     this.hotelLayer.on('add', () => {
       this.fetchHotels();
       this.hotelLayer.off('add'); // Remove listener after first call
-    });
+    }, { passive: true });
+
     this.museumLayer.on('add', () => {
-        this.fetchMuseums();
-        this.museumLayer.off('add'); // Remove listener after first call
-    });
+      this.fetchMuseums();
+      this.museumLayer.off('add'); // Remove listener after first call
+    }, { passive: true });
+
     this.railwayStationLayer.on('add', () => {
-        this.fetchRailwayStations();
-        this.railwayStationLayer.off('add'); // Remove listener after first call
-    });
+      this.fetchRailwayStations();
+      this.railwayStationLayer.off('add'); // Remove listener after first call
+    }, { passive: true });
 
 
     return layers;
@@ -196,13 +225,17 @@ class SelectedCountry {
       map.removeLayer(layer);
     });
   }
+
+  setNEarthQuakesDay(nEarthquakesDay) {
+    this.nEarthquakesDay = nEarthquakesDay;
+  }
 }
 
-// Factory functions for creating marker clusters and custom icons
 function createClusterGroup(maxRadius = 22, disZoomAt = 8) {
   return L.markerClusterGroup({
     maxClusterRadius: 22,
     disableClusteringAtZoom: 8,
+    chunkedLoading: true,  // Enable chunked loading
     iconCreateFunction: cluster => {
       return L.divIcon({
         html: '',
@@ -217,12 +250,15 @@ function createCustomClusterGroup(markerColor, maxRadius = 30, disZoomAt = 16, s
   return L.markerClusterGroup({
     maxClusterRadius: maxRadius,
     disableClusteringAtZoom: disZoomAt,
+    chunkedLoading: true,  
+    chunkDelay: 50, 
+    chunkInterval: 200, 
     iconCreateFunction: cluster => {
       const count = cluster.getChildCount();
       const adjustedColor = adjustColorBrightness(markerColor, -Math.min(100, count * 2));
       const borderStyle = borderBlack ? '2px solid rgb(0, 0, 0, 0.7);' : '';
       return L.divIcon({
-        html: `<div style="background-color: ${adjustedColor}; ${borderStyle}; color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center;">${count}</div>`,
+        html: `<div style="background-color: ${adjustedColor}; ${borderStyle}; height: ${size}px; width: ${size}px; color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center;">${count}</div>`,
         className: 'custom-cluster-icon',
         iconSize: [size, size],
         popupAnchor: [0, -20]
@@ -230,6 +266,8 @@ function createCustomClusterGroup(markerColor, maxRadius = 30, disZoomAt = 16, s
     }
   });
 }
+
+
 
 function createCustomIcon(iconClass, backgroundColor = 'gray', className = 'custom-div-icon', size = '28px') {
   return L.divIcon({
@@ -243,9 +281,8 @@ function createCustomIcon(iconClass, backgroundColor = 'gray', className = 'cust
 }
 
 // Global map variables and functions
-let map;
+export let map;
 export let currentCountry = null;
-let currentControlLayers = null;
 export let userlat;
 export let userlon;
 
@@ -253,24 +290,26 @@ const labels = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_only_labels/
   maxZoom: 19,
   attribution: '&copy; CartoDB'
 });
-const terrainLines = L.tileLayer('https://tiles.stadiamaps.com/tiles/stamen_terrain_lines/{z}/{x}/{y}{r}.png', {
+const terrainLines = L.tileLayer('https://tiles.stadiamaps.com/tiles/stamen_terrain/{z}/{x}/{y}{r}.png', {
   maxZoom: 20,
-  attribution: '&copy; Stadia Maps &copy; Stamen Design &copy; OpenMapTiles &copy; OpenStreetMap'
+  attribution: '&copy; <a href="https://stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://stamen.com/" target="_blank">Stamen Design</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>', 
 });
 
 // Initialize the map and base layers
 function initializeMap() {
   const basemaps = createBaseMaps();
-  const overlays = createOverlays();
   
   map = L.map('map').fitWorld();
   basemaps['Streets'].addTo(map);
-  L.control.layers(basemaps, overlays).addTo(map);
+  
+  controlSection.addTo(map);
+ 
   handleBaseLayerChange(map);
 
   map.locate({ setView: true, maxZoom: 12 });
   map.on('locationfound', handleLocationFound);
   map.on('locationerror', handleLocationError);
+
 }
 
 function createBaseMaps() {
@@ -296,12 +335,11 @@ function handleBaseLayerChange(map) {
   });
 }
 
-function createOverlays() {
-  return {
-    'Names': labels,
-    'Borders': terrainLines
-  };
-}
+let baseOverlays = {
+  'Names': labels,
+  'Borders': terrainLines
+};
+let controlSection = L.control.layers(createBaseMaps(), baseOverlays);
 
 // Handle map events
 function handleLocationFound(e) {
@@ -333,15 +371,17 @@ function initializeSelectedCountry(countryCode) {
   currentCountry.fetchWeather();
   currentCountry.fetchCities();
   currentCountry.fetchAirports();
-  // currentCountry.fetchPOIs('HTL', currentCountry.hotelLayer, 'fa-bell-concierge', '#dc4d8d');
-  // currentCountry.fetchPOIs('MUS', currentCountry.museumLayer, 'fa-landmark', '#dccd8b');
-  // currentCountry.fetchPOIs('RSTN', currentCountry.restaurantLayer, 'fa-utensils', '#ff6347');
+  currentCountry.fetchCountryBorderData().then(() => {
+    displayBorderData(currentCountry.borderData);
+  });
 
-  if (currentControlLayers) { 
-    map.removeControl(currentControlLayers);
-  }
+  if (controlSection) controlSection.remove();
+   // Update the overlays with the current country's layers
+   const countryLayers = currentCountry.getLayers();
+   baseOverlays = { ...baseOverlays, ...countryLayers }
 
-  currentControlLayers = L.control.layers(null, currentCountry.getLayers()).addTo(map);
+   controlSection = L.control.layers(createBaseMaps(), baseOverlays);
+   controlSection.addTo(map);
 }
 
 // Load countries into dropdown
@@ -352,14 +392,14 @@ function loadCountries() {
   }).fail((_, status, error) => console.error("Failed to fetch countries:", error));
 }
 
-const showCapitalIcon = (countryCode) => {
-  $.getJSON(`php/getCapitalCoordinates.php?code=${countryCode}`, capitalData => {
-    if (!capitalData.error) {
-      let capitalIcon = createCustomIcon('fa-city', 'black', 'marker-capital');
-      L.marker([capitalData.lat, capitalData.lon], { icon: capitalIcon }).addTo(map).bindPopup(`<strong>Capital City:<br> ${toTitleCase(capitalData.name)}</strong>`);
-    }
-  });
+// display borderData on map
+const displayBorderData = (borderData) => {
+  const geoJsonLayer = L.geoJson(borderData, {
+    style: { color: "#ff7800", weight: 5, opacity: 0.65, fillOpacity: 0.125 }
+  }).addTo(map);
+  map.fitBounds(geoJsonLayer.getBounds());
 }
+
 // Handle country selection changes
 function handleCountrySelection() {
   $('#countrySelect').change(function () {
@@ -367,20 +407,25 @@ function handleCountrySelection() {
     initializeSelectedCountry(selectedCountryCode);
 
     $.getJSON(`php/getCountryBorders.php?code=${selectedCountryCode}`, borderData => {
-      const geoJsonLayer = L.geoJson(borderData, {
-        style: { color: "#ff7800", weight: 5, opacity: 0.65, fillOpacity: 0.125 }
-      }).addTo(map);
-      map.fitBounds(geoJsonLayer.getBounds());
+      displayBorderData(borderData);
     });
   });
 }
 
 // Initialize modals for buttons
 const modalBtns = [
-  L.easyButton("bi-cloud-sun", () => $("#weatherModal").modal("show")),
-  L.easyButton("bi-info-circle", () => $("#infoModal").modal("show")),
-  L.easyButton("bi-bar-chart", () => $("#demographicsModal").modal("show")),
-  L.easyButton("bi-cash", () => $("#currencyModal").modal("show"))
+  L.easyButton('bi-cloud-sun fa-xl', (btn, map) => $("#weatherModal").modal("show")),
+  L.easyButton('bi-info-circle fa-xl', (btn, map) => $("#infoModal").modal("show")),
+  L.easyButton("bi-bar-chart fa-xl", (btn, map) => $("#demographicsModal").modal("show")),
+  L.easyButton("bi-cash fa-xl", (btn, map) => $("#currencyModal").modal("show")),
+  L.easyButton("bi-exclamation-diamond fa-xl", (btn, map) => {
+    $("#earthquakeOverlay").css("display", "flex");
+    if (!earthquakesGeoJSON) {
+      fetchEarthquakes();
+    } else {
+      earthquakesGeoJSON.addTo(map);
+    }
+  })
 ];
 
 function showModalBtns() {
