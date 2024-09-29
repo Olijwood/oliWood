@@ -414,11 +414,11 @@ function handleCountrySelection() {
 
 // Initialize modals for buttons
 const modalBtns = [
-  L.easyButton('bi-cloud-sun fa-xl', (btn, map) => $("#weatherModal").modal("show")),
-  L.easyButton('bi-info-circle fa-xl', (btn, map) => $("#infoModal").modal("show")),
-  L.easyButton("bi-bar-chart fa-xl", (btn, map) => $("#demographicsModal").modal("show")),
-  L.easyButton("bi-cash fa-xl", (btn, map) => $("#currencyModal").modal("show")),
-  L.easyButton("bi-exclamation-diamond fa-xl", (btn, map) => {
+  L.easyButton('bi-cloud-sun', (btn, map) => $("#weatherModal").modal("show")),
+  L.easyButton('bi-info-circle', (btn, map) => $("#infoModal").modal("show")),
+  L.easyButton("bi-bar-chart", (btn, map) => $("#demographicsModal").modal("show")),
+  L.easyButton("bi-cash", (btn, map) => $("#currencyModal").modal("show")),
+  L.easyButton("bi-exclamation-diamond", (btn, map) => {
     $("#earthquakeOverlay").css("display", "flex");
     if (!earthquakesGeoJSON) {
       fetchEarthquakes();

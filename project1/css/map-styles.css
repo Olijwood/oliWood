@@ -1,6 +1,6 @@
-*, *::before, *::after {
+/* *, *::before, *::after {
   box-sizing: border-box;
-}
+} */
 
 html, body {
   margin: 0;
@@ -19,6 +19,17 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: center;
+  width: auto; /* Ensure buttons resize based on content */
+  height: auto; /* Allow height to adapt */
+}
+
+.easy-button-button span {
+  font-size: 18px; /* Adjust font size for icons */
+  margin: auto;
+}
+
+.easy-button-button .bi::before, [class^="bi-"]::before, [class*=" bi-"]::before {
+  line-height: 30px !important;
 }
 
 #selectContainer {
