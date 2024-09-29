@@ -16,17 +16,37 @@ html, body {
 }
 
 .leaflet-bar .easy-button-button {
+  align-items: center;
+  justify-content: center;
+  width: 30px; 
+  height: 30px; 
+  padding: 0;
+  display: -webkit-flex; /* For iOS Safari */
+  -webkit-align-items: center;
+  -webkit-justify-content: center;
+}
+
+
+
+.easy-button-button span {
+  font-size: 18px; 
   display: flex;
   align-items: center;
   justify-content: center;
-  width: auto; /* Ensure buttons resize based on content */
-  height: auto; /* Allow height to adapt */
+  margin: 0;
+  line-height: 1; 
 }
 
-.easy-button-button span {
-  font-size: 18px; /* Adjust font size for icons */
-  margin: auto;
+.easy-button-button {
+  width: 30px; 
+  height: 30px; 
 }
+
+.easy-button-button .bi {
+  font-size: 18px; 
+  line-height: 1; 
+}
+
 
 .easy-button-button .bi::before, [class^="bi-"]::before, [class*=" bi-"]::before {
   line-height: 30px !important;
