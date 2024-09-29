@@ -39,7 +39,6 @@ function adjustMapHeight() {
   const viewportHeight = window.innerHeight;
 
   // Set the height of the map container to fit the viewport
-  console.log(viewportHeight);
   document.getElementById('map').style.height = `${viewportHeight}px`;
 
 }
@@ -47,5 +46,3 @@ function adjustMapHeight() {
 // Adjust the height on page load
 window.addEventListener('load', adjustMapHeight);
 
-// Adjust the height on window resize
-window.addEventListener('resize', adjustMapHeight);
