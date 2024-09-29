@@ -46,3 +46,5 @@ function adjustMapHeight() {
 // Adjust the height on page load
 window.addEventListener('load', adjustMapHeight);
 
+// Adjust the height on window resize
+window.addEventListener('resize', adjustMapHeight);
