@@ -47,4 +47,6 @@ function adjustMapHeight() {
 window.addEventListener('load', adjustMapHeight);
 
 // Adjust the height on window resize
-window.addEventListener('resize', adjustMapHeight);
+window.addEventListener('resize', () => {
+  adjustMapHeight();
+});
