@@ -1,3 +1,7 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
 html, body {
   margin: 0;
   padding: 0;
@@ -9,6 +13,12 @@ html, body {
   flex-grow: 1;
   position: relative
 
+}
+
+.leaflet-bar .easy-button-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 #selectContainer {

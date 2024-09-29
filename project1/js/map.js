@@ -439,3 +439,24 @@ $(document).ready(function() {
   handleCountrySelection();
   showModalBtns();
 });
+
+function adjustMapHeight() {
+  // Get the height of the visible viewport
+  const viewportHeight = window.innerHeight;
+
+  // Set the height of the map container to fit the viewport
+  document.getElementById('map').style.height = `${viewportHeight}px`;
+
+   // Invalidate the map size to fix rendering issues
+   if (map) {
+    map.invalidateSize(); // This method recalculates the map's size and updates the display
+  }
+}
+
+// Adjust the height on page load
+window.addEventListener('load', adjustMapHeight);
+
+// Adjust the height on window resize
+window.addEventListener('resize', () => {
+  adjustMapHeight();
+});
