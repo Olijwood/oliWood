@@ -290,7 +290,7 @@ const labels = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_only_labels/
   maxZoom: 19,
   attribution: '&copy; CartoDB'
 });
-const terrainLines = L.tileLayer('https://tiles.stadiamaps.com/tiles/stamen_terrain/{z}/{x}/{y}{r}.png', {
+const terrainLines = L.tileLayer('https://tiles.stadiamaps.com/tiles/stamen_terrain/{z}/{x}/{y}{r}.png?api_key=408797ca-05bb-4a64-9de8-7a9248c241ae', {
   maxZoom: 20,
   attribution: '&copy; <a href="https://stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://stamen.com/" target="_blank">Stamen Design</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>', 
 });
