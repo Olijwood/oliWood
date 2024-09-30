@@ -1,7 +1,10 @@
 <?php
+require_once './load_env.php';
+loadEnv(__DIR__ . '/../.env');
+
 if (isset($_GET['code'])) {
-    $countryCode = strtoupper($_GET['code']);  // Ensure country code is uppercase
-    $username = 'olijwood';  // Your GeoNames username
+    $countryCode = strtoupper($_GET['code']);  
+    $username = getenv('GNAMES_USERNAME');  
 
     // GeoNames API URL to fetch airports in the specified country
     $apiUrl = "http://api.geonames.org/searchJSON?country=$countryCode&featureCode=AIRP&maxRows=50&username=$username";

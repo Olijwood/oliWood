@@ -1,8 +1,11 @@
 <?php
+require_once './load_env.php';
+loadEnv(__DIR__ . '/../.env');
+
 if (isset($_GET['code']) && isset($_GET['fCode'])) {
     $countryCode = $_GET['code'];
     $featureCode = $_GET['fCode'];
-    $username = 'olijwood';
+    $username = getenv('GNAMES_USERNAME');
 
     $apiUrl = "http://api.geonames.org/searchJSON?country=$countryCode&featureCode=$featureCode&maxRows=1000&username=$username";
     

@@ -1,8 +1,10 @@
 <?php
+require_once '../load_env.php';
+loadEnv(__DIR__ . '/../../.env');
 // Set the cache file location
 $cacheFile = '../../data/currency_cache.json';
 $cacheDuration = 86400; // 1 day in seconds change in production
-$apiKey = '5a77a192ac53ba466daee24d';
+$apiKey = getenv('EXCHANGE_API_KEY');
 
 // Get the currency codes from the request
 $fromCurrency = $_GET['from'];

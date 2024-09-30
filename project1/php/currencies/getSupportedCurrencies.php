@@ -1,7 +1,9 @@
 <?php
+require_once '../load_env.php';
+loadEnv(__DIR__ . '/../../.env');
 $cacheFile = '../../data/supported_currencies.json';
 $cacheTime = 604800; // 1 week in seconds
-$apiKey = '5a77a192ac53ba466daee24d'; 
+$apiKey = getenv('EXCHANGE_API_KEY');
 $apiUrl = 'https://v6.exchangerate-api.com/v6/' . $apiKey . '/codes';
 
 // Check if the cache file exists and if it is still valid

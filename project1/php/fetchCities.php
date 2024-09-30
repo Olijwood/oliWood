@@ -1,6 +1,8 @@
 <?php
 // Set GeoNames username
-$username = 'olijwood';
+require_once './load_env.php';
+loadEnv(__DIR__ . '/../.env');
+$username = getenv('GNAMES_USERNAME');
 
 // Define paths for capitals.json and cities.json
 // Paths to capitals and cities JSON files

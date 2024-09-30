@@ -1,9 +1,10 @@
 <?php
-
+require_once './load_env.php';
+loadEnv(__DIR__ . '/../.env');
 if (isset($_GET['lat']) && isset($_GET['lon'])) {
     $lat = $_GET['lat'];
     $lon = $_GET['lon'];
-    $apiKey = '9787c10bc41ad2317f51d50a436fc09b';
+    $apiKey = getenv('WEATHER_API_KEY');
     $apiUrl = "https://api.openweathermap.org/data/2.5/weather?lat=$lat&lon=$lon&units=metric&appid=$apiKey";
 
     $curl = curl_init();
