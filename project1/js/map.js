@@ -25,6 +25,7 @@ class SelectedCountry {
     this.hasFetchedRailwayStations = false;
 
     // Create marker cluster groups
+    this.borderLayer = null
     this.cityLayer = createClusterGroup();
     this.airportLayer = createClusterGroup();
     this.railwayStationLayer = createCustomClusterGroup('#ff3131', 50, 16, 24, false);
@@ -221,7 +222,7 @@ class SelectedCountry {
   }
 
   removeLayersFromMap() {
-    [this.cityLayer, this.airportLayer, this.hotelLayer, this.museumLayer, this.railwayStationLayer].forEach(layer => {
+    [this.borderLayer,this.cityLayer, this.airportLayer, this.hotelLayer, this.museumLayer, this.railwayStationLayer].forEach(layer => {
       map.removeLayer(layer);
     });
   }
@@ -376,11 +377,10 @@ function initializeSelectedCountry(countryCode) {
     displayBorderData(currentCountry.borderData);
   });
 
+  // Update the control section
   if (controlSection) controlSection.remove();
-   // Update the overlays with the current country's layers
    const countryLayers = currentCountry.getLayers();
    baseOverlays = { ...baseOverlays, ...countryLayers }
-
    controlSection = L.control.layers(createBaseMaps(), baseOverlays);
    controlSection.addTo(map);
 }
@@ -393,23 +393,24 @@ function loadCountries() {
   }).fail((_, status, error) => console.error("Failed to fetch countries:", error));
 }
 
-// display borderData on map
 const displayBorderData = (borderData) => {
-  const geoJsonLayer = L.geoJson(borderData, {
+  if (currentCountry.borderLayer) {
+    map.removeLayer(currentCountry.borderLayer);
+  }
+
+  // Add the new border layer
+  currentCountry.borderLayer = L.geoJson(borderData, {
     style: { color: "#ff7800", weight: 5, opacity: 0.65, fillOpacity: 0.125 }
   }).addTo(map);
-  map.fitBounds(geoJsonLayer.getBounds());
-}
+
+  map.fitBounds(currentCountry.borderLayer.getBounds());
+};
 
 // Handle country selection changes
 function handleCountrySelection() {
   $('#countrySelect').change(function () {
     const selectedCountryCode = $(this).val();
     initializeSelectedCountry(selectedCountryCode);
-
-    $.getJSON(`php/getCountryBorders.php?code=${selectedCountryCode}`, borderData => {
-      displayBorderData(borderData);
-    });
   });
 }
 
