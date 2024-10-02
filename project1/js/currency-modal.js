@@ -2,7 +2,7 @@ import { toTitleCase } from './utils.js';
 
 let selectedCurr = $('#hiddenCurrSelected');
 
-function loadCurrenciesForCountry(countryCode) {
+export function loadCurrenciesForCountry(countryCode) {
   $.ajax({
     url: 'php/currencies/getCountryCurrencies.php',
     type: 'GET',
@@ -54,7 +54,7 @@ function loadCurrenciesForCountry(countryCode) {
   });
 };
 
-function populateCurrencyDropdowns() {
+export function populateCurrencyDropdowns() {
   $.ajax({
     url: 'php/currencies/getSupportedCurrencies.php', // Use getCurrencies2.php
     type: 'GET',
@@ -83,7 +83,7 @@ function populateCurrencyDropdowns() {
 
         const userCurr = selectedCurr.val();
         fromSelect.val(userCurr).change();
-        toSelect.val('EUR').change();
+        toSelect.val('USD').change();
         updateConversion(); // Initial conversion display
       }
     },
@@ -93,7 +93,7 @@ function populateCurrencyDropdowns() {
   });
 }
 
-function updateConversion() {
+export function updateConversion() {
   const fromCurrency = $('#fromCurrency').val();
   const toCurrency = $('#toCurrency').val();
   const amount = $('#fromAmount').val() || 1;
@@ -161,17 +161,7 @@ $('#toAmount').on('input', function() {
   }
 });
 
-// Populate the dropdowns on page load
-$('#currencyModal').on('shown.bs.modal', function () {
-  populateCurrencyDropdowns();
-  updateConversion();
-});
-
-// Handle country selection change
-$('#hiddenCountrySelected').on('change', function() {
-  const updatedCountryCode = $(this).val();
-  if (updatedCountryCode) {
-    console.log("Updated country code:", updatedCountryCode);
-    loadCurrenciesForCountry(updatedCountryCode);
-  }
+// Toggle the visibility of the overlay
+$('#cOverlayCloseBtn').on('click', function() {
+  $('#currencyOverlay').hide();
 });

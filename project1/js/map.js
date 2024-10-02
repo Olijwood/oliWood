@@ -1,5 +1,7 @@
 import { adjustColorBrightness, toTitleCase } from "./utils";
 import { fetchEarthquakes, calcEarthquakesInCountry, earthquakesGeoJSON} from "./earthquakes.js";
+import { populateCurrencyDropdowns, updateConversion, loadCurrenciesForCountry } from "./currency-modal.js";
+
 class SelectedCountry {
   constructor(countryCode) {
     this.countryCode = countryCode.toUpperCase();
@@ -376,6 +378,7 @@ function initializeSelectedCountry(countryCode) {
   currentCountry.fetchCountryBorderData().then(() => {
     displayBorderData(currentCountry.borderData);
   });
+  loadCurrenciesForCountry(countryCode);
 
   // Update the control section
   if (controlSection) controlSection.remove();
@@ -410,8 +413,14 @@ const displayBorderData = (borderData) => {
 function handleCountrySelection() {
   $('#countrySelect').change(function () {
     const selectedCountryCode = $(this).val();
+    hideCustomOverlays();
     initializeSelectedCountry(selectedCountryCode);
   });
+}
+
+const hideCustomOverlays = () => {
+  $('#earthquakeOverlay').css('display', 'none');
+  $('#currencyOverlay').css('display', 'none');
 }
 
 // Initialize modals for buttons
@@ -419,8 +428,14 @@ const modalBtns = [
   L.easyButton('bi-cloud-sun', (btn, map) => $("#weatherModal").modal("show")),
   L.easyButton('bi-info-circle', (btn, map) => $("#infoModal").modal("show")),
   L.easyButton("bi-bar-chart", (btn, map) => $("#demographicsModal").modal("show")),
-  L.easyButton("bi-cash", (btn, map) => $("#currencyModal").modal("show")),
+  L.easyButton("bi-cash", (btn, map) => {
+    $("#earthquakeOverlay").css("display", "none");
+    $("#currencyOverlay").css("display", "flex");
+    populateCurrencyDropdowns();
+    updateConversion();
+  }),
   L.easyButton("bi-exclamation-diamond", (btn, map) => {
+    $("#currencyOverlay").css("display", "none");
     $("#earthquakeOverlay").css("display", "flex");
     if (!earthquakesGeoJSON) {
       fetchEarthquakes();

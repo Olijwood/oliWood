@@ -10,7 +10,6 @@
     
     <link rel="stylesheet" href="css/map-styles.css">
     <link rel="stylesheet" href="css/modal-styles.css">
-    <link rel="stylesheet" href="css/currencies.css">
     <link rel="stylesheet" href="css/charts.css">
     <link rel="stylesheet" href="css/nouislider.css">
   </head>
@@ -22,22 +21,21 @@
       <div id="map">
         <span id="selectContainer">
           <select id="countrySelect" class="form-select shadow-sm">
-              <!-- populate from an AJAX CALL to a PHP routine that returns a JSON object that is an array of just ISO codes and names from countryBorders.geo.json -->
               <option value="GB">United Kingdom</option>
           </select>
         </span>
-        <div id="earthquakeOverlay">
-          <div class="form-check form-switch" id="earthquakeHeader">
-            <!-- <span class="text-muted fw-lighter fs-3" id="earthquakeCount"></span> -->
+        <div id="earthquakeOverlay" class="overlay-container">
+          <div id="earthquakeHeader" class="overlay-header">
             <button id="eAdvancedToggleBtn" class="btn eBtn">
               <i class="bi bi-chevron-up"></i>
             </button>
-            <div id='eTitleDiv'>
+            <div id="eTitleDiv" class="overlay-title">
               <label class="form-check-label" id="earthquakeToggleLabel" for="toggleEarthquakes">Earthquakes</label>
               <input class="form-check-input" type="checkbox" role="switch" id="toggleEarthquakes" checked>
             </div>
-            <button id="eOverlayCloseBtn" class="btn eBtn"><i class="bi bi-x"></i></button> 
+            <button id="eOverlayCloseBtn" class="overlay-close-btn"><i class="bi bi-x"></i></button> 
           </div>
+        
           <div id="earthquakeRadio">
             <div class="form-check form-check-inline">
               <input class="form-check-input" type="radio" name="inlineRadioOptions" id="eqRadioDay" value="day" checked>
@@ -52,13 +50,48 @@
               <label class="form-check-label" for="eqRadioMonth">Month</label>
             </div>
           </div>
+        
           <div id="eAdvanced">
-            <input id="search" type="text" placeholder="Search..."/>
+            <input id="search" type="text" class="input-field" placeholder="Search..."/>
             <h6></h6>
             <div id="slider"></div>
           </div>
         </div>
+        
+        <div id="currencyOverlay" class="overlay-container">
+          <div id="currencyHeader" class="overlay-header">
+            <div id="cTitleDiv" class="overlay-title">
+              <h5 class="text-center">Currency Converter</h5>
+            </div>
+            <button id="cOverlayCloseBtn" class="overlay-close-btn"><i class="bi bi-x"></i></button> 
+          </div>
+        
+          <div id="cConverterContainer">
+            <div id="conversionRate" class="conversion-rate">1 GBP equals 1.28 EUR</div>
+            
+            <!-- Convert From -->
+            <div class="currency-input-group">
+              <div class="currency-input">
+                <input type="number" id="fromAmount" value="1">
+              </div>
+              <div class="currency-select">
+                <select id="fromCurrency"></select>
+              </div>
+            </div>
+            
+            <!-- Convert To -->
+            <div class="currency-input-group">
+              <div class="currency-input">
+                <input type="number" id="toAmount">
+              </div>
+              <div class="currency-select">
+                <select id="toCurrency"></select>
+              </div>
+            </div>
+          </div>
+        </div>        
       </div>
+      
 
      
        <!-- Weather Modal -->
@@ -325,79 +358,9 @@
         </div>
       </div>
 
+      
 
-      <!-- Currency Modal -->
-      <div id="currencyModal" class="modal fade" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
-        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-          <div class="modal-content">
-            <div class="modal-header bg-primary text-white">
-              <div></i></div><br>
-              <h5 class="modal-title">Currency Information</h5>
-              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-              <!-- Tabs (if needed) -->
-              <ul class="nav nav-tabs" id="currencyTab" role="tablist">
-                <li class="nav-item" role="presentation">
-                  <button class="nav-link active" id="c-general-tab" data-bs-toggle="tab" data-bs-target="#currencyGeneral" type="button" role="tab" aria-controls="currencyGeneral" aria-selected="true">General</button>
-                </li>
-                <li class="nav-item" role="presentation">
-                  <button class="nav-link" id="c-historical-tab" data-bs-toggle="tab" data-bs-target="#cHistorical" type="button" role="tab" aria-controls="cHistorical" aria-selected="false">Historical</button>
-                </li>
-              </ul>
-              <div class="tab-content mt-3" id="currencyTabContent">
-                <div class="tab-pane fade show active" id="currencyGeneral" role="tabpanel" aria-labelledby="c-historical-tab">
-                  <table class="table table-sm table-hover caption-top ">
-                    <!-- <caption class="text-center">Currencies</caption> -->
-                    <thead class="table-light border-dark">
-                      <tr class="align-middle">
-                        <th scope=""><i id="currencyModalIcon" class="bi bi-cash"></i></th>
-                        <th scope="">Name</th>
-                        <th>Code</th>
-                      </tr>
-                    </thead>
-                    <tbody id="curr-tbody"></tbody>
-                  </table>
-                </div>
-                <!-- Conversion Section -->
-                <div class="currency-converter-container">
-                  <h6 class="text-center">Currency Converter</h6>
-                  <div id="conversionRate" class="conversion-rate">1 GBP equals 1.28 EUR</div>
-                
-                  <!-- Convert From -->
-                  <div class="currency-input-group">
-                    <div class="currency-input">
-                      <input type="number" id="fromAmount" value="1">
-                    </div>
-                    <div class="currency-select">
-                      <select id="fromCurrency"></select>
-                    </div>
-                  </div>
-                
-                  <!-- Convert To -->
-                  <div class="currency-input-group">
-                    <div class="currency-input">
-                      <input type="number" id="toAmount">
-                    </div>
-                    <div class="currency-select">
-                      <select id="toCurrency"></select>
-                    </div>
-                  </div>
-                </div>
-                <div class="tab-pane fade" id="cHistorical" role="tabpanel" aria-labelledby="c-historical-tab">
-                  <h6 class="mt-4">Historical Data</h6>
-                  <div id="historicalContent">
-                    <!-- Dynamic Historical Data Goes Here -->
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
-            </div>
-          </div>
-        </div>
-      </div>
+      
       
     </div>
     <input type="hidden" value="" id='hiddenCountrySelected' />

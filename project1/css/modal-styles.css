@@ -55,3 +55,225 @@
     padding: 0.5rem;
   }
 }
+
+/* General Overlay Container Styles */
+.overlay-container {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 900;
+  padding: 0;
+  margin-top: 10px;
+  bottom: 10px;
+  width: 95%;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  background-color: rgba(244, 244, 244, 0.75);
+  border-radius: 15px;
+  border: 2px solid rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: height 0.3s ease;
+  padding-bottom: 2px;
+  display: none;
+}
+
+#earthquakeOverlay {
+  @extend .overlay-container;
+  height: 110px;
+}
+
+#currencyOverlay {
+  @extend .overlay-container;
+  height: 260px;
+  max-width: 500px;
+}
+
+/* Overlay Header Styles */
+.overlay-header {
+  display: inline-flex;
+  width: 90%;
+  justify-content: space-around;
+  align-items: center;
+  margin-top: 8px;
+  margin-bottom: 2px;
+  padding-left: 0;
+  margin-left: 0;
+  border: 1px solid lightgrey;
+  border-radius: 24px;
+}
+
+#earthquakeHeader {
+  @extend .overlay-header;
+}
+
+#currencyHeader {
+  @extend .overlay-header;
+}
+
+/* Close Button */
+.overlay-close-btn {
+  margin-top: 3px;
+  background: none;
+  border: none;
+  font-size: 1.8rem;
+  color: rgb(83, 83, 83);
+  cursor: pointer;
+}
+
+#eOverlayCloseBtn {
+  @extend .overlay-close-btn;
+}
+
+#cOverlayCloseBtn {
+  @extend .overlay-close-btn;
+}
+
+/* Title Div */
+.overlay-title {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+#eTitleDiv {
+  @extend .overlay-title;
+  width: 50%;
+}
+
+#cTitleDiv {
+  @extend .overlay-title;
+  width: 70%;
+}
+
+#cTitleDiv h5 {
+  margin-bottom: 0px !important;
+  font-size: 1.4rem;
+}
+
+/* Common Input Styles */
+.input-field {
+  width: 70%;
+  margin: 4px;
+  border: 2px solid lightgrey;
+  border-radius: 10px;
+}
+
+/* Conversion Rate Display */
+.conversion-rate {
+  font-size: 1.15rem;
+  font-weight: 550;
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+/* Currency Input Group */
+.currency-input-group {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+
+.currency-input {
+  flex: 1;
+  margin-right: 10px;
+}
+
+.currency-input input {
+  width: 100%;
+  padding: 10px;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+.currency-select {
+  flex: 2;
+}
+
+.currency-select select {
+  width: 100%;
+  height: 100%;
+  padding: 10px;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+/* Hover and Focus Effects */
+.currency-input input:focus,
+.currency-select select:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+#cConverterContainer {
+  height: auto;
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+}
+
+/* Other Specific Styles */
+#earthquakeRadio {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  font-weight: bolder;
+  margin-bottom: 10px;
+  margin-top: 8px;
+}
+
+#earthquakeToggleLabel {
+  font-size: 1.3rem;
+  font-weight: bold;
+}
+
+#earthquakeOverlay .form-switch {
+  margin-left: 0;
+  padding-left: 0;
+}
+
+#eAdvanced {
+  display: none; 
+  align-items: center;
+  flex-direction: column;
+  margin-top: 2px;
+  width: 90%;
+}
+
+#toggleEarthquakes {
+  font-size: 1rem;
+  margin-top: 0px;
+}
+
+#earthquakeOverlay #search {
+  width: 70%;
+  margin: 4px;
+  border: 2px solid lightgrey;
+  border-radius: 10px;
+}
+
+#slider {
+  width: 80%;
+  margin: 30px 0px 6px 0px;
+  background-color: #e0e0e0;
+  z-index: 1000;
+  padding: 0 16px;
+}
+
+#slider  .noUi-tooltip{
+  display: none;
+  border: 1px solid rgba(0, 0, 0, 0.8);
+}
+
+#slider .noUi-active .noUi-tooltip {
+  display: block;
+  height: 28px;
+}
