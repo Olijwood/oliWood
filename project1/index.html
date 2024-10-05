@@ -89,13 +89,60 @@
               </div>
             </div>
           </div>
-        </div>        
+        </div> 
+
       </div>
+
+      <!-- Weather Overlay -->
+      <div id="weatherOverlay" class="overlay-container">
+        <div id="weatherHeader" class="overlay-header">
+          <button class="btn eBtn" id="wAdvancedToggleBtn">
+            <i class="bi bi-chevron-up"></i>
+          </button>
+          <div id="wTitleDiv" class="overlay-title">
+            <h5 class="text-center">Weather</h5>
+          </div>
+          <button id="wOverlayCloseBtn" class="btn overlay-close-btn">
+            <i class="bi bi-x"></i>
+          </button>
+        </div>
+        <div class="weather-content">
+          <div class="weather-icon-temp">
+            <i id="currentWeatherIcon" class="bi bi-cloud"></i>
+            <span id="temperature"></span>
+            <div id="tempToggle" class="temp-toggle">
+              <span id="unit">°C</span> 
+              <i id="tempToggleIcon" class="bi bi-arrow-left-right"></i>
+            </div>
+            <div class="weather-details">             
+              <span id="weatherDesc" class="o-text-muted"></span>
+              <div class="weather-details-sm">
+                <span id="humidity" class="o-text-muted"></span>
+                <span id="windSpeed" class="o-text-muted"></span>
+              </div>
+            </div>
+          </div>
+          <div class="weather-time-desc"> 
+            <h5 id="weatherLocation" class="weather-location"></h5>
+            <h5 id="weatherTime" class=" weather-location"></span>
+          </div>
+        </div>
+        
+        <!-- Forecast Carousel -->
+        <div id="wAdvanced">
+          
+          <div id="hourlyCarousel" class="hourly-carousel"></div>
+          <div id="dailyCarousel" class="forecast-carousel"></div>
+        </div>
+      </div>
+
+
+       
       
 
      
        <!-- Weather Modal -->
-      <div id="weatherModal" class="modal fade" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+      <!-- <div id="weatherModal" class="modal fade" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
           <div class="modal-content">
             <div class="modal-header bg-primary text-white">
@@ -104,7 +151,6 @@
               <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-              <!-- Tabs (if needed) -->
               <ul class="nav nav-tabs" id="weatherTab" role="tablist">
                 <li class="nav-item" role="presentation">
                   <button class="nav-link active" id="currentWeather-tab" data-bs-toggle="tab" data-bs-target="#currentWeather" type="button" role="tab" aria-controls="currentWeather" aria-selected="true">Current</button>
@@ -144,21 +190,21 @@
                   </table>
                 </div>
                 <div class="tab-pane fade" id="forecast" role="tabpanel" aria-labelledby="forecast-tab">
-                  <!-- Forecast Data -->
-                  <div id="forecastContent">
-                    <!-- Dynamic Forecast Data Goes Here -->
+                  <div id="hourlyCarousel" class="hourly-carousel">
+                  </div>
+
+                  <div id="dailyCarousel" class="forecast-carousel">
                   </div>
                 </div>
               </div>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
-              <!-- Add more buttons if needed -->
             </div>
           </div>
 
         </div>
-      </div>
+      </div> -->
 
             
             <!-- General Info Modal -->

@@ -145,7 +145,7 @@ export const calcEarthquakesInCountry = () => {
   $('#earthquakeCount').text(`${currentCountry.countryCode}: ${nEarthquakes}`);
 };
 
-let isExpanded = false;
+let eIsExpanded = false;
 
 // Toggle the visibility of the overlay
 $('#eOverlayCloseBtn').on('click', function() {
@@ -163,7 +163,7 @@ $('#eAdvancedToggleBtn').on('click', function() {
   const advancedFeatures = $('#eAdvanced');
   const icon = $(this).find('i');
 
-  if (isExpanded) {
+  if (eIsExpanded) {
     // Collapse the overlay
     advancedFeatures.css({ display: 'none' });
     overlay.animate({ height: '130px' }, 300); // Adjust this height to fit non-advanced content
@@ -175,7 +175,7 @@ $('#eAdvancedToggleBtn').on('click', function() {
     icon.removeClass('bi-chevron-up').addClass('bi-chevron-down');
   }
 
-  isExpanded = !isExpanded;
+  eIsExpanded = !eIsExpanded;
 });
 
 // Handle radio button changes to call fetchEarthquakes

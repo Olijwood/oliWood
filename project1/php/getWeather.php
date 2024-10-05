@@ -12,11 +12,14 @@ if (isset($_GET['lat']) && isset($_GET['lon'])) {
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
     $response = curl_exec($curl);
     curl_close($curl);
-
+    // header('Content-Type: application/json');
+    // echo $response;
     $data = json_decode($response, true);
+       
     if (isset($data['weather'][0]['main'])) {
         $weather = [];
-        $weather['wDescription'] = $data['weather'][0]['description'];
+        $weather['wMain'] = $data['weather'][0]['main'];
+        $weather['wDesc'] = $data['weather'][0]['description'];
         $weather['temperature'] = $data['main']['temp'];
         $weather['feelsLike'] = $data['main']['feels_like'];
         $weather['humidity'] = $data['main']['humidity'];

@@ -69,7 +69,7 @@
   flex-direction: column;
   justify-content: space-around;
   align-items: center;
-  background-color: rgba(244, 244, 244, 0.75);
+  background-color: rgba(244, 244, 244, 0.7);
   border-radius: 15px;
   border: 2px solid rgba(0, 0, 0, 0.2);
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
@@ -137,6 +137,11 @@
   align-items: center;
 }
 
+.overlay-title h5 {
+  margin-bottom: 0px !important;
+  font-size: 1.4rem;
+}
+
 #eTitleDiv {
   @extend .overlay-title;
   width: 50%;
@@ -147,10 +152,7 @@
   width: 70%;
 }
 
-#cTitleDiv h5 {
-  margin-bottom: 0px !important;
-  font-size: 1.4rem;
-}
+
 
 /* Common Input Styles */
 .input-field {
@@ -276,4 +278,253 @@
 #slider .noUi-active .noUi-tooltip {
   display: block;
   height: 28px;
+}
+
+
+/* Weather  Styles */
+
+/* Weather Overlay */
+#weatherOverlay {
+  @extend .overlay-container;
+  height: 190px;
+  width: 96%;
+  padding-top: 4px;
+  margin-top: 0px;
+}
+
+/* Weather Header Styles */
+#weatherHeader {
+  @extend .overlay-header;
+  width: 96%;
+  justify-content: space-between;
+  padding: 2px 4px;
+  margin-top: 4px;
+  background-color: #f5f5f5;
+  border-radius: 20px;
+}
+
+/* Weather Content */
+.weather-content {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 6px;
+  align-items: flex-start;
+  width: 96%;
+  margin: 0px;
+
+}
+
+/* Weather Icon and Temperature */
+.weather-icon-temp {
+  display: flex;
+  align-items: center;
+}
+
+.weather-details {
+  display: flex;
+  flex-direction: column;
+  padding-left: 10px;
+  font-size: 0.78rem;
+  font-weight: bolder;
+  height: 80px;
+  justify-content: space-around;
+  
+}
+
+.weather-details-sm {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  line-height: 1.25;
+  font-size: 0.78rem;
+}
+
+#weatherDesc {
+  font-size: 0.96rem;
+  font-weight: 600;
+}
+
+#currentWeatherIcon {
+  font-size: 3.2rem;
+  align-self: center;
+  width: 3.2rem;
+  display: flex;
+  justify-content: center;
+}
+
+
+
+#temperature {
+  align-self: center;
+  font-size: 2.2rem;
+  padding-left: 7px;
+}
+
+
+
+#wAdvanced {
+  display: none;
+  flex-direction: column;
+  width: 96%;
+  background-color: #f5f5f5;
+  padding: 10px 8px;
+  border: 1px solid #00000033;
+  border-radius: 20px;
+}
+
+
+.o-text-muted {
+  color: #000000d0;
+}
+
+.temp-toggle {
+  display: flex;
+  padding: 8px 2px 8px 5px;
+  font-size: 1.05rem;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#tempToggleIcon {
+  font-weight: 600;
+  width: 1.1rem;
+  cursor: pointer;
+  align-self: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#unit {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.weather-location {
+  margin-bottom: 0px;
+  font-weight: 550;
+  font-size: 1.1rem;
+}
+
+.weather-time-desc {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: space-around;
+  align-items: flex-end;
+  max-width: 28%;
+}
+
+
+
+/* Hourly Carousel */
+#hourlyCarousel {
+  display: flex;
+  overflow-x: auto;
+  padding: 0px;
+}
+
+/* Hourly Cards */
+.hour-card {
+  flex: 0 0 auto;
+  border-radius: 5px;
+  margin: 0 3px;
+  padding: 6px 16px;
+  text-align: center;
+  min-width: 60px;
+}
+
+
+.hour-card .hour {
+  font-size: 0.8rem;
+  padding-bottom: 10px;
+}
+
+.hour-card .hourly-icon {
+  width: 30px;
+  height: 30px;
+}
+
+.hour-card .hour-temp {
+  font-size: 0.8rem;
+}
+
+/* Daily Forecast Carousel */
+#dailyCarousel {
+  display: flex;
+  overflow-x: auto;
+  padding: 4px 0px 8px 0px;
+}
+
+/* Daily Cards */
+.forecast-card {
+  flex: 0 0 auto;
+  background-color: #eff5ffa8;
+  border-radius: 10px;
+  margin: 4px 2px;
+  padding: 10px 18px;
+  text-align: center;
+  min-width: 80px;
+  cursor: pointer;
+  border: 2px solid rgba(0, 0, 0, 0.2);
+}
+
+.forecast-card .day {
+  font-weight: bold;
+}
+
+.forecast-card .forecast-icon {
+  width: 40px;
+  height: 40px;
+}
+
+.forecast-card .temp {
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.hourly-icon,
+.forecast-icon {
+  font-size: 30px; /* Adjust as needed */
+  color: #343434; /* Adjust icon color */
+}
+
+/* Highlight active forecast card */
+.active-forecast {
+  background: #d0e7ffa1; /* Light blue background */
+  border: 2px solid #007bff; /* Blue border */
+}
+
+/* Alternatively, add an underline */
+.active-forecast::after {
+  content: "";
+  display: block;
+  width: 100%;
+  height: 4px;
+  background-color: #5b5b5b66; 
+  border-radius: 100px;
+  margin-top: 5px;
+}
+
+.hourly-carousel, .forecast-carousel {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding: 10px;
+}
+
+.hour-card, .forecast-card {
+  scroll-snap-align: start;
+  flex: 0 0 auto;
+  margin-right: 6px;
+}
+
+/* Hourly Carousel */
+#hourlyCarousel, #dailyCarousel {
+  display: flex;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch; /* Smooth scrolling on mobile */
+  padding: 10px;
+  scroll-snap-type: x mandatory; /* Enable snap scrolling */
 }

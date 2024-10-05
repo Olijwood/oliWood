@@ -1,7 +1,7 @@
 import { adjustColorBrightness, toTitleCase } from "./utils";
 import { fetchEarthquakes, calcEarthquakesInCountry, earthquakesGeoJSON} from "./earthquakes.js";
 import { populateCurrencyDropdowns, updateConversion, loadCurrenciesForCountry } from "./currency-modal.js";
-
+import { fetchWeather, fetchWeatherForecast, updateWeatherUI } from "./weather.js";
 class SelectedCountry {
   constructor(countryCode) {
     this.countryCode = countryCode.toUpperCase();
@@ -66,8 +66,8 @@ class SelectedCountry {
       .fail((_, status, error) => console.error('Error fetching country info:', error));
   }
 
-  fetchWeather() {
-    return $.getJSON('php/getWeather.php', { lat: this.lat, lon: this.lon })
+  fetchCountryWeather() {
+    return $.getJSON('php/getWeather.php', { lat: this.capitalData.lat, lon: this.capitalData.lon })
       .done(response => {
         if (response.error) {
           console.error('Error fetching weather data:', response.error);
@@ -76,6 +76,17 @@ class SelectedCountry {
         }
       })
       .fail(() => console.error('Failed to fetch weather data.'));
+  }
+
+  getCapitalCoordinates() {
+    return $.getJSON(`php/getCapitalCoordinates.php?code=${this.countryCode}`)
+      .done(data => {
+        if (!data.error) {
+          this.capitalData = data;
+          return data;
+        }
+      })
+      .fail((_, status, error) => console.error('Error fetching capital coordinates:', error));
   }
 
   fetchCities() {
@@ -288,6 +299,7 @@ export let map;
 export let currentCountry = null;
 export let userlat;
 export let userlon;
+let userCountryCode;
 
 const labels = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}{r}.png', {
   maxZoom: 19,
@@ -350,12 +362,12 @@ function handleLocationFound(e) {
   const { latlng, accuracy } = e;
   userlat = latlng.lat;
   userlon = latlng.lng;
-
   L.marker(latlng).addTo(map).bindPopup("You are here").openPopup();
   L.circle(latlng, accuracy).addTo(map);
 
   $.getJSON(`php/reverseGeocode.php?lat=${latlng.lat}&lon=${latlng.lng}`, data => {
     if (data.countryCode) {
+      userCountryCode = data.countryCode;
       initializeSelectedCountry(data.countryCode);
       $('#hiddenCountrySelected').val(data.countryCode).trigger('change');
     }
@@ -372,7 +384,15 @@ function initializeSelectedCountry(countryCode) {
 
   currentCountry = new SelectedCountry(countryCode);
   currentCountry.fetchInfo();
-  currentCountry.fetchWeather();
+  currentCountry.getCapitalCoordinates()
+  .then(() => {
+    return currentCountry.fetchCountryWeather(); // Wait for the capital coordinates before fetching weather
+  })
+  .then(() => {
+    // Now that weather data is fetched, update the UI if needed
+    updateWeatherUI(currentCountry.weather);
+  })
+  .catch(error => console.error('Error during country initialization:', error));
   currentCountry.fetchCities();
   currentCountry.fetchAirports();
   currentCountry.fetchCountryBorderData().then(() => {
@@ -421,13 +441,28 @@ function handleCountrySelection() {
 const hideCustomOverlays = () => {
   $('#earthquakeOverlay').css('display', 'none');
   $('#currencyOverlay').css('display', 'none');
+  $('#weatherOverlay').css('display', 'none');
 }
-
+const showWeatherOverlay = () => {
+  hideCustomOverlays();
+  if (userCountryCode == currentCountry.countryCode) {
+      fetchWeather(userlat, userlon);
+      // fetchWeatherForecast(userlat, userlon);
+    } else if (currentCountry.weather) {
+    updateWeatherUI(currentCountry.weather);
+    fetchWeatherForecast(currentCountry.capitalData.lat, currentCountry.capitalData.lon);
+  } else {
+    console.log('no weather data');
+  }
+  $('#weatherOverlay').css('display', 'flex');
+};
 // Initialize modals for buttons
 const modalBtns = [
-  L.easyButton('bi-cloud-sun', (btn, map) => $("#weatherModal").modal("show")),
   L.easyButton('bi-info-circle', (btn, map) => $("#infoModal").modal("show")),
   L.easyButton("bi-bar-chart", (btn, map) => $("#demographicsModal").modal("show")),
+  L.easyButton('bi-cloud-sun', (btn, map) => {
+    showWeatherOverlay();
+  }),
   L.easyButton("bi-cash", (btn, map) => {
     $("#earthquakeOverlay").css("display", "none");
     $("#currencyOverlay").css("display", "flex");
