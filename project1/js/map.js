@@ -464,13 +464,13 @@ const modalBtns = [
     showWeatherOverlay();
   }),
   L.easyButton("bi-cash", (btn, map) => {
-    $("#earthquakeOverlay").css("display", "none");
+    hideCustomOverlays();
     $("#currencyOverlay").css("display", "flex");
     populateCurrencyDropdowns();
     updateConversion();
   }),
   L.easyButton("bi-exclamation-diamond", (btn, map) => {
-    $("#currencyOverlay").css("display", "none");
+    hideCustomOverlays();
     $("#earthquakeOverlay").css("display", "flex");
     if (!earthquakesGeoJSON) {
       fetchEarthquakes();
