@@ -8,7 +8,7 @@ export const updateWeatherUI = (data, isUser = false) => {
   $('#humidity').text(`Humidity: ${data.humidity}%`);
   $('#windSpeed').text(`Wind: ${Math.round(data.windSpeed)} mph`);
   $('#weatherLocation').text(locName);
-  $('#weatherTime').text('Now');
+  $('#weatherTime').text('Today');
   $('#weatherDesc').text(toTitleCase(data.wDesc));
   $('#currentWeatherIcon').attr('class', `bi bi-${getWeatherIconClass(data.wMain, data.wDesc)}`);
 
@@ -136,6 +136,7 @@ const updateForecastUI = (data) => {
   // Set the initial active day (first day)
   const firstDayCard = $('.forecast-card').first();
   firstDayCard.addClass('active-forecast');
+  firstDayCard.children('.day').text('Today');
   updateHourlyCarousel(days[firstDayCard.data('day')].hours);
 
   // Add click event to daily cards to update the hourly carousel and active state
@@ -156,7 +157,7 @@ const updateForecastUI = (data) => {
     $('#weatherDesc').text(toTitleCase(selectedDayData.cDesc));
     $('#humidity').text(`Humidity: ${selectedDayData.humidity}%`);
     $('#windSpeed').text(`Wind: ${Math.round(selectedDayData.windSpeed)} mph`);
-    $('#weatherTime').text(day); // Update the time to the selected day
+    $('#weatherTime').text(day !== firstDayCard.data('day') ? day : 'Today'); // Update the time to the selected day
     $('#currentWeatherIcon').attr('class', `bi bi-${getWeatherIconClass(selectedDayData.cMain, selectedDayData.cDesc)}`);
   });
 };
