@@ -145,7 +145,7 @@
        <div class="overlay-modal-container" id="infoContainer">
       <div id="infoOverlay" class="overlay-container">
         <div class="overlay-header">
-          <i id="iOverlayIcon" class="bi bi-info-circle"></i>
+          <i id="iOverlayIcon" class="bi bi-info-circle overlay-icon"></i>
           <div id="iTitleDiv" class="overlay-title">
             <h5 class="text-center">General Information</h5>
           </div>
@@ -247,90 +247,89 @@
            
       
       <!-- Demographics Modal -->
-
-      <div id="demographicsModal" class="modal fade" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
-        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-          <div class="modal-content">
-            <div class="modal-header bg-primary text-white">
-              <i id="demographicsModalIcon" class="fas fa-users fa-lg me-2"></i>
-              <h5 class="modal-title">Demographics</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-            <!-- Tab Navigation -->
-            <ul class="nav nav-tabs" id="demographicsTabs" role="tablist">
-              <li class="nav-item">
-                <button class="nav-link active" id="d-current-tab" data-bs-toggle="tab" data-bs-target="#currentDemo" role="tab"
-                  aria-controls="currentDemo" aria-selected="true">Overview</button>
-              </li>
-              <li class="nav-item">
-                <button class="nav-link" id="d-population-tab" data-bs-toggle="tab" data-bs-target="#populationDemoTab" role="tab" aria-controls="populationDemoTab" aria-selected="false">Population</button>
-              </li>
-              <li class="nav-item">
-                <button class="nav-link" id="d-health-tab" data-bs-toggle="tab" data-bs-target="#healthDemoTab" role="tab" aria-controls="healthDemoTab" aria-selected="false">Health</button>
-              </li>
-              <li class="nav-item">
-                <button class="nav-link" id="d-economy-tab" data-bs-toggle="tab" data-bs-target="#economyDemoTab" role="tab" aria-controls="economyDemoTab" aria-selected="false">Economy</button>
-              </li>
-              <li class="nav-item">
-                <button class="nav-link" id="d-environment-tab" data-bs-toggle="tab" data-bs-target="#environmentDemoTab" role="tab" aria-controls="environmentDemoTab" aria-selected="false">Environment</button>
-              </li>
-            </ul>
-              
-
-             <!-- Overview Tab -->
-            <div class="tab-content mt-3">
-              <div class="tab-pane fade show active" id="currentDemo" role="tabpanel" aria-labelledby="overview-tab">
-              
-                <div id="populationOverview"></div>
-                <div id="economicOverview"></div>
-                <div id="healthOverview"></div>
-                <div id="environmentOverview"></div>
-              </div>
-              
-              <!-- Population Tab -->
-              <div class="tab-pane fade demoHistTab" id="populationDemoTab" role="tabpanel" aria-labelledby="d-population-tab">
-                <div id="popGeneral"></div>
-                <div id="popDistributions"></div>
-                <div id="popEducation"></div>
-                <div id="popMoreInfo"></div>
-              </div>  
-
-              <!-- Health Tab -->
-              <div class="tab-pane fade demoHistTab" id="healthDemoTab" role="tabpanel" aria-labelledby="d-health-tab">
-                <div id="mortalityLifeExpectancy"></div>
-                <div id="healthcareAccess"></div>
-                <div id="immunizationCoverage"></div>
-                <div id="healthPrevelance"></div>
-               
-              </div>
-
-              <!-- Economy Tab -->
-              <div class="tab-pane fade demoHistTab" id="economyDemoTab" role="tabpanel" aria-labelledby="d-economy-tab">
-               <div id="econGeneral"></div>
-               <div id="incomeInequality"></div>
-               <div id="econMoreInfo"></div>
-                  
-              </div>
-
-              <!-- Environment Tab -->
-              <div class="tab-pane fade demoHistTab" id="environmentDemoTab" role="tabpanel" aria-labelledby="d-environment-tab">
-                <div id="airQuality"></div>
-                <div id="energySustainability"></div>
-                <div id="landUse"></div>
-                <div id="waterResources"></div>
-              </div>
-              
-            </div>
+    <div class="overlay-modal-container" id="demoContainer">
+      <div id="demoOverlay" class="overlay-container">
+        <div class="overlay-header">
+          <i id="dOverlayIcon" class="bi bi-graph-up overlay-icon"></i>
+          <div class="overlay-title" id="dTitleDiv">
+            <h5 class="text-center">Demographics</h5>
+          </div>
+          <button id="dOverlayCloseBtn" class="overlay-close-btn"><i class="bi bi-x"></i></button>
+        </div>
+       
+        <div class="overlay-tabs" id="dOverlayTabs">
+          <!-- Tab Navigation -->
+          <ul class="o-tabs-ul" id="demographicsTab" role="tablist">
+            <li class="d-tabs-li">
+              <button class="d-tabs-link tab-active" id="currentDemo-tab" data-target="currentDemoContent">Overview</button>
+            </li>
+            <li class="d-tabs-li">
+              <button class="d-tabs-link" id="populationDemo-tab" data-target="populationDemoContent" >Population</button>
+            </li>
+            <li class="d-tabs-li">
+              <button class="d-tabs-link" id="healthDemo-tab" data-target="healthDemoContent" >Health</button>
+            </li>
+            <li class="d-tabs-li">
+              <button class="d-tabs-link" id="economyDemo-tab" data-target="economyDemoContent" >Economy</button>
+            </li>
+            <li class="d-tabs-li">
+              <button class="d-tabs-link" id="environmentDemo-tab" data-target="environmentDemoContent" >Environment</button>
+            </li>
+          </ul>
+        </div>
+        <div class="overlay-content" id="dOverlayContent">
+            <!-- Overview Tab -->
+          <div class="tab-content" id="currentDemoContent">
+            <div id="currentDemo">
             
-            <!-- Modal Footer -->
+              <div id="populationOverview"></div>
+              <div id="economicOverview"></div>
+              <div id="healthOverview"></div>
+              <div id="environmentOverview"></div>
             </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+          </div>
+            <!-- Population Tab -->
+          <div class="tab-content" id="populationDemoContent">
+            <div id="populationDemo">
+              <div id="popGeneral"></div>
+              <div id="popDistributions"></div>
+              <div id="popEducation"></div>
+              <div id="popMoreInfo"></div>
+            </div>  
+          </div>
+          
+            <!-- Health Tab -->
+          <div class="tab-content" id="healthDemoContent">
+            <div id="healthDemo">
+              <div id="mortalityLifeExpectancy"></div>
+              <div id="healthcareAccess"></div>
+              <div id="immunizationCoverage"></div>
+              <div id="healthPrevelance"></div>
+            </div>
+          </div>
+
+            <!-- Economy Tab -->
+          <div class="tab-content" id="economyDemoContent"> 
+            <div id="economyDemoTab">
+              <div id="econGeneral"></div>
+              <div id="incomeInequality"></div>
+              <div id="econMoreInfo"></div>
+                
+            </div>
+          </div>
+
+            <!-- Environment Tab -->
+          <div class="tab-content" id="environmentDemoContent">
+            <div id="environmentDemo">
+              <div id="airQuality"></div>
+              <div id="energySustainability"></div>
+              <div id="landUse"></div>
+              <div id="waterResources"></div>
             </div>
           </div>
         </div>
       </div>
+    </div>
 
       
 

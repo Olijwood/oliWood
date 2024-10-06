@@ -2,6 +2,7 @@ import { toTitleCase } from "./utils.js";
 import { currentCountry } from "./map.js";
 import { countryInfoConfig } from "./configs/modalConfigs.js";
 import { _adapters } from "chart.js";
+import { loadDemoModal } from "./demographics.js";
 
 
 const injectDataIntoModal = (data, config) => {
@@ -120,3 +121,4 @@ $('.o-tabs-link').on('click', function () {
   $('#iOverlayCloseBtn').on('click', () => {
     $('#infoContainer').hide();
   });
+

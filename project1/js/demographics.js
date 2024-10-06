@@ -2,7 +2,7 @@ import { getGroupIndicatorIdsString, downsampleData, injectNumericDataForTab, la
 import { indicatorGroups } from './configs/indicatorConfig.js';
 import { healthSectionsConfig, populationSectionsConfig, economicSectionsConfig, environmentSectionsConfig, overviewSectionsConfig } from "./configs/tabConfigs.js";
 import { createStackedHorizontalBarChart } from "./charts/chartDemographics.js";
-
+import { currentCountry, hideCustomOverlays } from './map.js';
 const DEMOGRAPHICS_ENDPOINT = 'php/demographics/getDemographics.php';
 const HISTORICAL_DATA_ENDPOINT = 'php/demographics/getHistoricalData.php';
 
@@ -104,7 +104,7 @@ const injectSection = (containerId, title, data = [], charts = [], icon='') => {
     content += `
         <tr>
             <td>${item.label} ${unitCite}</td>
-            <td class="fw-bold text-end" id="${item.id}"></td>
+            <td class="fwbold text-end" id="${item.id}"></td>
         </tr>
     `;
   });
@@ -267,52 +267,126 @@ class DemographicsUI {
   }
 }
 
-// Cache the modal and tabs
-const $modal = $('#demographicsModal');
-const $tabs = $('#demographicsTabs button[data-bs-toggle="tab"]');
 
-// Populate the demographics modal on page load
-$modal.on('shown.bs.modal', function () {
-  const countryCode = $('#hiddenCountrySelected').val();
+$('.d-tabs-link').on('click', function () {
+  // Remove the active class from all tabs
+  $('.d-tabs-link').removeClass('tab-active');
+  
+  // Add the active class to the clicked tab
+  $(this).addClass('tab-active');
+
+   // Get the target content ID from the clicked tab
+  const targetContentId = $(this).data('target');
+   // Hide all tab content sections
+   $('.tab-content').css({
+     display: 'none'
+   });
+   $('.tab-content').removeClass('show');
+ 
+   // Show the target content section
+   $(`#${targetContentId}`).css(
+     {
+       display: 'block'
+     }
+   );
+
+   const countryCode = $('#hiddenCountrySelected').val();
+
   if (!countryCode) {
     console.log('no country selected');
     return;
   }
-
-  const demographicsUI = new DemographicsUI(countryCode);
-  demographicsUI.injectOverviewTab();
-  demographicsUI.injectDataForTab('overview');
-});
-
-// Populate the tab when tab is clicked
-$tabs.on('shown.bs.tab', async function (e) {
-  const targetId = $(e.target).attr('data-bs-target');
-  const countryCode = $('#hiddenCountrySelected').val();
-
-  if (!countryCode) {
-    console.log('no country selected');
-    return;
-  }
-
+  let targetId = '#' + targetContentId.slice(0, -7)
   const demographicsUI = new DemographicsUI(countryCode);
   switch (targetId) {
-    case '#populationDemoTab':
+    case '#populationDemo':
       demographicsUI.injectPopulationTab();
       demographicsUI.injectDataForTab('population');
       break;
-    case '#healthDemoTab':
+    case '#healthDemo':
       demographicsUI.injectHealthTab();
       demographicsUI.injectDataForTab('health');
       break;
-    case '#environmentDemoTab':
+    case '#environmentDemo':
       demographicsUI.injectEnvironmentTab();
       demographicsUI.injectDataForTab('environment');
       break;
-    case '#economyDemoTab':
+    case '#economyDemo':
       demographicsUI.injectEcomomicTab();
       demographicsUI.injectDataForTab('economy');
+      break;
+    case '#currentDemo':
+      demographicsUI.injectOverviewTab();
+      demographicsUI.injectDataForTab('overview');
       break;
     default:
       break;
   }
+  });
+
+$('#dOverlayCloseBtn').on('click', () => {
+  $('#demoContainer').hide();
 });
+export const showDemographicsOverlay = () => {
+  hideCustomOverlays();
+  
+  // Get the current country code
+  const countryCode = currentCountry.countryCode;
+  if (!countryCode) {
+    console.log('No country selected.');
+    return;
+  }
+
+  // Create the DemographicsUI instance
+  const demographicsUI = new DemographicsUI(countryCode);
+  
+  // Inject the overview tab content and data before displaying the tab
+  demographicsUI.injectOverviewTab();
+  demographicsUI.injectDataForTab('overview');
+
+  // Hide all tab contents
+  $('.tab-content').hide();
+
+  // Show the Overview tab content
+  $('#currentDemoContent').show();
+
+  // Set the 'Overview' tab as active
+  $('.d-tabs-link').removeClass('tab-active');
+  $('#currentDemo-tab').addClass('tab-active');
+
+  // Show the demographics overlay
+  $('#demoContainer').show();
+};
+
+
+// $tabs.on('shown.bs.tab', async function (e) {
+//   const targetId = $(e.target).attr('data-bs-target');
+//   const countryCode = $('#hiddenCountrySelected').val();
+
+//   if (!countryCode) {
+//     console.log('no country selected');
+//     return;
+//   }
+
+//   const demographicsUI = new DemographicsUI(countryCode);
+//   switch (targetId) {
+//     case '#populationDemo':
+//       demographicsUI.injectPopulationTab();
+//       demographicsUI.injectDataForTab('population');
+//       break;
+//     case '#healthDemo':
+//       demographicsUI.injectHealthTab();
+//       demographicsUI.injectDataForTab('health');
+//       break;
+//     case '#environmentDemo':
+//       demographicsUI.injectEnvironmentTab();
+//       demographicsUI.injectDataForTab('environment');
+//       break;
+//     case '#economyDemo':
+//       demographicsUI.injectEcomomicTab();
+//       demographicsUI.injectDataForTab('economy');
+//       break;
+//     default:
+//       break;
+//   }
+// });

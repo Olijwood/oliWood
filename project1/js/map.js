@@ -4,6 +4,7 @@ import { populateCurrencyDropdowns, updateConversion, loadCurrenciesForCountry }
 import { fetchWeather, fetchWeatherForecast, updateWeatherUI } from "./weather.js";
 import { updateCountryInfo } from "./country-info.js";
 import { countryInfoConfig } from "./configs/modalConfigs.js";
+import { loadDemoModal, showDemographicsOverlay } from "./demographics.js";
 class SelectedCountry {
   constructor(countryCode) {
     this.countryCode = countryCode.toUpperCase();
@@ -401,7 +402,6 @@ function initializeSelectedCountry(countryCode) {
     displayBorderData(currentCountry.borderData);
   });
   loadCurrenciesForCountry(countryCode);
-
   // Update the control section
   if (controlSection) controlSection.remove();
    const countryLayers = currentCountry.getLayers();
@@ -440,10 +440,12 @@ function handleCountrySelection() {
   });
 }
 
-const hideCustomOverlays = () => {
+export const hideCustomOverlays = () => {
   $('#earthquakeOverlay').css('display', 'none');
   $('#currencyOverlay').css('display', 'none');
   $('#weatherOverlay').css('display', 'none');
+  $('#demoContainer').css('display', 'none');
+  $('#infoContainer').css('display', 'none');
 }
 const showWeatherOverlay = () => {
   hideCustomOverlays();
@@ -463,9 +465,11 @@ const modalBtns = [
   L.easyButton('bi-info-circle', (btn, map) => {
     hideCustomOverlays();
     updateCountryInfo(currentCountry.info, countryInfoConfig);
-    $("#infoContainer").css("display", "flex")
+    $("#infoContainer").css("display", "flex");
   }),
-  L.easyButton("bi-bar-chart", (btn, map) => $("#demographicsModal").modal("show")),
+  L.easyButton("bi-bar-chart", (btn, map) => {
+    showDemographicsOverlay();
+  }),
   L.easyButton('bi-cloud-sun', (btn, map) => {
     showWeatherOverlay();
   }),

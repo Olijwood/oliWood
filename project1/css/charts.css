@@ -20,7 +20,7 @@
 }
 
 .chart-td {
-  padding: 0.1rem 0.2rem !important;
+  padding: 0.4rem 0.2rem !important;
 }
 
 .chart-td h4{
@@ -65,9 +65,7 @@
 
 
 @media (max-width: 768px) {
-    .chart-container {
-      height: 80px;
-    }
+    
 
     .chartjs-size-monitor {
       width: 100%; 
