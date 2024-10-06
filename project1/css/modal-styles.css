@@ -62,59 +62,57 @@
   left: 50%;
   transform: translateX(-50%);
   z-index: 900;
-  padding: 0;
-  margin-top: 10px;
+  padding: 2px;
+  margin-top: 0px;
   bottom: 10px;
-  width: 95%;
+  width: 96%;
   flex-direction: column;
   justify-content: space-around;
   align-items: center;
   background-color: rgba(244, 244, 244, 0.7);
-  border-radius: 15px;
-  border: 2px solid rgba(0, 0, 0, 0.2);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 20px;
+  border: 2px solid #ababab;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
   overflow: hidden;
   transition: height 0.3s ease;
-  padding-bottom: 2px;
   display: none;
 }
 
 #earthquakeOverlay {
-  @extend .overlay-container;
-  height: 110px;
+  height: 134px;
 }
 
 #currencyOverlay {
-  @extend .overlay-container;
-  height: 260px;
+  height: 240px;
   max-width: 500px;
 }
+
+
 
 /* Overlay Header Styles */
 .overlay-header {
   display: inline-flex;
-  width: 90%;
-  justify-content: space-around;
+  width: 96%;
+  justify-content: space-between;
   align-items: center;
-  margin-top: 8px;
   margin-bottom: 2px;
-  padding-left: 0;
-  margin-left: 0;
-  border: 1px solid lightgrey;
-  border-radius: 24px;
+  padding: 0px 4px;
+  margin-top: 0px;
+  border: 1px solid #abababd0;
+  background-color: #f5f5f5;
+  border-radius: 20px;
 }
 
 #earthquakeHeader {
-  @extend .overlay-header;
+  padding: 4px 4px;
 }
 
 #currencyHeader {
-  @extend .overlay-header;
+  padding: 4px 16px
 }
 
 /* Close Button */
 .overlay-close-btn {
-  margin-top: 3px;
   background: none;
   border: none;
   font-size: 1.8rem;
@@ -122,12 +120,8 @@
   cursor: pointer;
 }
 
-#eOverlayCloseBtn {
-  @extend .overlay-close-btn;
-}
-
 #cOverlayCloseBtn {
-  @extend .overlay-close-btn;
+  padding: 0px
 }
 
 /* Title Div */
@@ -142,15 +136,14 @@
   font-size: 1.4rem;
 }
 
-#eTitleDiv {
-  @extend .overlay-title;
-  width: 50%;
+.overlay-title-icon {
+  font-size: 1.4rem;
+  color: rgb(83, 83, 83)
 }
 
-#cTitleDiv {
-  @extend .overlay-title;
-  width: 70%;
-}
+
+
+
 
 
 
@@ -177,22 +170,28 @@
   margin-bottom: 15px;
 }
 
+#toInputGroup {
+  margin-bottom: 0px;
+}
+
 .currency-input {
   flex: 1;
-  margin-right: 10px;
+  margin-left: 1%;
 }
 
 .currency-input input {
   width: 100%;
   padding: 10px;
   font-size: 1rem;
-  border-radius: 8px;
-  border: 1px solid #ccc;
+  border-radius: 16px;
+  border: 1px solid #ababab;
   box-sizing: border-box;
 }
 
 .currency-select {
   flex: 2;
+  margin-right: 1%;
+  margin-left: 4%;
 }
 
 .currency-select select {
@@ -200,8 +199,8 @@
   height: 100%;
   padding: 10px;
   font-size: 1rem;
-  border-radius: 8px;
-  border: 1px solid #ccc;
+  border-radius: 16px;
+  border: 1px solid #ababab;
   box-sizing: border-box;
 }
 
@@ -214,7 +213,7 @@
 
 #cConverterContainer {
   height: auto;
-  width: 90%;
+  width: 94%;
   display: flex;
   flex-direction: column;
   align-items: stretch;
@@ -226,15 +225,15 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.1rem;
-  font-weight: bolder;
+  font-size: 1.2rem;
+  font-weight: 500;
   margin-bottom: 10px;
   margin-top: 8px;
 }
 
 #earthquakeToggleLabel {
-  font-size: 1.3rem;
-  font-weight: bold;
+  font-size: 1.4rem;
+  margin-right: 10px;
 }
 
 #earthquakeOverlay .form-switch {
@@ -246,13 +245,14 @@
   display: none; 
   align-items: center;
   flex-direction: column;
-  margin-top: 2px;
+  margin-top: 10px;
   width: 90%;
 }
 
 #toggleEarthquakes {
   font-size: 1rem;
-  margin-top: 0px;
+  margin-top: 1px;
+  margin-left: 6px;
 }
 
 #earthquakeOverlay #search {
@@ -285,31 +285,22 @@
 
 /* Weather Overlay */
 #weatherOverlay {
-  @extend .overlay-container;
   height: 190px;
   width: 96%;
-  padding-top: 4px;
-  margin-top: 0px;
 }
 
 /* Weather Header Styles */
 #weatherHeader {
-  @extend .overlay-header;
-  width: 96%;
-  justify-content: space-between;
-  padding: 2px 4px;
-  margin-top: 4px;
   background-color: #f5f5f5;
-  border-radius: 20px;
 }
 
 /* Weather Content */
 .weather-content {
   display: flex;
   justify-content: space-between;
-  padding: 12px 6px;
+  padding: 6px 6px;
   align-items: flex-start;
-  width: 96%;
+  width: 98%;
   margin: 0px;
 
 }
@@ -318,7 +309,10 @@
 .weather-icon-temp {
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  width: 70%;
 }
+
 
 .weather-details {
   display: flex;
@@ -342,6 +336,7 @@
 #weatherDesc {
   font-size: 0.96rem;
   font-weight: 600;
+  color: rgba(0, 0, 0, 0.8);
 }
 
 #currentWeatherIcon {
@@ -352,12 +347,15 @@
   justify-content: center;
 }
 
-
+#wTempContainer {
+  display: flex;
+  justify-content: space-around;
+  padding-left: 10px;
+}
 
 #temperature {
   align-self: center;
   font-size: 2.2rem;
-  padding-left: 7px;
 }
 
 
@@ -367,19 +365,19 @@
   flex-direction: column;
   width: 96%;
   background-color: #f5f5f5;
-  padding: 10px 8px;
+  padding: 8px 8px 6px 8px;
   border: 1px solid #00000033;
   border-radius: 20px;
 }
 
 
 .o-text-muted {
-  color: #000000d0;
+  color: rgba(0, 0, 0, 0.6);
 }
 
 .temp-toggle {
   display: flex;
-  padding: 8px 2px 8px 5px;
+  padding: 8px 2px 0px 6px;
   font-size: 1.05rem;
   flex-direction: column;
   justify-content: space-between;
@@ -394,6 +392,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  color: rgba(0, 0, 0, 0.6);
 }
 
 #unit {
@@ -416,15 +415,6 @@
   max-width: 28%;
 }
 
-
-
-/* Hourly Carousel */
-#hourlyCarousel {
-  display: flex;
-  overflow-x: auto;
-  padding: 0px;
-}
-
 /* Hourly Cards */
 .hour-card {
   flex: 0 0 auto;
@@ -434,7 +424,6 @@
   text-align: center;
   min-width: 60px;
 }
-
 
 .hour-card .hour {
   font-size: 0.8rem;
@@ -448,13 +437,6 @@
 
 .hour-card .hour-temp {
   font-size: 0.8rem;
-}
-
-/* Daily Forecast Carousel */
-#dailyCarousel {
-  display: flex;
-  overflow-x: auto;
-  padding: 4px 0px 8px 0px;
 }
 
 /* Daily Cards */
@@ -493,10 +475,10 @@
 /* Highlight active forecast card */
 .active-forecast {
   background: #d0e7ffa1; /* Light blue background */
-  border: 2px solid #007bff; /* Blue border */
+  border: 2px solid ; /* Blue border */
 }
 
-/* Alternatively, add an underline */
+/* Alternatively, add an underline
 .active-forecast::after {
   content: "";
   display: block;
@@ -505,14 +487,8 @@
   background-color: #5b5b5b66; 
   border-radius: 100px;
   margin-top: 5px;
-}
+} */
 
-.hourly-carousel, .forecast-carousel {
-  display: flex;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  padding: 10px;
-}
 
 .hour-card, .forecast-card {
   scroll-snap-align: start;
@@ -521,10 +497,121 @@
 }
 
 /* Hourly Carousel */
-#hourlyCarousel, #dailyCarousel {
+.hourly-carousel, .daily-carousel {
   display: flex;
   overflow-x: auto;
-  -webkit-overflow-scrolling: touch; /* Smooth scrolling on mobile */
-  padding: 10px;
-  scroll-snap-type: x mandatory; /* Enable snap scrolling */
+  padding: 2px 0px 4px 0px;
+  scroll-snap-type: x mandatory; 
+  scroll-behavior: smooth;
+  scroll-padding: 10px;
+}
+
+
+
+/* info overlay */
+
+#infoOverlay {
+  display: flex;
+  padding: 6px 0px;
+  background-color: rgba(244, 244, 244, 0.85);
+}
+
+#infoOverlay .overlay-header {
+  padding: 4px 10px;
+  background-color: #fff;
+}
+
+#iOverlayIcon {
+  font-size: 1.5rem;
+}
+
+#iOverlayCloseBtn {
+  padding-right: 0px;
+} 
+
+#iOverlayCloseBtn i {
+  font-size: 2rem !important;
+}
+
+.overlay-tabs {
+  padding: 6px;
+  display: flex;
+  width: 96%;
+}
+
+.o-tabs-ul {
+  list-style-type: none;
+  display: flex;
+  margin: 0;
+  padding: 0;
+  width: 96%;
+  align-items: center;
+  justify-content: center;
+}
+
+.o-tabs-li {
+  margin: 0px 4px;
+}
+
+.o-tabs-link {
+  border: 2px solid #abababd0;
+  border-radius: 20px;
+  padding: 4px 20px;
+  font-size: 1rem;
+  font-weight: 550;
+  color: rgba(0, 0, 0, 0.82);
+  background-color: #fff;
+}
+
+.tab-active {
+  border: 2px solid #007bff;
+  background-color: #ecf6ff;
+}
+
+
+
+.overlay-content {
+  border: 1px solid #abababd0;
+  border-radius: 20px;
+  width: 96%;
+  background-color: #fff;
+}
+
+#generalInfoContent {
+  display: block;
+}
+
+.tab-content {
+  display: none;
+  margin: 0.8rem 0.4rem;
+  border-radius: 20px;
+  border: 1px solid transparent;
+}
+
+.o-info-table {
+  margin: 0px; 
+}
+
+table#info-tabletwo {
+  margin: 12px 0px 2px 0px;
+}
+
+.overlay-modal-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.15);
+  position: absolute;
+  top: 0;
+  z-index: 1000;
+}
+
+#infoContainer {
+  display: none;
+}
+
+#eTitleDiv h5 {
+  font-weight: 600;
 }

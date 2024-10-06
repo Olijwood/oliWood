@@ -166,12 +166,12 @@ $('#eAdvancedToggleBtn').on('click', function() {
   if (eIsExpanded) {
     // Collapse the overlay
     advancedFeatures.css({ display: 'none' });
-    overlay.animate({ height: '130px' }, 300); // Adjust this height to fit non-advanced content
+    overlay.animate({ height: '134px' }, 300); // Adjust this height to fit non-advanced content
     icon.removeClass('bi-chevron-down').addClass('bi-chevron-up');
   } else {
     // Expand the overlay
     advancedFeatures.css({ display: 'inline-flex' });
-    overlay.animate({ height: '220px' }, 300); // Adjust to the original size you want
+    overlay.animate({ height: '248px' }, 300); // Adjust to the original size you want
     icon.removeClass('bi-chevron-up').addClass('bi-chevron-down');
   }
 

@@ -231,7 +231,7 @@ $('#wAdvancedToggleBtn').on('click', function() {
   } else {
     // Expand the overlay
     advancedFeatures.css({ display: 'inline-flex' });
-    overlay.animate({ height: '474px' }, 300); // Adjust to the original size you want
+    overlay.animate({ height: '454px' }, 300); // Adjust to the original size you want
     icon.removeClass('bi-chevron-up').addClass('bi-chevron-down');
   }
 

@@ -2,6 +2,8 @@ import { adjustColorBrightness, toTitleCase } from "./utils";
 import { fetchEarthquakes, calcEarthquakesInCountry, earthquakesGeoJSON} from "./earthquakes.js";
 import { populateCurrencyDropdowns, updateConversion, loadCurrenciesForCountry } from "./currency-modal.js";
 import { fetchWeather, fetchWeatherForecast, updateWeatherUI } from "./weather.js";
+import { updateCountryInfo } from "./country-info.js";
+import { countryInfoConfig } from "./configs/modalConfigs.js";
 class SelectedCountry {
   constructor(countryCode) {
     this.countryCode = countryCode.toUpperCase();
@@ -458,7 +460,11 @@ const showWeatherOverlay = () => {
 };
 // Initialize modals for buttons
 const modalBtns = [
-  L.easyButton('bi-info-circle', (btn, map) => $("#infoModal").modal("show")),
+  L.easyButton('bi-info-circle', (btn, map) => {
+    hideCustomOverlays();
+    updateCountryInfo(currentCountry.info, countryInfoConfig);
+    $("#infoContainer").css("display", "flex")
+  }),
   L.easyButton("bi-bar-chart", (btn, map) => $("#demographicsModal").modal("show")),
   L.easyButton('bi-cloud-sun', (btn, map) => {
     showWeatherOverlay();

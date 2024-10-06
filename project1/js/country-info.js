@@ -34,6 +34,7 @@ const injectDataIntoModal = (data, config) => {
 };
 
 export const updateCountryInfo = (countryData, countryInfoConfig) => {
+  console.log(countryData);
   injectDataIntoModal(countryData, countryInfoConfig);
   const {
     countryName,
@@ -91,9 +92,31 @@ export const updateCountryInfo = (countryData, countryInfoConfig) => {
 };
 
 
-$('#infoModal').on('shown.bs.modal', () => {
+// Handle tab switching
+$('.o-tabs-link').on('click', function () {
+  // Remove the active class from all tabs
+  $('.o-tabs-link').removeClass('tab-active');
   
-  const countryInfoData = currentCountry.info;
+  // Add the active class to the clicked tab
+  $(this).addClass('tab-active');
+
+   // Get the target content ID from the clicked tab
+  const targetContentId = $(this).data('target');
+  console.log(targetContentId);
+   // Hide all tab content sections
+   $('.tab-content').css({
+     display: 'none'
+   });
+   $('.tab-content').removeClass('show');
  
-  updateCountryInfo(countryInfoData, countryInfoConfig);
-});
+   // Show the target content section
+   $(`#${targetContentId}`).css(
+     {
+       display: 'block'
+     }
+   );
+  });
+
+  $('#iOverlayCloseBtn').on('click', () => {
+    $('#infoContainer').hide();
+  });

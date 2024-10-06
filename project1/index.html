@@ -30,7 +30,7 @@
               <i class="bi bi-chevron-up"></i>
             </button>
             <div id="eTitleDiv" class="overlay-title">
-              <label class="form-check-label" id="earthquakeToggleLabel" for="toggleEarthquakes">Earthquakes</label>
+              <h5 class="text-center">Earthquakes</h5>
               <input class="form-check-input" type="checkbox" role="switch" id="toggleEarthquakes" checked>
             </div>
             <button id="eOverlayCloseBtn" class="overlay-close-btn"><i class="bi bi-x"></i></button> 
@@ -60,6 +60,7 @@
         
         <div id="currencyOverlay" class="overlay-container">
           <div id="currencyHeader" class="overlay-header">
+            <i class="bi bi-cash overlay-title-icon"></i>
             <div id="cTitleDiv" class="overlay-title">
               <h5 class="text-center">Currency Converter</h5>
             </div>
@@ -80,7 +81,7 @@
             </div>
             
             <!-- Convert To -->
-            <div class="currency-input-group">
+            <div class="currency-input-group" id="toInputGroup">
               <div class="currency-input">
                 <input type="number" id="toAmount">
               </div>
@@ -109,13 +110,15 @@
         <div class="weather-content">
           <div class="weather-icon-temp">
             <i id="currentWeatherIcon" class="bi bi-cloud"></i>
-            <span id="temperature"></span>
-            <div id="tempToggle" class="temp-toggle">
-              <span id="unit">°C</span> 
-              <i id="tempToggleIcon" class="bi bi-arrow-left-right"></i>
+            <div id="wTempContainer">
+              <span id="temperature"></span>
+              <div id="tempToggle" class="temp-toggle">
+                <span id="unit">°C</span> 
+                <i id="tempToggleIcon" class="bi bi-arrow-left-right"></i>
+              </div>
             </div>
             <div class="weather-details">             
-              <span id="weatherDesc" class="o-text-muted"></span>
+              <span id="weatherDesc"></span>
               <div class="weather-details-sm">
                 <span id="humidity" class="o-text-muted"></span>
                 <span id="windSpeed" class="o-text-muted"></span>
@@ -132,123 +135,117 @@
         <div id="wAdvanced">
           
           <div id="hourlyCarousel" class="hourly-carousel"></div>
-          <div id="dailyCarousel" class="forecast-carousel"></div>
+          <div id="dailyCarousel" class="daily-carousel"></div>
         </div>
       </div>
 
 
-           
-            <!-- General Info Modal -->
-      <div id="infoModal" class="modal fade" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
-        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-          <div class="modal-content">
-            <div class="modal-header bg-primary text-white">
-              <i id="infoModalIcon" class="fas fa-info-circle fa-lg me-2"></i>
-              <h5 class="modal-title">General Information</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
+      <!-- Info Overlay -->
+       <div class="overlay-modal-container" id="infoContainer">
+      <div id="infoOverlay" class="overlay-container">
+        <div class="overlay-header">
+          <i id="iOverlayIcon" class="bi bi-info-circle"></i>
+          <div id="iTitleDiv" class="overlay-title">
+            <h5 class="text-center">General Information</h5>
+          </div>
+          <button id="iOverlayCloseBtn" class="overlay-close-btn"><i class="bi bi-x"></i></button>
+        </div>
+        <div class="overlay-tabs">
+          <!-- Tab Navigation -->
+          <ul class="o-tabs-ul" id="countryInfoTab" role="tablist">
+            <li class="o-tabs-li">
+              <button class="o-tabs-link tab-active" id="generalInfo-tab" data-target="generalInfoContent">General Info</button>
+            </li>
+            <li class="o-tabs-li">
+              <button class="o-tabs-link" id="moreInfo-tab" data-target="moreInfoContent" >More Info</button>
+            </li>
+          </ul>
+        </div>
+        <div class="overlay-content">
+          <!-- Tab Content -->
+          <div class="tab-content" id="generalInfoContent">
+            <!-- General Info Tab -->
+            <div id="generalInfo">
+              <table class="table table-bordered table-hover .o-info-table">
+                <tbody>
+                  <tr>
+                    <td><i class="fas fa-city text-info me-2"></i>Capital City</td>
+                    <td class="fw-bold text-end" id="capitalCity"></td>
+                  </tr>
+                  <tr>
+                    <td><i class="fas fa-globe text-warning me-2"></i>Continent</td>
+                    <td class="fw-bold text-end" id="continent"></td>
+                  </tr>
+                  <tr>
+                    <td><i class="fas fa-globe text-muted me-2"></i>Sub-Continent</td>
+                    <td class="fw-bold text-end" id="subcontinent"></td>
+                  </tr>
+                  <tr>
+                    <td><i class="fas fa-users text-primary me-2"></i>Population</td>
+                    <td class="fw-bold text-end" id="populationVal"></td>
+                  </tr>
+                  <tr>
+                    <td><i class="bi bi-arrows text-dark me-2"></i>Area</td>
+                    <td class="fw-bold text-end" id="area"></td>
+                  </tr>
+                  <tr>
+                    <td><i class="bi bi-car-front text-success me-2"></i>Driving Side</td>
+                    <td class="fw-bold text-end" id="driveSide"></td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <!-- Currencies, Languages, and Borders -->
+              <table class="table table-bordered table-hovero-info-table" id="info-tabletwo">
+                <tbody>
+                  <tr>
+                    <td class="align-middle"><i class="bi bi-cash text-info me-2"></i>Currencies</td>
+                    <td class="fw-bold text-end align-middle"><ul class="list-unstyled" id="currenciesVal"></ul></td>
+                  </tr>
+                  <tr>
+                    <td class="align-middle"><i class="fas fa-language text-info me-2"></i>Languages</td>
+                    <td class="fw-bold text-end align-middle"><ul class="list-unstyled" id="languagesTable"></ul></td>
+                  </tr>
+                  <tr>
+                    <td class="align-middle"><i class="bi bi-globe-americas text-info me-2"></i>Neighbours</td>
+                    <td class="fw-bold text-end align-middle"><ul class="list-unstyled" id="borderCs"></ul></td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
-            <div class="modal-body">
-              <!-- Country Flag and Name -->
-              <div class="text-center mb-3">
-                <img id="countryFlag" src="" alt="Country Flag" class="img-fluid rounded" style="max-width: 150px;">
-                <h3 id="countryName" class="mt-2"></h3>
-              </div>
-
-              <!-- Tab Navigation -->
-              <ul class="nav nav-tabs" id="countryInfoTab" role="tablist">
-                <li class="nav-item">
-                  <button class="nav-link active" id="generalInfo-tab" data-bs-toggle="tab" data-bs-target="#generalInfo" role="tab" aria-controls="generalInfo" aria-selected="true">General Info</button>
-                </li>
-                <li class="nav-item">
-                  <button class="nav-link" id="moreInfo-tab" data-bs-toggle="tab" data-bs-target="#moreInfo" role="tab" aria-controls="moreInfo" aria-selected="false">More Info</button>
-                </li>
-              </ul>
-
-              <!-- Tab Content -->
-              <div class="tab-content mt-3" id="countryInfoTabContent">
-                <!-- General Info Tab -->
-                <div class="tab-pane fade show active" id="generalInfo" role="tabpanel" aria-labelledby="generalInfo-tab">
-                  <table class="table table-bordered table-hover">
-                    <tbody>
-                      <tr>
-                        <td><i class="fas fa-city text-info me-2"></i>Capital City</td>
-                        <td class="fw-bold text-end" id="capitalCity"></td>
-                      </tr>
-                      <tr>
-                        <td><i class="fas fa-globe text-warning me-2"></i>Continent</td>
-                        <td class="fw-bold text-end" id="continent"></td>
-                      </tr>
-                      <tr>
-                        <td><i class="fas fa-globe text-muted me-2"></i>Sub-Continent</td>
-                        <td class="fw-bold text-end" id="subcontinent"></td>
-                      </tr>
-                      <tr>
-                        <td><i class="fas fa-users text-primary me-2"></i>Population</td>
-                        <td class="fw-bold text-end" id="populationVal"></td>
-                      </tr>
-                      <tr>
-                        <td><i class="bi bi-arrows text-dark me-2"></i>Area</td>
-                        <td class="fw-bold text-end" id="area"></td>
-                      </tr>
-                      <tr>
-                        <td><i class="bi bi-car-front text-success me-2"></i>Driving Side</td>
-                        <td class="fw-bold text-end" id="driveSide"></td>
-                      </tr>
-                    </tbody>
-                  </table>
-
-                  <!-- Currencies, Languages, and Borders -->
-                  <table class="table table-bordered table-hover mt-4">
-                    <tbody>
-                      <tr>
-                        <td class="align-middle"><i class="bi bi-cash text-info me-2"></i>Currencies</td>
-                        <td class="fw-bold text-end align-middle"><ul class="list-unstyled" id="currenciesVal"></ul></td>
-                      </tr>
-                      <tr>
-                        <td class="align-middle"><i class="fas fa-language text-info me-2"></i>Languages</td>
-                        <td class="fw-bold text-end align-middle"><ul class="list-unstyled" id="languagesTable"></ul></td>
-                      </tr>
-                      <tr>
-                        <td class="align-middle"><i class="bi bi-globe-americas text-info me-2"></i>Neighbours</td>
-                        <td class="fw-bold text-end align-middle"><ul class="list-unstyled" id="borderCs"></ul></td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-
-                <!-- More Info Tab -->
-                <div class="tab-pane fade" id="moreInfo" role="tabpanel" aria-labelledby="moreInfo-tab">
-                  <table class="table table-bordered table-hover">
-                    <tbody>
-                      <tr>
-                        <td><i class="fas fa-scroll text-secondary me-2"></i>Official Name</td>
-                        <td class="fw-bold text-end" id="officialName"></td>
-                      </tr>
-                      <tr>
-                        <td><i class="fas fa-user-tie text-secondary me-2"></i>Demonym(s)</td>
-                        <td class="fw-bold text-end" id="demonymsTable"></td>
-                      </tr>
-                      <tr>
-                        <td><i class="fas fa-globe-americas text-primary me-2"></i>Independent</td>
-                        <td class="fw-bold text-end" id="independent"></td>
-                      </tr>
-                      <tr>
-                        <td><i class="fas fa-hashtag text-info me-2"></i>UN Member</td>
-                        <td class="fw-bold text-end" id="unm49"></td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+          </div>
+          <div class="tab-content" id="moreInfoContent">
+            <!-- More Info Tab -->
+            <div id="moreInfo" >
+              <table class="table table-bordered table-hover o-info-table">
+                <tbody>
+                  <tr>
+                    <td><i class="fas fa-scroll text-secondary me-2"></i>Official Name</td>
+                    <td class="fw-bold text-end" id="officialName"></td>
+                  </tr>
+                  <tr>
+                    <td><i class="fas fa-user-tie text-secondary me-2"></i>Demonym(s)</td>
+                    <td class="fw-bold text-end" id="demonymsTable"></td>
+                  </tr>
+                  <tr>
+                    <td><i class="fas fa-globe-americas text-primary me-2"></i>Independent</td>
+                    <td class="fw-bold text-end" id="independent"></td>
+                  </tr>
+                  <tr>
+                    <td><i class="fas fa-hashtag text-info me-2"></i>UN Member</td>
+                    <td class="fw-bold text-end" id="unm49"></td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
       </div>
-
+    </div>
+  </div>
+           
+      
       <!-- Demographics Modal -->
 
       <div id="demographicsModal" class="modal fade" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
