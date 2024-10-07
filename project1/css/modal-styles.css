@@ -535,9 +535,9 @@
 }
 
 .overlay-tabs {
-  padding: 6px;
+  padding: 6px 2px;
   display: flex;
-  width: 96%;
+  width: 98%;
 }
 
 .o-tabs-ul {
@@ -545,7 +545,7 @@
   display: flex;
   margin: 0;
   padding: 0;
-  width: 96%;
+  width: 100%;
   align-items: center;
   justify-content: center;
 }
@@ -660,10 +660,12 @@ ul#demographicsTab {
 
 .d-tabs-li {
     margin: 3px 2px;
-    min-width: 32%;
+    min-width: 30%;
 }
 
-
+.demo-subtitle {
+  margin-bottom: 0px;
+}
 
 #dOverlayContent { 
   border: 1px solid #abababd0; 

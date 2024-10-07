@@ -35,7 +35,6 @@ const injectDataIntoModal = (data, config) => {
 };
 
 export const updateCountryInfo = (countryData, countryInfoConfig) => {
-  console.log(countryData);
   injectDataIntoModal(countryData, countryInfoConfig);
   const {
     countryName,
@@ -103,7 +102,6 @@ $('.o-tabs-link').on('click', function () {
 
    // Get the target content ID from the clicked tab
   const targetContentId = $(this).data('target');
-  console.log(targetContentId);
    // Hide all tab content sections
    $('.tab-content').css({
      display: 'none'

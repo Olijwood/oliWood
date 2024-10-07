@@ -91,7 +91,7 @@ const injectSection = (containerId, title, data = [], charts = [], icon='') => {
   let content = `
       <div class="card mb-3">
           <div class="card-header">
-              <h6 class="text-center"><i class="${icon} me-2"></i>${title}</h6>
+              <h6 class="text-center demo-subtitle"><i class="${icon} me-2"></i>${title}</h6>
           </div>
           <div class="card-body">
               <table class="table table-bordered table-hover">
@@ -115,7 +115,7 @@ const injectSection = (containerId, title, data = [], charts = [], icon='') => {
     content += `
         <tr>
             <td colspan="2" class="chart-td">
-                <h6 class="text-center">${chart.title} ${unitCite}</h6>
+                <h6 class="text-center demo-subtitle" >${chart.title} ${unitCite}</h6>
                 <div class="spinner-container">
                   <div class="spinner" id="spinner-${chart.id}"></div>
                 </div>

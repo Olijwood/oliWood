@@ -120,6 +120,12 @@ html, body {
   display: none !important;
 }
 
+input.leaflet-control-layers-selector {
+  margin-top: 2px;
+  position: relative;
+  top: 0.12rem !important;
+}
+
 /* Markers */
 
 .marker-city div {
