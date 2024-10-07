@@ -464,7 +464,15 @@ const showWeatherOverlay = () => {
 const modalBtns = [
   L.easyButton('bi-info-circle', (btn, map) => {
     hideCustomOverlays();
+    
     updateCountryInfo(currentCountry.info, countryInfoConfig);
+    $('.info-tabs-link').removeClass('tab-active');
+    $('#generalInfo-tab').addClass('tab-active');
+ 
+    $('.info-tab-content').hide();
+     
+    $('#generalInfoContent').show();
+     
     $("#infoContainer").css("display", "flex");
   }),
   L.easyButton("bi-bar-chart", (btn, map) => {
