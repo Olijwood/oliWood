@@ -55,10 +55,8 @@
     padding: 0.5rem;
   }
 }
-#infoOverlay, #demoOverlay .overlay-header {
-  padding: 4px 10px;
-  background-color: #fff;
-}
+
+
 
 /* General Overlay Container Styles */
 .overlay-container {
@@ -103,7 +101,7 @@
   padding: 0px 4px;
   margin-top: 0px;
   border: 1px solid #abababd0;
-  background-color: #f5f5f5;
+  background-color: #fff;
   border-radius: 20px;
 }
 
@@ -205,6 +203,7 @@
   font-size: 1rem;
   border-radius: 16px;
   border: 1px solid #ababab;
+  background-color: #fff;
   box-sizing: border-box;
 }
 
@@ -256,7 +255,7 @@
 #toggleEarthquakes {
   font-size: 1rem;
   margin-top: 1px;
-  margin-left: 6px;
+  margin-left: 8px;
 }
 
 #earthquakeOverlay #search {
@@ -295,7 +294,7 @@
 
 /* Weather Header Styles */
 #weatherHeader {
-  background-color: #f5f5f5;
+  background-color: #fff;
 }
 
 /* Weather Content */
@@ -368,7 +367,7 @@
   display: none;
   flex-direction: column;
   width: 96%;
-  background-color: #f5f5f5;
+  background-color: #fff;
   padding: 8px 8px 6px 8px;
   border: 1px solid #00000033;
   border-radius: 20px;
@@ -446,7 +445,7 @@
 /* Daily Cards */
 .forecast-card {
   flex: 0 0 auto;
-  background-color: #eff5ffa8;
+  background-color: #fff;
   border-radius: 10px;
   margin: 4px 2px;
   padding: 10px 18px;
@@ -478,7 +477,7 @@
 
 /* Highlight active forecast card */
 .active-forecast {
-  background: #d0e7ffa1; /* Light blue background */
+  background: #daf7ff; /* Light blue background */
   border: 2px solid ; /* Blue border */
 }
 
@@ -613,8 +612,16 @@ table#info-tabletwo {
   display: none;
 }
 
-#eTitleDiv h5 {
-  font-weight: 600;
+#iOverlayHeader {
+  padding: 0px 8px 0px 12px;
+}
+
+#dOverlayHeader {
+  padding: 4px 8px 4px 16px;
+}
+
+#eOverlayCloseBtn, #cOverlayCloseBtn {
+  padding-top: 2px !important;
 }
 
 #demoOverlay {
@@ -646,6 +653,10 @@ table#info-tabletwo {
   width: 100%;
 }
 
+#dOverlayIcon {
+  font-size: 1.3rem;
+}
+
 #dOverlayTabs {
   margin: 2px 0px;
 }
@@ -674,7 +685,7 @@ ul#demographicsTab {
   background-color: #fff;
   overflow-y: auto;
   max-height: 100%; 
-  padding: 10px
+  padding: 2px;
 }
 
 #dOverlayContent .tab-content {
