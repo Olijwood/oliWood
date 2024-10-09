@@ -7,7 +7,14 @@ applications.html
 bitnami.css
 favicon.ico
 index.php
+.env
+.htaccess
 
-# Project1 files
+# Project1
+project1/node_modules
+project1/.env
+project1/.htaccess
 
-project1/templates/
+project2/*
+task/*
+/assets/vendor/
