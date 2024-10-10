@@ -1,73 +1,40 @@
-/* General Modal Styles */
-.modal {
-  align-items: center;
+/* ------------------------------------------------------------------------------
+   MODAL STYLES
+------------------------------------------------------------------------------ */
+
+/* Close / Toggle Button Styles */
+.bi-chevron-up,
+.bi-chevron-down {
+  font-size: 1.5rem;
+  color: var(--overlay-btn-grey)
 }
 
-.modal-dialog {
-  padding: 10rem 0rem 6rem 0rem ;
-  min-width: 90%;
+.bi-x {
+  font-size: 1.8rem;
+  color: var(--overlay-btn-grey)
 }
 
-/* Ensure the header and footer are visible */
-.modal-content {
-  display: flex;
-  flex-direction: column;
-  height: auto;
-  max-height: 80vh;
+.overlay-close-btn {
+  background: none;
+  border: none;
+  font-size: 1.8rem;
+  color: var(--overlay-btn-grey);
+  cursor: pointer;
 }
 
-/* Make the modal body scrollable */
-.modal-body {
-  overflow-y: auto;
-  flex: 1 1 auto; /* Allows the modal body to grow and shrink */
-}
+/* ------------------------------------------------------------------------------
+   GENERAL OVERLAY STYLES
+------------------------------------------------------------------------------ */
 
-/* Optional: Adjust spacing around modals */
-#currencyModal, #infoModal, #weatherModal {
-  margin: 0; /* Remove margin if you want to make full use of space */
-}
-
-.modal-header, .modal-footer {
-  flex: 0 0 auto; /* Keeps header and footer fixed size */
-}
-
-/* Custom Table Styling */
-.table-striped {
-  margin-bottom: 0.1rem;
-}
-
-.table td, .table th {
-  padding: 0.6rem;
-  vertical-align: middle;
-}
-
-.list-unstyled {
-  padding-left: 0;
-  margin-bottom: 0 !important;
-}
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .modal-dialog {
-    max-width: none; /* Remove max-width for smaller screens */
-  }
-
-  .modal-body {
-    padding: 0.5rem;
-  }
-}
-
-
-
-/* General Overlay Container Styles */
 .overlay-container {
   position: absolute;
   right: 50%;
   transform: translateX(50%);
   z-index: 900;
   padding: 2px;
-  margin-top: 0px;
   bottom: 10px;
   width: 96%;
+  display: none;
   flex-direction: column;
   justify-content: space-around;
   align-items: center;
@@ -75,23 +42,8 @@
   border-radius: 20px;
   border: 2px solid #ababab;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
-  overflow: hidden;
-  transition: height 0.3s ease;
-  display: none;
 }
 
-#earthquakeOverlay {
-  height: 134px;
-}
-
-#currencyOverlay {
-  height: 240px;
-  max-width: 500px;
-}
-
-
-
-/* Overlay Header Styles */
 .overlay-header {
   display: inline-flex;
   width: 96%;
@@ -99,34 +51,12 @@
   align-items: center;
   margin-bottom: 2px;
   padding: 0px 4px;
-  margin-top: 0px;
-  border: 1px solid #abababd0;
   background-color: #fff;
+  border: 1px solid var(--border-color);
   border-radius: 20px;
 }
 
-#earthquakeHeader {
-  padding: 4px 4px;
-}
-
-#currencyHeader {
-  padding: 4px 16px
-}
-
-/* Close Button */
-.overlay-close-btn {
-  background: none;
-  border: none;
-  font-size: 1.8rem;
-  color: rgb(83, 83, 83);
-  cursor: pointer;
-}
-
-#cOverlayCloseBtn {
-  padding: 0px
-}
-
-/* Title Div */
+/* Overlay Title */
 .overlay-title {
   display: flex;
   justify-content: space-around;
@@ -140,21 +70,173 @@
 
 .overlay-title-icon {
   font-size: 1.4rem;
-  color: rgb(83, 83, 83)
+  color: var(--overlay-btn-grey);
 }
 
+/* ------------------------------------------------------------------------------
+   OVERLAY MODAL STYLES
+------------------------------------------------------------------------------ */
 
+.overlay-modal-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.15);
+  position: absolute;
+  top: 0;
+  z-index: 1000;
+}
 
+.overlay-modal {
+  display: flex;
+  padding: 8px 0px;
+  background-color: rgba(244, 244, 244, 0.85) !important;
+}
 
+.overlay-content {
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  width: 96%;
+  background-color: #fff;
+}
 
+/* Overlay Tabs */
+.overlay-tabs {
+  padding: 6px 2px;
+  display: flex;
+  width: 98%;
+}
 
+.tab-content {
+  display: none;
+  margin: 0.8rem 0.4rem;
+  border-radius: 20px;
+  border: 1px solid transparent;
+}
 
-/* Common Input Styles */
-.input-field {
+.o-tabs-ul {
+  list-style-type: none;
+  display: flex;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
+.o-tabs-li {
+  margin: 0px 4px;
+}
+
+.o-tabs-link {
+  border: 2px solid var(--border-color);
+  border-radius: 20px;
+  padding: 4px 20px;
+  font-size: 1rem;
+  font-weight: 550;
+  color: rgba(0, 0, 0, 0.82);
+  background-color: #fff;
+}
+
+.tab-active {
+  border: 2px solid var(--tab-active-border) !important;
+  background-color: var(--tab-active-bg-color) !important;
+}
+
+/* ------------------------------------------------------------------------------
+   EARTHQUAKE OVERLAY STYLES
+------------------------------------------------------------------------------ */
+
+#earthquakeOverlay {
+  height: 134px;
+}
+
+#eOverlayCloseBtn {
+  padding-top: 3px !important;
+}
+
+#earthquakeHeader {
+  padding: 4px 4px;
+}
+
+#toggleEarthquakes {
+  font-size: 1rem;
+  margin-top: 1px;
+  margin-left: 8px;
+}
+
+#earthquakeRadio {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  font-weight: 500;
+  margin-bottom: 10px;
+  margin-top: 8px;
+}
+
+/* Advanced Features Styles */
+#eAdvanced {
+  display: none;
+  align-items: center;
+  flex-direction: column;
+  margin-top: 10px;
+  width: 90%;
+}
+
+#earthquakeOverlay #search {
   width: 70%;
   margin: 4px;
-  border: 2px solid lightgrey;
+  border: 2px solid var(--border-color);
   border-radius: 10px;
+}
+
+/* Earthquake Slider */
+#slider {
+  width: 80%;
+  margin: 30px 0px 6px 0px;
+  background-color: #e0e0e0;
+  z-index: 1000;
+  padding: 0 16px;
+}
+
+#slider .noUi-tooltip {
+  display: none;
+  border: 1px solid rgba(0, 0, 0, 0.8);
+}
+
+#slider .noUi-active .noUi-tooltip {
+  display: block;
+  height: 28px;
+}
+
+/* ------------------------------------------------------------------------------
+   CURRENCY OVERLAY STYLES
+------------------------------------------------------------------------------ */
+
+#currencyOverlay {
+  height: 240px;
+  max-width: 500px;
+}
+
+#currencyHeader {
+  padding: 4px 16px;
+}
+
+#cOverlayCloseBtn {
+  padding: 0px;
+  padding-top: 3px !important;
+}
+
+#cConverterContainer {
+  height: auto;
+  width: 94%;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
 }
 
 /* Conversion Rate Display */
@@ -165,15 +247,18 @@
   margin-bottom: 12px;
 }
 
-/* Currency Input Group */
+/* Currency Inputs */
+.input-field {
+  width: 70%;
+  margin: 4px;
+  border: 2px solid var(--border-color);
+  border-radius: 10px;
+}
+
 .currency-input-group {
   display: flex;
   justify-content: space-between;
   margin-bottom: 15px;
-}
-
-#toInputGroup {
-  margin-bottom: 0px;
 }
 
 .currency-input {
@@ -186,10 +271,15 @@
   padding: 10px;
   font-size: 1rem;
   border-radius: 16px;
-  border: 1px solid #ababab;
+  border: 1px solid var(--border-color);
   box-sizing: border-box;
 }
 
+#toInputGroup {
+  margin-bottom: 0px;
+}
+
+/* Currency Select */
 .currency-select {
   flex: 2;
   margin-right: 1%;
@@ -202,7 +292,7 @@
   padding: 10px;
   font-size: 1rem;
   border-radius: 16px;
-  border: 1px solid #ababab;
+  border: 1px solid var(--border-color);
   background-color: #fff;
   box-sizing: border-box;
 }
@@ -214,90 +304,20 @@
   outline: none;
 }
 
-#cConverterContainer {
-  height: auto;
-  width: 94%;
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  justify-content: center;
-}
+/* ------------------------------------------------------------------------------
+   WEATHER OVERLAY STYLES
+------------------------------------------------------------------------------ */
 
-/* Other Specific Styles */
-#earthquakeRadio {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.2rem;
-  font-weight: 500;
-  margin-bottom: 10px;
-  margin-top: 8px;
-}
-
-#earthquakeToggleLabel {
-  font-size: 1.4rem;
-  margin-right: 10px;
-}
-
-#earthquakeOverlay .form-switch {
-  margin-left: 0;
-  padding-left: 0;
-}
-
-#eAdvanced {
-  display: none; 
-  align-items: center;
-  flex-direction: column;
-  margin-top: 10px;
-  width: 90%;
-}
-
-#toggleEarthquakes {
-  font-size: 1rem;
-  margin-top: 1px;
-  margin-left: 8px;
-}
-
-#earthquakeOverlay #search {
-  width: 70%;
-  margin: 4px;
-  border: 2px solid lightgrey;
-  border-radius: 10px;
-}
-
-#slider {
-  width: 80%;
-  margin: 30px 0px 6px 0px;
-  background-color: #e0e0e0;
-  z-index: 1000;
-  padding: 0 16px;
-}
-
-#slider  .noUi-tooltip{
-  display: none;
-  border: 1px solid rgba(0, 0, 0, 0.8);
-}
-
-#slider .noUi-active .noUi-tooltip {
-  display: block;
-  height: 28px;
-}
-
-
-/* Weather  Styles */
-
-/* Weather Overlay */
 #weatherOverlay {
   height: 190px;
   width: 96%;
 }
 
-/* Weather Header Styles */
 #weatherHeader {
   background-color: #fff;
 }
 
-/* Weather Content */
+/* Current Weather Styles */
 .weather-content {
   display: flex;
   justify-content: space-between;
@@ -305,17 +325,22 @@
   align-items: flex-start;
   width: 98%;
   margin: 0px;
-
 }
 
-/* Weather Icon and Temperature */
+#currentWeatherIcon {
+  font-size: 3.2rem;
+  align-self: center;
+  width: 3.2rem;
+  display: flex;
+  justify-content: center;
+}
+
 .weather-icon-temp {
   display: flex;
   align-items: center;
   justify-content: space-between;
   width: 70%;
 }
-
 
 .weather-details {
   display: flex;
@@ -325,7 +350,6 @@
   font-weight: bolder;
   height: 80px;
   justify-content: space-around;
-  
 }
 
 .weather-details-sm {
@@ -342,14 +366,22 @@
   color: rgba(0, 0, 0, 0.8);
 }
 
-#currentWeatherIcon {
-  font-size: 3.2rem;
-  align-self: center;
-  width: 3.2rem;
-  display: flex;
-  justify-content: center;
+.weather-location {
+  margin-bottom: 0px;
+  font-weight: 550;
+  font-size: 1.1rem;
 }
 
+.weather-time-desc {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: space-around;
+  align-items: flex-end;
+  max-width: 28%;
+}
+
+/* Temperature Styles */
 #wTempContainer {
   display: flex;
   justify-content: space-around;
@@ -359,23 +391,6 @@
 #temperature {
   align-self: center;
   font-size: 2.2rem;
-}
-
-
-
-#wAdvanced {
-  display: none;
-  flex-direction: column;
-  width: 96%;
-  background-color: #fff;
-  padding: 8px 8px 6px 8px;
-  border: 1px solid #00000033;
-  border-radius: 20px;
-}
-
-
-.o-text-muted {
-  color: rgba(0, 0, 0, 0.6);
 }
 
 .temp-toggle {
@@ -403,22 +418,40 @@
   font-weight: 600;
 }
 
-.weather-location {
-  margin-bottom: 0px;
-  font-weight: 550;
-  font-size: 1.1rem;
-}
-
-.weather-time-desc {
-  display: flex;
+/* Weather Advanced Features */
+#wAdvanced {
+  display: none;
   flex-direction: column;
-  height: 100%;
-  justify-content: space-around;
-  align-items: flex-end;
-  max-width: 28%;
+  width: 96%;
+  background-color: #fff;
+  padding: 8px 8px 6px 8px;
+  border: 1px solid #00000033;
+  border-radius: 20px;
 }
 
-/* Hourly Cards */
+.hourly-icon,
+.forecast-icon {
+  font-size: 30px;
+  color: #343434;
+}
+
+.hour-card, .forecast-card {
+  scroll-snap-align: start;
+  flex: 0 0 auto;
+  margin-right: 6px;
+}
+
+/* Carousels */
+.weather-carousel {
+  display: flex;
+  overflow-x: auto;
+  padding: 2px 0px 4px 0px;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  scroll-padding: 10px;
+}
+
+/* Hourly Forecasts */
 .hour-card {
   flex: 0 0 auto;
   border-radius: 5px;
@@ -442,7 +475,12 @@
   font-size: 0.8rem;
 }
 
-/* Daily Cards */
+/* Daily Forecasts */
+.active-forecast {
+  background: #daf7ff;
+  border: 2px solid;
+}
+
 .forecast-card {
   flex: 0 0 auto;
   background-color: #fff;
@@ -469,144 +507,9 @@
   font-weight: 500;
 }
 
-.hourly-icon,
-.forecast-icon {
-  font-size: 30px; /* Adjust as needed */
-  color: #343434; /* Adjust icon color */
-}
-
-/* Highlight active forecast card */
-.active-forecast {
-  background: #daf7ff; /* Light blue background */
-  border: 2px solid ; /* Blue border */
-}
-
-/* Alternatively, add an underline
-.active-forecast::after {
-  content: "";
-  display: block;
-  width: 100%;
-  height: 4px;
-  background-color: #5b5b5b66; 
-  border-radius: 100px;
-  margin-top: 5px;
-} */
-
-
-.hour-card, .forecast-card {
-  scroll-snap-align: start;
-  flex: 0 0 auto;
-  margin-right: 6px;
-}
-
-/* Hourly Carousel */
-.hourly-carousel, .daily-carousel {
-  display: flex;
-  overflow-x: auto;
-  padding: 2px 0px 4px 0px;
-  scroll-snap-type: x mandatory; 
-  scroll-behavior: smooth;
-  scroll-padding: 10px;
-}
-
-
-
-/* info overlay */
-
-#infoOverlay {
-  display: flex;
-  padding: 6px 0px;
-  background-color: rgba(244, 244, 244, 0.85);
-}
-
-
-
-.overlay-icon {
-  font-size: 1.5rem;
-}
-
-#iOverlayCloseBtn {
-  padding-right: 0px;
-} 
-
-#iOverlayCloseBtn i {
-  font-size: 2rem !important;
-}
-
-.overlay-tabs {
-  padding: 6px 2px;
-  display: flex;
-  width: 98%;
-}
-
-.o-tabs-ul {
-  list-style-type: none;
-  display: flex;
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  align-items: center;
-  justify-content: center;
-}
-
-.o-tabs-li {
-  margin: 0px 4px;
-}
-
-.o-tabs-link {
-  border: 2px solid #abababd0;
-  border-radius: 20px;
-  padding: 4px 20px;
-  font-size: 1rem;
-  font-weight: 550;
-  color: rgba(0, 0, 0, 0.82);
-  background-color: #fff;
-}
-
-.tab-active {
-  border: 2px solid #007bff !important;
-  background-color: #ecf6ff !important;
-}
-
-
-
-.overlay-content {
-  border: 1px solid #abababd0;
-  border-radius: 20px;
-  width: 96%;
-  background-color: #fff;
-}
-
-#generalInfoContent {
-  display: block;
-}
-
-.tab-content {
-  display: none;
-  margin: 0.8rem 0.4rem;
-  border-radius: 20px;
-  border: 1px solid transparent;
-}
-
-.o-info-table {
-  margin: 0px; 
-}
-
-table#info-tabletwo {
-  margin: 12px 0px 2px 0px;
-}
-
-.overlay-modal-container {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: rgba(0, 0, 0, 0.15);
-  position: absolute;
-  top: 0;
-  z-index: 1000;
-}
+/* ------------------------------------------------------------------------------
+   GENERAL INFO OVERLAY STYLES
+------------------------------------------------------------------------------ */
 
 #infoContainer, #demoContainer {
   display: none;
@@ -616,34 +519,48 @@ table#info-tabletwo {
   padding: 0px 8px 0px 12px;
 }
 
-#dOverlayHeader {
-  padding: 4px 8px 4px 16px;
+#iOverlayCloseBtn {
+  padding-right: 0px;
 }
 
-#eOverlayCloseBtn, #cOverlayCloseBtn {
-  padding-top: 2px !important;
+#iOverlayCloseBtn i {
+  font-size: 2rem !important;
 }
+
+#generalInfoContent {
+  display: block;
+}
+
+/* General Info Table */
+.o-info-table {
+  margin: 0px;
+}
+
+table#info-tabletwo {
+  margin: 12px 0px 2px 0px;
+}
+
+/* ------------------------------------------------------------------------------
+   DEMOGRAPHICS OVERLAY STYLES
+------------------------------------------------------------------------------ */
 
 #demoOverlay {
-  padding: 6px 0px;
-  background-color: rgba(244, 244, 244, 0.85);
-  display: flex;
-  max-height: 90%;
+  max-height: 85.5%;
   left: 9px;
   transform: none;
 }
 
-#demographicsHeader {
-  width: 96%;
-  justify-content: space-between;
-  padding: 2px 4px;
-  margin-top: 4px;
-  background-color: #f5f5f5;
-  border-radius: 20px;
+#dOverlayHeader {
+  padding: 4px 8px 4px 16px;
 }
 
+#dOverlayIcon {
+  font-size: 1.3rem;
+}
+
+/* Demographics Tabs */
 .d-tabs-link {
-  border: 2px solid #abababd0;
+  border: 2px solid var(--border-color);
   border-radius: 20px;
   padding: 4px 10px;
   font-size: 1rem;
@@ -653,11 +570,7 @@ table#info-tabletwo {
   width: 100%;
 }
 
-#dOverlayIcon {
-  font-size: 1.3rem;
-}
-
-#dOverlayTabs {
+#demoTabsContainer {
   margin: 2px 0px;
 }
 
@@ -670,21 +583,18 @@ ul#demographicsTab {
 }
 
 .d-tabs-li {
-    margin: 3px 2px;
-    min-width: 30%;
+  margin: 3px 2px;
+  min-width: 30%;
 }
 
-.demo-subtitle {
-  margin-bottom: 0px;
-}
-
-#dOverlayContent { 
-  border: 1px solid #abababd0; 
-  border-radius: 20px; 
+/* Demographics Content */
+#dOverlayContent {
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
   width: 96%;
   background-color: #fff;
   overflow-y: auto;
-  max-height: 100%; 
+  max-height: 100%;
   padding: 2px;
 }
 
@@ -692,6 +602,6 @@ ul#demographicsTab {
   font-weight: 500;
 }
 
-.fwbold {
-  font-weight:  600 !important;
+.demo-subtitle {
+  margin-bottom: 0px;
 }

@@ -7,7 +7,7 @@
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-    
+    <link rel="stylesheet" href="css/general-styles.css">
     <link rel="stylesheet" href="css/map-styles.css">
     <link rel="stylesheet" href="css/modal-styles.css">
     <link rel="stylesheet" href="css/charts.css">
@@ -134,8 +134,8 @@
         <!-- Forecast Carousel -->
         <div id="wAdvanced">
           
-          <div id="hourlyCarousel" class="hourly-carousel"></div>
-          <div id="dailyCarousel" class="daily-carousel"></div>
+          <div id="hourlyCarousel" class="weather-carousel"></div>
+          <div id="dailyCarousel" class="weather-carousel"></div>
         </div>
       </div>
 
@@ -143,7 +143,7 @@
 
       <!-- Info Overlay -->
        <div class="overlay-modal-container" id="infoContainer">
-      <div id="infoOverlay" class="overlay-container">
+      <div id="infoOverlay" class="overlay-container overlay-modal">
         <div class="overlay-header" id="iOverlayHeader">
           <i id="iOverlayIcon" class="bi bi-info-circle overlay-icon"></i>
           <div id="iTitleDiv" class="overlay-title">
@@ -248,7 +248,7 @@
       
       <!-- Demographics Modal -->
     <div class="overlay-modal-container" id="demoContainer">
-      <div id="demoOverlay" class="overlay-container">
+      <div id="demoOverlay" class="overlay-container overlay-modal">
         <div class="overlay-header" id="dOverlayHeader">
           <i id="dOverlayIcon" class="bi bi-graph-up overlay-icon"></i>
           <div class="overlay-title" id="dTitleDiv">
@@ -257,7 +257,7 @@
           <button id="dOverlayCloseBtn" class="overlay-close-btn"><i class="bi bi-x"></i></button>
         </div>
        
-        <div class="overlay-tabs" id="dOverlayTabs">
+        <div class="overlay-tabs" id="demoTabsContainer">
           <!-- Tab Navigation -->
           <ul class="o-tabs-ul" id="demographicsTab" role="tablist">
             <li class="d-tabs-li">

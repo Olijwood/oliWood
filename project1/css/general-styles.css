@@ -1,0 +1,33 @@
+/* ------------------------------------------------------------------------------
+   GENERAL STYLES
+------------------------------------------------------------------------------ */
+
+:root {
+  --border-color: #abababd0;
+  --overlay-btn-grey: rgb(83, 83, 83);
+  --tab-active-border: #007bff;
+  --tab-active-bg-color: #ecf6ff;
+}
+/* Font Styles */
+.o-text-muted {
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.fwbold {
+  font-weight: 600 !important;
+}
+
+/* Custom Table Styling */
+.table-striped {
+  margin-bottom: 0.1rem;
+}
+
+.table td, .table th {
+  padding: 0.6rem;
+  vertical-align: middle;
+}
+
+.list-unstyled {
+  padding-left: 0;
+  margin-bottom: 0 !important;
+}
