@@ -1,3 +1,4 @@
+import { hideCustomOverlays } from './map.js';
 import { toTitleCase } from './utils.js';
 
 let selectedCurr = $('#hiddenCurrSelected');
@@ -165,3 +166,11 @@ $('#toAmount').on('input', function() {
 $('#cOverlayCloseBtn').on('click', function() {
   $('#currencyOverlay').hide();
 });
+
+
+export const showCurrencyOverlay = () => {
+  hideCustomOverlays();
+  $("#currencyOverlay").css("display", "flex");
+  populateCurrencyDropdowns();
+  updateConversion();
+};

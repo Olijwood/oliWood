@@ -446,6 +446,7 @@
   display: flex;
   overflow-x: auto;
   padding: 2px 0px 4px 0px;
+  margin: 1px 0px;
   scroll-snap-type: x mandatory;
   scroll-behavior: smooth;
   scroll-padding: 10px;
@@ -477,9 +478,9 @@
 
 /* Daily Forecasts */
 .active-forecast {
-  background: #daf7ff;
-  border: 2px solid;
-}
+  background: var(--tab-active-bg-color) !important;
+  border: 2px solid var(--tab-active-border) !important;
+} 
 
 .forecast-card {
   flex: 0 0 auto;
@@ -538,6 +539,11 @@
 
 table#info-tabletwo {
   margin: 12px 0px 2px 0px;
+}
+
+#demonymsTable {
+  display: flex;
+  justify-content: flex-end;
 }
 
 /* ------------------------------------------------------------------------------

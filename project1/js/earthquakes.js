@@ -1,4 +1,4 @@
-import { currentCountry, map } from './map.js';
+import { currentCountry, hideCustomOverlays, map } from './map.js';
 import { round1d, toTitleCase } from './utils.js';
 import noUiSlider from 'nouislider';
 
@@ -186,3 +186,13 @@ $('input[name="inlineRadioOptions"]').on('change', function() {
   fetchEarthquakes(selectedPeriod);
 });
 
+
+export const showEarthquakesOverlay = () => {
+  hideCustomOverlays();
+  $("#earthquakeOverlay").css("display", "flex");
+  if (!earthquakesGeoJSON) {
+    fetchEarthquakes();
+  } else {
+    earthquakesGeoJSON.addTo(map);
+  }
+}

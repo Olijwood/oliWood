@@ -108,3 +108,4 @@ export const chartColours = {
   deaths: 'rgba(201, 203, 207, 0.5)',
   births: 'rgba(255, 217, 64, 0.2)'
 };
+

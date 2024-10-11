@@ -1,5 +1,5 @@
 import { toTitleCase } from './utils.js';
-import { currentCountry } from './map.js';
+import { currentCountry, hideCustomOverlays, userLat, userLon, userCountryCode} from './map.js';
 
 export const updateWeatherUI = (data, isUser = false) => {
   let locName = !isUser ? currentCountry.capitalData.name : data.wStationName;
@@ -44,7 +44,7 @@ $('.forecast-card').on('click', function() {
 });
 
 // Initialize overlay when weather data is ready
-export const fetchWeather = (lat, lon) => {
+const fetchWeather = (lat, lon) => {
   $.getJSON('php/getWeather.php', { lat, lon })
     .done((response) => {
       if (!response.error) {
@@ -164,7 +164,7 @@ const updateForecastUI = (data) => {
 
 
 
-export const fetchWeatherForecast = (lat, lon) => {
+const fetchWeatherForecast = (lat, lon) => {
   $.getJSON('php/getWeatherForecast.php', { lat, lon })
     .done((response) => {
       if (response.error) {
@@ -238,3 +238,15 @@ $('#wAdvancedToggleBtn').on('click', function() {
   wIsExpanded = !wIsExpanded;
 });
 
+export const showWeatherOverlay = () => {
+  hideCustomOverlays();
+  if (userCountryCode == currentCountry.countryCode) {
+      fetchWeather(userLat, userLon);
+    } else if (currentCountry.weather) {
+    updateWeatherUI(currentCountry.weather);
+    fetchWeatherForecast(currentCountry.capitalData.lat, currentCountry.capitalData.lon);
+  } else {
+    console.log('no weather data');
+  }
+  $('#weatherOverlay').css('display', 'flex');
+};

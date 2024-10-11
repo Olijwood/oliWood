@@ -327,6 +327,7 @@ $('.d-tabs-link').on('click', function () {
 $('#dOverlayCloseBtn').on('click', () => {
   $('#demoContainer').hide();
 });
+
 export const showDemographicsOverlay = () => {
   hideCustomOverlays();
   
@@ -357,36 +358,3 @@ export const showDemographicsOverlay = () => {
   // Show the demographics overlay
   $('#demoContainer').show();
 };
-
-
-// $tabs.on('shown.bs.tab', async function (e) {
-//   const targetId = $(e.target).attr('data-bs-target');
-//   const countryCode = $('#hiddenCountrySelected').val();
-
-//   if (!countryCode) {
-//     console.log('no country selected');
-//     return;
-//   }
-
-//   const demographicsUI = new DemographicsUI(countryCode);
-//   switch (targetId) {
-//     case '#populationDemo':
-//       demographicsUI.injectPopulationTab();
-//       demographicsUI.injectDataForTab('population');
-//       break;
-//     case '#healthDemo':
-//       demographicsUI.injectHealthTab();
-//       demographicsUI.injectDataForTab('health');
-//       break;
-//     case '#environmentDemo':
-//       demographicsUI.injectEnvironmentTab();
-//       demographicsUI.injectDataForTab('environment');
-//       break;
-//     case '#economyDemo':
-//       demographicsUI.injectEcomomicTab();
-//       demographicsUI.injectDataForTab('economy');
-//       break;
-//     default:
-//       break;
-//   }
-// });

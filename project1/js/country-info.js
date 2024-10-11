@@ -1,8 +1,7 @@
 import { toTitleCase } from "./utils.js";
-import { currentCountry } from "./map.js";
+import { currentCountry, hideCustomOverlays } from "./map.js";
 import { countryInfoConfig } from "./configs/modalConfigs.js";
 import { _adapters } from "chart.js";
-import { loadDemoModal } from "./demographics.js";
 
 
 const injectDataIntoModal = (data, config) => {
@@ -84,8 +83,10 @@ export const updateCountryInfo = (countryData, countryInfoConfig) => {
   $('#demonymsTable').empty();
   if (demonyms && Object.keys(demonyms).length) {
     Object.entries(demonyms).forEach(([lang, { m, f }]) => {
-      $('#demonymsTable').append(`<tr><td>${lang}:  ${m} / ${f}</td></tr>`);
-    });
+      if (lang === 'eng') {
+        $('#demonymsTable').append(`<tr><td>${m}</td></tr>`);
+      } 
+    });   
   } else {
     $('#demonymsTable').html('<tr><td colspan="2">N/A</td></tr>');
   }
@@ -119,4 +120,16 @@ $('.o-tabs-link').on('click', function () {
   $('#iOverlayCloseBtn').on('click', () => {
     $('#infoContainer').hide();
   });
+  
+export const showGeneralInfoOverlay = () => {
+  hideCustomOverlays();
+  updateCountryInfo(currentCountry.info, countryInfoConfig);
+  $('.info-tabs-link').removeClass('tab-active');
+  $('#generalInfo-tab').addClass('tab-active');
 
+  $('.info-tab-content').hide();
+    
+  $('#generalInfoContent').show();
+    
+  $("#infoContainer").css("display", "flex");
+};
