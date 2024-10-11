@@ -1,14 +1,18 @@
 import { toTitleCase } from "./utils.js";
 import { currentCountry, hideCustomOverlays } from "./map.js";
 import { countryInfoConfig } from "./configs/modalConfigs.js";
-import { _adapters } from "chart.js";
 
-
+/**
+ * Injects data into the modal based on a configuration.
+ * @param {Object} data - Country data object.
+ * @param {Array} config - Configuration array with id and format keys.
+ */
 const injectDataIntoModal = (data, config) => {
-  config.forEach(({ id: key, format}) => {
+  config.forEach(({ id: key, format }) => {
     const val = data[key];
-    let element = $(`#${key}`);
+    const element = $(`#${key}`);
     let formattedValue;
+
     if (val === undefined) {
       element.text("N/A");
     } else {
@@ -33,8 +37,14 @@ const injectDataIntoModal = (data, config) => {
   });
 };
 
+/**
+ * Updates the country info modal with data and configuration.
+ * @param {Object} countryData - Country data object.
+ * @param {Array} countryInfoConfig - Configuration for country info modal.
+ */
 export const updateCountryInfo = (countryData, countryInfoConfig) => {
   injectDataIntoModal(countryData, countryInfoConfig);
+
   const {
     countryName,
     languages,
@@ -42,21 +52,20 @@ export const updateCountryInfo = (countryData, countryInfoConfig) => {
     flag,
     alt,
     borders,
-    demonyms,
+    demonyms
   } = countryData;
 
   // Set country flag
   $('#countryFlag').attr('src', flag).attr('alt', alt || `${countryName} Flag`);
 
-
   // Bordering countries
   $('#borderCs').empty();
   if (borders && borders.length) {
-    borders.forEach((border) => {
+    borders.forEach(border => {
       $('#borderCs').append(`<li>${border}</li>`);
     });
   } else {
-    $('#borderCs').append(`<li>No bordering countries</li>`);
+    $('#borderCs').append('<li>No bordering countries</li>');
   }
 
   // Languages
@@ -85,51 +94,63 @@ export const updateCountryInfo = (countryData, countryInfoConfig) => {
     Object.entries(demonyms).forEach(([lang, { m, f }]) => {
       if (lang === 'eng') {
         $('#demonymsTable').append(`<tr><td>${m}</td></tr>`);
-      } 
-    });   
+      }
+    });
   } else {
     $('#demonymsTable').html('<tr><td colspan="2">N/A</td></tr>');
   }
 };
 
+/* --------------------------------------------------------------------------
+      TAB HANDLING
+-------------------------------------------------------------------------- */
 
-// Handle tab switching
+/**
+ * Handles tab switching for the modal.
+ */
 $('.o-tabs-link').on('click', function () {
-  // Remove the active class from all tabs
+  // Remove active class from all tabs
   $('.o-tabs-link').removeClass('tab-active');
-  
-  // Add the active class to the clicked tab
+
+  // Add active class to the clicked tab
   $(this).addClass('tab-active');
 
-   // Get the target content ID from the clicked tab
+  // Get target content ID and hide all tab content sections
   const targetContentId = $(this).data('target');
-   // Hide all tab content sections
-   $('.tab-content').css({
-     display: 'none'
-   });
-   $('.tab-content').removeClass('show');
- 
-   // Show the target content section
-   $(`#${targetContentId}`).css(
-     {
-       display: 'block'
-     }
-   );
-  });
+  $('.tab-content').hide().removeClass('show');
 
-  $('#iOverlayCloseBtn').on('click', () => {
-    $('#infoContainer').hide();
-  });
-  
+  // Show the target content section
+  $(`#${targetContentId}`).show().addClass('show');
+});
+
+/**
+ * Hides the country information overlay when the close button is clicked.
+ */
+$('#iOverlayCloseBtn').on('click', () => {
+  $('#infoContainer').hide();
+});
+
+/**
+ * Displays the general information overlay for the selected country.
+ */
 export const showGeneralInfoOverlay = () => {
   hideCustomOverlays();
+
+  // Update the modal with the selected country's data
   updateCountryInfo(currentCountry.info, countryInfoConfig);
+
+  // Reset all tabs by removing 'tab-active' class from all info tabs
   $('.info-tabs-link').removeClass('tab-active');
+
+  // Add 'tab-active' class only to the 'generalInfo' tab
   $('#generalInfo-tab').addClass('tab-active');
 
+  // Hide all tab content
   $('.info-tab-content').hide();
-    
+
+  // Show only the general info content
   $('#generalInfoContent').show();
-    
+
+  // Show the info container
   $("#infoContainer").css("display", "flex");
 };

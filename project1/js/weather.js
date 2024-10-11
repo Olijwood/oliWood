@@ -1,49 +1,49 @@
 import { toTitleCase } from './utils.js';
-import { currentCountry, hideCustomOverlays, userLat, userLon, userCountryCode} from './map.js';
+import { currentCountry, hideCustomOverlays, userLat, userLon, userCountryCode } from './map.js';
 
+/**
+ * Updates the weather UI with the provided data.
+ * @param {Object} data - Weather data to update the UI.
+ * @param {boolean} [isUser=false] - Indicates whether the weather is for the user or not.
+ */
 export const updateWeatherUI = (data, isUser = false) => {
-  let locName = !isUser ? currentCountry.capitalData.name : data.wStationName;
-  // Update the main weather details
+  const locationName = isUser ? data.wStationName : currentCountry.capitalData.name;
+
+  // Update weather details
   $('#temperature').html(`${Math.round(data.temperature)}`);
   $('#humidity').text(`Humidity: ${data.humidity}%`);
   $('#windSpeed').text(`Wind: ${Math.round(data.windSpeed)} mph`);
-  $('#weatherLocation').text(locName);
+  $('#weatherLocation').text(locationName);
   $('#weatherTime').text('Today');
   $('#weatherDesc').text(toTitleCase(data.wDesc));
   $('#currentWeatherIcon').attr('class', `bi bi-${getWeatherIconClass(data.wMain, data.wDesc)}`);
-
 };
 
-// Toggle between Celsius and Fahrenheit
+/**
+ * Toggles between Celsius and Fahrenheit.
+ */
 $('#tempToggleIcon').on('click', function() {
-  const isCelsius = $('#tempToggle #unit').text() == ('°C');
+  const isCelsius = $('#tempToggle #unit').text() === '°C';
 
-  // Update temperature
   let temp = parseFloat($('#temperature').text());
-  if (isCelsius) {
-    temp = (temp - 32) * (5 / 9);
-  } else {
-    temp = (temp * 9 / 5) + 32;
-  }
-  $('#temperature').text(`${Math.round(temp)}`);
+  temp = isCelsius ? (temp * 9 / 5) + 32 : (temp - 32) * (5 / 9);
 
-  // Update unit
+  $('#temperature').text(`${Math.round(temp)}`);
   $('#tempToggle #unit').text(isCelsius ? '°F' : '°C');
 });
 
-// Close weather overlay
+/**
+ * Closes the weather overlay.
+ */
 $('#wOverlayCloseBtn').on('click', () => {
   $('#weatherOverlay').hide();
 });
 
-
-// Handle forecast selection
-$('.forecast-card').on('click', function() {
-  const day = $(this).data('day');
-  updateWeatherUI(days[day]);
-});
-
-// Initialize overlay when weather data is ready
+/**
+ * Fetches weather data for the given latitude and longitude.
+ * @param {number} lat - Latitude.
+ * @param {number} lon - Longitude.
+ */
 const fetchWeather = (lat, lon) => {
   $.getJSON('php/getWeather.php', { lat, lon })
     .done((response) => {
@@ -54,17 +54,18 @@ const fetchWeather = (lat, lon) => {
         console.error('Error fetching weather data:', response.error);
       }
     })
-    .fail(() => {
-      console.error('Failed to fetch weather data.');
-    });
+    .fail(() => console.error('Failed to fetch weather data.'));
 };
 
-
+/**
+ * Updates the hourly weather carousel with the provided hourly data.
+ * @param {Array} hours - Array of hourly weather data.
+ */
 const updateHourlyCarousel = (hours) => {
   const hourlyCarousel = $('#hourlyCarousel');
   hourlyCarousel.empty(); // Clear previous content
 
-  // Create hourly cards
+  // Populate hourly cards
   hours.forEach(hourData => {
     const iconClass = getWeatherIconClass(hourData.cMain, hourData.cDesc);
     const hourCard = `
@@ -78,6 +79,10 @@ const updateHourlyCarousel = (hours) => {
   });
 };
 
+/**
+ * Updates the forecast UI with the provided weather data.
+ * @param {Object} data - Forecast data.
+ */
 const updateForecastUI = (data) => {
   const forecastContainer = $('#dailyCarousel');
   forecastContainer.empty(); // Clear previous content
@@ -88,8 +93,9 @@ const updateForecastUI = (data) => {
     const date = new Date(entry.dt * 1000);
     const day = date.toLocaleDateString('en-US', { weekday: 'short' });
     const hour = date.getHours();
-    const cMain = String(entry.weather[0].main) || entry.weather[0].main;
-    const cDesc = String(entry.weather[0].description).toLowerCase();
+    const { main, description } = entry.weather[0];
+    const cMain = String(main) || main;
+    const cDesc = String(description).toLowerCase();
 
     if (!days[day]) {
       days[day] = {
@@ -97,8 +103,8 @@ const updateForecastUI = (data) => {
         temp: entry.main.temp,
         maxTemp: entry.main.temp_max,
         minTemp: entry.main.temp_min,
-        cMain: cMain,
-        cDesc: cDesc,
+        cMain,
+        cDesc,
         windSpeed: entry.wind.speed,
         humidity: entry.main.humidity,
         hours: []
@@ -110,19 +116,18 @@ const updateForecastUI = (data) => {
 
     // Add hourly data
     days[day].hours.push({
-      hour: hour,
+      hour,
       temp: entry.main.temp,
-      cMain: cMain,
-      cDesc: cDesc
+      cMain,
+      cDesc
     });
   });
 
   // Create daily forecast cards
-  for (const day in days) {
+  Object.keys(days).forEach(day => {
     const dayData = days[day];
     const iconClass = getWeatherIconClass(dayData.cMain, dayData.cDesc);
 
-    // Daily card
     const dayCard = `
       <div class="forecast-card" data-day="${day}">
         <div class="day">${dayData.date}</div>
@@ -131,7 +136,7 @@ const updateForecastUI = (data) => {
       </div>
     `;
     forecastContainer.append(dayCard);
-  }
+  });
 
   // Set the initial active day (first day)
   const firstDayCard = $('.forecast-card').first();
@@ -139,48 +144,54 @@ const updateForecastUI = (data) => {
   firstDayCard.children('.day').text('Today');
   updateHourlyCarousel(days[firstDayCard.data('day')].hours);
 
-  // Add click event to daily cards to update the hourly carousel and active state
+  // Add click event to daily cards to update hourly carousel and active state
   $('.forecast-card').on('click', function() {
-    // Remove the active class from all cards
     $('.forecast-card').removeClass('active-forecast');
-
-    // Add the active class to the clicked card
     $(this).addClass('active-forecast');
 
-    // Update the hourly carousel
     const day = $(this).data('day');
     updateHourlyCarousel(days[day].hours);
-
-    // Update the weather-content section with the selected day's weather
-    const selectedDayData = days[day];
-    $('#temperature').html(`${Math.round(selectedDayData.temp)}`);
-    $('#weatherDesc').text(toTitleCase(selectedDayData.cDesc));
-    $('#humidity').text(`Humidity: ${selectedDayData.humidity}%`);
-    $('#windSpeed').text(`Wind: ${Math.round(selectedDayData.windSpeed)} mph`);
-    $('#weatherTime').text(day !== firstDayCard.data('day') ? day : 'Today'); // Update the time to the selected day
-    $('#currentWeatherIcon').attr('class', `bi bi-${getWeatherIconClass(selectedDayData.cMain, selectedDayData.cDesc)}`);
+    updateSelectedDayWeather(days[day]);
   });
 };
 
+/**
+ * Updates the main weather section with selected day's weather.
+ * @param {Object} selectedDayData - The weather data for the selected day.
+ */
+const updateSelectedDayWeather = (selectedDayData) => {
+  $('#temperature').html(`${Math.round(selectedDayData.temp)}`);
+  $('#weatherDesc').text(toTitleCase(selectedDayData.cDesc));
+  $('#humidity').text(`Humidity: ${selectedDayData.humidity}%`);
+  $('#windSpeed').text(`Wind: ${Math.round(selectedDayData.windSpeed)} mph`);
+  $('#weatherTime').text('Today'); // Set it to 'Today' for simplicity
+  $('#currentWeatherIcon').attr('class', `bi bi-${getWeatherIconClass(selectedDayData.cMain, selectedDayData.cDesc)}`);
+};
 
-
+/**
+ * Fetches the weather forecast for the given latitude and longitude.
+ * @param {number} lat - Latitude.
+ * @param {number} lon - Longitude.
+ */
 const fetchWeatherForecast = (lat, lon) => {
   $.getJSON('php/getWeatherForecast.php', { lat, lon })
     .done((response) => {
-      if (response.error) {
-        console.error('Error fetching weather forecast:', response.error);
-      } else {
+      if (!response.error) {
         updateForecastUI(response);
+      } else {
+        console.error('Error fetching weather forecast:', response.error);
       }
     })
-    .fail(() => {
-      console.error('Failed to fetch weather forecast.');
-    });
+    .fail(() => console.error('Failed to fetch weather forecast.'));
 };
 
-// Mapping function for weather conditions to Bootstrap icons
+/**
+ * Maps weather conditions to corresponding Bootstrap icons.
+ * @param {string} cMain - Main weather condition.
+ * @param {string} cDesc - Description of the weather condition.
+ * @returns {string} - The Bootstrap icon class for the weather condition.
+ */
 const getWeatherIconClass = (cMain, cDesc) => {
-  // Main condition to icon mapping
   const iconMapping = {
     'Clear': 'brightness-high',
     'Clouds': {
@@ -189,64 +200,65 @@ const getWeatherIconClass = (cMain, cDesc) => {
       'broken clouds': 'clouds',
       'overcast clouds': 'clouds'
     },
-    'Rain': (cDesc.includes('light')) ? 'cloud-drizzle' : 
-            (cDesc.includes('heavy')) ? 'cloud-rain-heavy' : 
+    'Rain': cDesc.includes('light') ? 'cloud-drizzle' :
+            cDesc.includes('heavy') ? 'cloud-rain-heavy' :
             'cloud-rain',
     'Snow': 'cloud-snow',
     'Drizzle': 'cloud-drizzle',
-    'Thunderstorm': (cDesc.includes('rain')) ? 'cloud-lightning-rain' : 'cloud-lightning',
+    'Thunderstorm': cDesc.includes('rain') ? 'cloud-lightning-rain' : 'cloud-lightning',
     'Mist': 'cloud-haze2',
-    'Smoke': 'cloud-haze2',
-    'Haze': 'cloud-haze2',
-    'Dust': 'cloud-haze2',
     'Fog': 'cloud-haze2',
+    'Dust': 'cloud-haze2',
     'Sand': 'cloud-haze2',
     'Ash': 'cloud-haze2',
     'Squall': 'cloud-hail',
     'Tornado': 'tornado'
   };
 
-  // Handle cloud-specific cases
   if (cMain === 'Clouds' && iconMapping['Clouds'][cDesc]) {
     return iconMapping['Clouds'][cDesc];
   }
 
-  // Return icon based on main weather condition
-  return iconMapping[cMain] || 'cloud'; // Default to 'cloud' if no match found
+  return iconMapping[cMain] || 'cloud'; // Default to 'cloud' if no match
 };
 
 let wIsExpanded = false;
 
-// Handle advanced features toggle button
+/**
+ * Toggles the advanced features in the weather overlay.
+ */
 $('#wAdvancedToggleBtn').on('click', function() {
   const overlay = $('#weatherOverlay');
   const advancedFeatures = $('#wAdvanced');
   const icon = $(this).find('i');
 
   if (wIsExpanded) {
-    // Collapse the overlay
-    advancedFeatures.css({ display: 'none' });
-    overlay.animate({ height: '190px' }, 300); // Adjust this height to fit non-advanced content
+    advancedFeatures.hide();
+    overlay.animate({ height: '190px' }, 300);
     icon.removeClass('bi-chevron-down').addClass('bi-chevron-up');
   } else {
-    // Expand the overlay
     advancedFeatures.css({ display: 'inline-flex' });
-    overlay.animate({ height: '454px' }, 300); // Adjust to the original size you want
+    overlay    .animate({ height: '454px' }, 300);
     icon.removeClass('bi-chevron-up').addClass('bi-chevron-down');
   }
 
   wIsExpanded = !wIsExpanded;
 });
 
+/**
+ * Displays the weather overlay and fetches weather data if necessary.
+ */
 export const showWeatherOverlay = () => {
   hideCustomOverlays();
-  if (userCountryCode == currentCountry.countryCode) {
-      fetchWeather(userLat, userLon);
-    } else if (currentCountry.weather) {
+
+  if (userCountryCode === currentCountry.countryCode) {
+    fetchWeather(userLat, userLon);
+  } else if (currentCountry.weather) {
     updateWeatherUI(currentCountry.weather);
     fetchWeatherForecast(currentCountry.capitalData.lat, currentCountry.capitalData.lon);
   } else {
-    console.log('no weather data');
+    console.log('No weather data available.');
   }
+
   $('#weatherOverlay').css('display', 'flex');
 };

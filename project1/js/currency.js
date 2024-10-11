@@ -3,31 +3,30 @@ import { toTitleCase } from './utils.js';
 
 let selectedCurr = $('#hiddenCurrSelected');
 
+/**
+ * Loads currency information for the selected country.
+ * @param {string} countryCode - ISO country code of the selected country.
+ */
 export function loadCurrenciesForCountry(countryCode) {
   $.ajax({
     url: 'php/currencies/getCountryCurrencies.php',
     type: 'GET',
-    data: { countryCode: countryCode },
+    data: { countryCode },
     dataType: 'json',
-    success: function(data) {
+    success: function (data) {
       const tbody = $('#curr-tbody');
       tbody.empty();
       $('#currencies').empty();
-      
+
       if (data && data.currencies && data.currencies.length > 0) {
         const countryCurrencies = data.currencies;
-        
-        // Change Selected Currency Hidden Input
-        selectedCurr.val('');
-        let fisrtCurr = countryCurrencies[0].currencyCode;
-        selectedCurr.val(fisrtCurr);
 
-        // Populate Currencies
-        
+        // Set first currency as selected
+        selectedCurr.val(countryCurrencies[0].currencyCode);
+
+        // Populate currencies in modals
         countryCurrencies.forEach(currency => {
-          let cSymbol = currency.symbol;
-          let cName = currency.currencyName;
-          let cCode = currency.currencyCode;
+          const { symbol: cSymbol, currencyName: cName, currencyCode: cCode } = currency;
 
           // General Info Modal
           $('#currencies').append(`
@@ -35,7 +34,7 @@ export function loadCurrenciesForCountry(countryCode) {
               <strong>${cCode}</strong> | ${cSymbol} | ${toTitleCase(cName)}
             </div>
           `);
-          
+
           // Currencies Modal
           tbody.append(`
             <tr class="align-middle">
@@ -49,30 +48,31 @@ export function loadCurrenciesForCountry(countryCode) {
         tbody.append('<tr><td colspan="3">No currencies available for this country</td></tr>');
       }
     },
-    error: function(jqXHR, textStatus, errorThrown) {
+    error: function (jqXHR, textStatus, errorThrown) {
       console.error('Failed to fetch currency data:', textStatus, errorThrown);
     }
   });
-};
+}
 
+/**
+ * Populates the currency dropdowns with supported currencies.
+ */
 export function populateCurrencyDropdowns() {
   $.ajax({
-    url: 'php/currencies/getSupportedCurrencies.php', // Use getCurrencies2.php
+    url: 'php/currencies/getSupportedCurrencies.php',
     type: 'GET',
     dataType: 'json',
-    success: function(data) {
+    success: function (data) {
       if (data && Array.isArray(data)) {
         const fromSelect = $('#fromCurrency');
         const toSelect = $('#toCurrency');
         const defaultCurrencies = ['USD', 'EUR', 'GBP'];
 
-        // Sort currencies
-        const sortedCurrencies = data.sort((a, b) => {
-          const aCode = a[0];
-          const bCode = b[0];
-          if (defaultCurrencies.includes(aCode) && !defaultCurrencies.includes(bCode)) return -1;
-          if (!defaultCurrencies.includes(aCode) && defaultCurrencies.includes(bCode)) return 1;
-          return aCode.localeCompare(bCode);
+        // Sort currencies and prioritize default ones
+        const sortedCurrencies = data.sort(([a], [b]) => {
+          if (defaultCurrencies.includes(a) && !defaultCurrencies.includes(b)) return -1;
+          if (!defaultCurrencies.includes(a) && defaultCurrencies.includes(b)) return 1;
+          return a.localeCompare(b);
         });
 
         // Populate dropdowns
@@ -82,18 +82,21 @@ export function populateCurrencyDropdowns() {
           toSelect.append(option.cloneNode(true));
         });
 
-        const userCurr = selectedCurr.val();
-        fromSelect.val(userCurr).change();
+        // Set default currency and trigger conversion
+        fromSelect.val(selectedCurr.val()).change();
         toSelect.val('USD').change();
-        updateConversion(); // Initial conversion display
+        updateConversion();
       }
     },
-    error: function(jqXHR, textStatus, errorThrown) {
+    error: function (jqXHR, textStatus, errorThrown) {
       console.error('Failed to fetch currency list:', textStatus, errorThrown);
     }
   });
 }
 
+/**
+ * Updates the currency conversion based on the selected currencies and amount.
+ */
 export function updateConversion() {
   const fromCurrency = $('#fromCurrency').val();
   const toCurrency = $('#toCurrency').val();
@@ -104,39 +107,32 @@ export function updateConversion() {
       url: 'php/currencies/currencyConverter.php',
       type: 'GET',
       data: {
-        amount: amount,
+        amount,
         from: fromCurrency,
         to: toCurrency
       },
       dataType: 'json',
-      success: function(response) {
+      success: function (response) {
         if (response.convertedAmount) {
-          $('#conversionRate').html(`
-              ${amount} ${fromCurrency} equals ${response.convertedAmount.toFixed(2)} ${toCurrency}
-          `);
+          $('#conversionRate').html(`${amount} ${fromCurrency} equals ${response.convertedAmount.toFixed(2)} ${toCurrency}`);
           $('#toAmount').val(response.convertedAmount.toFixed(2));
         }
       },
-      error: function(jqXHR, textStatus, errorThrown) {
+      error: function (jqXHR, textStatus, errorThrown) {
         console.error('Conversion failed:', textStatus, errorThrown);
       }
     });
   }
 }
 
-
-// Event listeners for inputs and dropdowns
-$('#fromCurrency, #toCurrency').on('change', updateConversion);
-
-$('#fromAmount').on('input', function() {
-  updateConversion();
-});
-
-$('#toAmount').on('input', function() {
+/**
+ * Updates the 'from' amount when the 'to' amount is modified.
+ */
+$('#toAmount').on('input', function () {
   const fromCurrency = $('#fromCurrency').val();
   const toCurrency = $('#toCurrency').val();
   const toValue = parseFloat($('#toAmount').val()) || 0;
-  
+
   if (fromCurrency && toCurrency && toValue) {
     $.ajax({
       url: 'php/currencies/currencyConverter.php',
@@ -147,30 +143,38 @@ $('#toAmount').on('input', function() {
         to: fromCurrency
       },
       dataType: 'json',
-      success: function(response) {
+      success: function (response) {
         if (response.convertedAmount) {
           $('#fromAmount').val(response.convertedAmount.toFixed(2));
-          $('#conversionRate').html(`
-            ${toValue} ${toCurrency} equals ${response.convertedAmount.toFixed(2)} ${fromCurrency}
-          `);
+          $('#conversionRate').html(`${toValue} ${toCurrency} equals ${response.convertedAmount.toFixed(2)} ${fromCurrency}`);
         }
       },
-      error: function(jqXHR, textStatus, errorThrown) {
+      error: function (jqXHR, textStatus, errorThrown) {
         console.error('Conversion failed:', textStatus, errorThrown);
       }
     });
   }
 });
 
-// Toggle the visibility of the overlay
-$('#cOverlayCloseBtn').on('click', function() {
+/**
+ * Event listeners for input and dropdown changes to trigger conversion updates.
+ */
+$('#fromCurrency, #toCurrency').on('change', updateConversion);
+$('#fromAmount').on('input', updateConversion);
+
+/**
+ * Closes the currency overlay when the close button is clicked.
+ */
+$('#cOverlayCloseBtn').on('click', function () {
   $('#currencyOverlay').hide();
 });
 
-
+/**
+ * Shows the currency overlay and populates the dropdowns.
+ */
 export const showCurrencyOverlay = () => {
   hideCustomOverlays();
-  $("#currencyOverlay").css("display", "flex");
+  $('#currencyOverlay').css('display', 'flex');
   populateCurrencyDropdowns();
   updateConversion();
 };

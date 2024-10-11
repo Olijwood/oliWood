@@ -1,38 +1,44 @@
-
 import Chart from 'chart.js/auto';  
 import ChartDataLabels from 'chartjs-plugin-datalabels'; 
+
+// Register plugins
 Chart.register(ChartDataLabels);
 
-
-import { defaultStackedHorizontalBarChartOptions, defaultHorizontalBarChartOptions, defaultLineChartOptions } from "./chartOptions.js";
+import { defaultStackedHorizontalBarChartOptions, defaultHorizontalBarChartOptions, defaultLineChartOptions } from './chartOptions.js';
 import { destroyExistingChart, buildChartDatasets } from './chartUtils.js'; 
 
-// Helper to create horizontal bar charts (stacked or non-stacked)
+/* ---------------------------------------------------------------------------
+    STACKED HORIZONTAL BAR CHART
+--------------------------------------------------------------------------- */
+
+/**
+ * Creates a stacked or non-stacked horizontal bar chart.
+ * @param {string} canvasId - ID of the canvas element to render the chart.
+ * @param {Array} datasets - Data to display in the chart.
+ * @param {string} chartTitle - Title of the chart.
+ * @param {boolean} isStacked - Determines if the chart is stacked.
+ * @param {boolean} isPct - Determines if values should be displayed as percentages.
+ * @param {number} dataMaxD3 - Maximum data value for alignment adjustment.
+ */
 export const createStackedHorizontalBarChart = (
   canvasId, datasets, chartTitle, isStacked = true, isPct = false, dataMaxD3 = 0
 ) => {
-  
-
   // Destroy any existing chart before creating a new one
   destroyExistingChart(canvasId);
-  const chartContainer = $(`#${canvasId}`);
 
+  const chartContainer = $(`#${canvasId}`);
   const ctx = chartContainer[0].getContext('2d');
   const spinnerId = `spinner-${canvasId}`;
 
-  // find max data value in dataset s
-  // Determine the correct options based on stacked or non-stacked configuration
+  // Determine the correct chart options based on whether the chart is stacked
   const chartOptions = isStacked
     ? defaultStackedHorizontalBarChartOptions
     : defaultHorizontalBarChartOptions;
 
-  // Chart configuration with default options, merging in dynamic chart title
+  // Configure chart settings
   const chartConfig = {
     type: 'bar',
-    data: {
-      labels: [''],
-      datasets,
-    },
+    data: { labels: [''], datasets },
     options: {
       ...chartOptions,
       plugins: {
@@ -55,24 +61,36 @@ export const createStackedHorizontalBarChart = (
     plugins: [ChartDataLabels],
   };
 
-  // Create the new chart
+  // Create the chart
   const newChart = new Chart(ctx, chartConfig);
 
- 
-  // Store the chart instance on the canvas element for future cleanup
+  // Store the chart instance for future cleanup and hide spinner
   chartContainer.chartInstance = newChart;
-  $(`#${spinnerId}`).hide();  // Hide the spinner
-  chartContainer.show();  // Show the chart canvas
+  $(`#${spinnerId}`).hide();  
+  chartContainer.show();  
 };
 
+/* ---------------------------------------------------------------------------
+    LINE CHART WITH KEY
+--------------------------------------------------------------------------- */
 
-
-
+/**
+ * Creates a line chart with customizable options for displaying percentage values, multiple datasets, etc.
+ * @param {string} canvasId - ID of the canvas element to render the chart.
+ * @param {Array} labels - Labels for the chart (e.g., dates).
+ * @param {Array} data - Data to display in the chart.
+ * @param {string} title - Title of the chart.
+ * @param {Array} borderColors - Colors for the chart lines.
+ * @param {boolean} isFilled - Determines if the area under the lines should be filled.
+ * @param {boolean} isPercentage - Determines if values should be displayed as percentages.
+ * @param {boolean} isMultiDataset - Determines if multiple datasets are being displayed.
+ * @param {Array} legendLabels - Labels for the datasets.
+ * @param {boolean} applyCustomTickFormat - Whether to apply custom tick formatting.
+ */
 export const createLineChartWithKey = (
   canvasId, labels, data, title, borderColors = ['#3e95cd'], isFilled = false, 
   isPercentage = false, isMultiDataset = false, legendLabels = null, applyCustomTickFormat = true
 ) => {
-
   // Destroy any existing chart before creating a new one
   destroyExistingChart(canvasId);
 
@@ -83,7 +101,7 @@ export const createLineChartWithKey = (
   // Prepare datasets
   const datasets = buildChartDatasets(data, borderColors, isFilled, legendLabels, isMultiDataset, title);
 
-  // Merge default options with dynamic scales and plugin settings
+  // Configure chart options with dynamic settings
   const options = {
     ...defaultLineChartOptions,
     scales: {
@@ -111,19 +129,19 @@ export const createLineChartWithKey = (
       }
     },
     plugins: {
-        ...defaultLineChartOptions.plugins,
-        legend: {
-            display: isMultiDataset,
-            ...defaultLineChartOptions.plugins.legend,
-        },
-        tooltip: {
-            callbacks: {
-                label: (tooltipItem) => isPercentage ? `${tooltipItem.formattedValue}%` : tooltipItem.formattedValue
-            }
+      ...defaultLineChartOptions.plugins,
+      legend: {
+        display: isMultiDataset,
+        ...defaultLineChartOptions.plugins.legend,
+      },
+      tooltip: {
+        callbacks: {
+          label: (tooltipItem) => isPercentage ? `${tooltipItem.formattedValue}%` : tooltipItem.formattedValue
         }
+      }
     }
-    
   };
+
   // Create the chart
   const newChart = new Chart(ctx, {
     type: 'line',
@@ -134,8 +152,8 @@ export const createLineChartWithKey = (
     options
   });
 
-  // Store the chart instance on the canvas element for future cleanup
+  // Store the chart instance for future cleanup and hide spinner
   chartContainer.chartInstance = newChart;
-  $(`#${spinnerId}`).hide();  // Hide the spinner
-  chartContainer.show();  // Show the chart canvas
+  $(`#${spinnerId}`).hide();  
+  chartContainer.show();  
 };

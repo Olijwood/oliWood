@@ -1,6 +1,6 @@
 import { adjustColorBrightness, toTitleCase } from "./utils";
 import { showEarthquakesOverlay } from "./earthquakes.js";
-import { showCurrencyOverlay, loadCurrenciesForCountry } from "./currency-modal.js";
+import { showCurrencyOverlay, loadCurrenciesForCountry } from "./currency.js";
 import { showWeatherOverlay, updateWeatherUI } from "./weather.js";
 import { showDemographicsOverlay } from "./demographics.js";
 import { showGeneralInfoOverlay } from "./country-info.js";

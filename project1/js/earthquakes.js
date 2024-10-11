@@ -1,184 +1,199 @@
 import { currentCountry, hideCustomOverlays, map } from './map.js';
 import { round1d, toTitleCase } from './utils.js';
 import noUiSlider from 'nouislider';
+import { pointsWithinPolygon, points } from '@turf/turf';
 
 export let earthquakesGeoJSON = null;
-var earthquakeFilters = {
+let earthquakePointsArray = [];
+let earthquakesVisible = true;
+
+const earthquakeFilters = {
   text: '',
   range: []
 };
-var earthquakePointsArray = [];
+
 const periodOpacities = {
   'day': 0.08,
   'week': 0.03,
   'month': 0.02
 };
 
+/**
+ * Fetches earthquakes data for the specified period and magnitude.
+ * @param {string} [period='day'] - The period for which to fetch earthquakes (day, week, month).
+ * @param {string} [minMag='1.0'] - The minimum magnitude of earthquakes to fetch.
+ * @returns {Promise<void>}
+ */
 export function fetchEarthquakes(period = 'day', minMag = '1.0') {
   if (period === 'month') {
-    minMag = '2.5'
+    minMag = '2.5';
   }
-  return $.getJSON(`php/fetchEarthquakes.php?period=${period}&mag=${minMag}`, data => {
-      earthquakePointsArray = [];
-
-      data.features.forEach(earthquake => {
-        earthquakePointsArray.push(earthquake.geometry.coordinates);
-      });
-      var min = 0;
-      var max = 0;
+  return $.getJSON(`php/fetchEarthquakes.php?period=${period}&mag=${minMag}`)
+    .done(data => {
+      earthquakePointsArray = data.features.map(earthquake => earthquake.geometry.coordinates);
+      let min = 0, max = 0;
       earthquakesGeoJSON = L.geoJSON(data, {
-      style: function (feature) {
-        return {
+        style: () => ({
           fillOpacity: periodOpacities[period],
           fillColor: '#000',
           color: '#000',
           opacity: 0.2
-        };
-      },
-      pointToLayer: function (geoJsonPoint, latlng) {
-        // Get min max
-        if (geoJsonPoint.properties.mag < min || min === 0) min = round1d(geoJsonPoint.properties.mag);
-        if (geoJsonPoint.properties.mag > max) max = round1d(geoJsonPoint.properties.mag);
-        // Add tooltip popup
-        const { mag, place, time } = geoJsonPoint.properties;
-        const html = [
-         
-          mag ? `<strong>${toTitleCase('mag')}</strong>: ${round1d(mag)}` : null,
-          place ? `<strong>${toTitleCase('place')}</strong>: ${toTitleCase(place)}` : null,
-          time ? `<strong>${toTitleCase('time')}</strong>: ${new Date(time).toLocaleString('en-GB')}` : null
-        ].filter(Boolean).join('<br>');
-        return L.circle(latlng, 75000 * mag).bindPopup(html);
-      },
-  }).addTo(map);
-  map.fitBounds(earthquakesGeoJSON.getBounds());
+        }),
+        pointToLayer: (geoJsonPoint, latlng) => {
+          const { mag, place, time } = geoJsonPoint.properties;
+          if (mag < min || min === 0) min = round1d(mag);
+          if (mag > max) max = round1d(mag);
 
-  // Make slider
+          const html = [
+            mag ? `<strong>Magnitude</strong>: ${round1d(mag)}` : null,
+            place ? `<strong>Place</strong>: ${toTitleCase(place)}` : null,
+            time ? `<strong>Time</strong>: ${new Date(time).toLocaleString('en-GB')}` : null
+          ].filter(Boolean).join('<br>');
+          return L.circle(latlng, 75000 * mag).bindPopup(html);
+        }
+      }).addTo(map);
+      map.fitBounds(earthquakesGeoJSON.getBounds());
+
+      // Initialize slider for filtering based on magnitude range
+      initializeSlider(min, max);
+    })
+    .fail((_, status, error) => console.error("Failed to fetch earthquakes:", error));
+}
+
+/**
+ * Initializes the magnitude filter slider.
+ * @param {number} min - Minimum magnitude.
+ * @param {number} max - Maximum magnitude.
+ */
+function initializeSlider(min, max) {
   earthquakeFilters.range = [min, max];
-  var slider = document.getElementById('slider');
+  const slider = document.getElementById('slider');
+  
   if (slider.noUiSlider) {
     slider.noUiSlider.destroy();
   }
+
   noUiSlider.create(slider, {
-      start: [min, max],
-      step: 0.1,
-      tooltips: true,
-      connect: true,
-      range: {
-          'min': min,
-          'max': max
-      }
-  }).on('slide', (e) => {
-    earthquakeFilters.range = [parseFloat(e[0]), parseFloat(e[1])];
-    earthquakesGeoJSON.eachLayer(function(layer) {
-      filterEarthquakes(layer);
-    });
+    start: [min, max],
+    step: 0.1,
+    tooltips: true,
+    connect: true,
+    range: { min, max }
+  }).on('slide', (values) => {
+    earthquakeFilters.range = values.map(parseFloat);
+    filterAllEarthquakes();
   });
-})
-  .fail((_, status, error) => console.error("Failed to fetch earthquakes:", error));
 }
-$(document).on('keyup', '#search', function(e) {
-  earthquakeFilters.text = e.target.value;
-  earthquakesGeoJSON.eachLayer(function(layer) {
-    filterEarthquakes(layer);
-  });
-});
 
-let earthquakesVisible = true;
-$('#toggleEarthquakes').on('click', function() {
-  if (earthquakesVisible) {
-    map.removeLayer(earthquakesGeoJSON);
-    earthquakesVisible = false;
-  } else {
-    if (!earthquakesGeoJSON) {
-      fetchEarthquakes();
-    } else {
-      earthquakesGeoJSON.addTo(map);
-    }
-    earthquakesVisible = true;
-}});
+/**
+ * Filters earthquakes based on search text and magnitude range.
+ */
+function filterAllEarthquakes() {
+  earthquakesGeoJSON.eachLayer(layer => filterEarthquakes(layer));
+}
 
+/**
+ * Filters individual earthquake layers based on the applied filters.
+ * @param {L.Layer} layer - The Leaflet layer to filter.
+ */
 function filterEarthquakes(layer) {
-  var numberOfTrue = 0;
-  if (layer.feature.properties.place.toLowerCase().includes(earthquakeFilters.text.toLowerCase())) {
-    numberOfTrue++;
-  }
-  if (layer.feature.properties.mag >= earthquakeFilters.range[0] && layer.feature.properties.mag <= earthquakeFilters.range[1]) {
-    numberOfTrue++;
-  }
-  if (numberOfTrue === 2) {
+  const { text, range } = earthquakeFilters;
+  const { place, mag } = layer.feature.properties;
+
+  const matchesText = place.toLowerCase().includes(text.toLowerCase());
+  const matchesMagnitude = mag >= range[0] && mag <= range[1];
+
+  if (matchesText && matchesMagnitude) {
     layer.addTo(map);
   } else {
     map.removeLayer(layer);
   }
 }
-import { pointsWithinPolygon, points } from '@turf/turf';
+
+/**
+ * Calculates the number of earthquakes within the selected country's borders.
+ */
 export const calcEarthquakesInCountry = () => {
-  
   if (!currentCountry || !currentCountry.borderData) {
     console.error('Border data is missing or not loaded properly.');
     return;
   }
 
-  // Check if the earthquake points array is valid
   if (!Array.isArray(earthquakePointsArray) || earthquakePointsArray.length === 0) {
     console.error('Earthquake points array is invalid or empty.');
     return;
   }
 
-  // Map to [longitude, latitude] format for Turf.js
   const coordinates = earthquakePointsArray.map(coord => [coord[0], coord[1]]);
   const pointsCollection = points(coordinates);
-
-  // Get the border data polygon directly
   const polygon = currentCountry.borderData;
 
-  // Ensure the polygon is of valid type (MultiPolygon or Polygon)
   if (!polygon || (polygon.type !== 'MultiPolygon' && polygon.type !== 'Polygon')) {
     console.error('No valid polygon data in borderData.');
     return;
   }
 
-  // Find points that are within the polygon
   const ptsWithin = pointsWithinPolygon(pointsCollection, polygon);
   const nEarthquakes = ptsWithin.features.length;
   currentCountry.setNEarthQuakesDay(nEarthquakes);
   $('#earthquakeCount').text(`${currentCountry.countryCode}: ${nEarthquakes}`);
 };
 
-let eIsExpanded = false;
+/**
+ * Toggles the visibility of the earthquake layer on the map.
+ */
+$('#toggleEarthquakes').on('click', function() {
+  if (earthquakesVisible) {
+    map.removeLayer(earthquakesGeoJSON);
+  } else if (!earthquakesGeoJSON) {
+    fetchEarthquakes();
+  } else {
+    earthquakesGeoJSON.addTo(map);
+  }
+  earthquakesVisible = !earthquakesVisible;
+});
 
-// Toggle the visibility of the overlay
+// Handles the search input for filtering earthquakes by place name
+$(document).on('keyup', '#search', function(e) {
+  earthquakeFilters.text = e.target.value;
+  filterAllEarthquakes();
+});
+
+/**
+ * Handles closing of the earthquake overlay and removes the earthquake layer.
+ */
 $('#eOverlayCloseBtn').on('click', function() {
   if (earthquakesGeoJSON) {
     map.removeLayer(earthquakesGeoJSON);
     earthquakesGeoJSON = null;
-    earthquakesVisible = false; // Reset the visibility state
+    earthquakesVisible = false;
   }
   $('#earthquakeOverlay').hide();
 });
 
-// Handle advanced features toggle button
+/**
+ * Toggles the advanced features in the earthquake overlay.
+ */
+let eIsExpanded = false;
 $('#eAdvancedToggleBtn').on('click', function() {
   const overlay = $('#earthquakeOverlay');
   const advancedFeatures = $('#eAdvanced');
   const icon = $(this).find('i');
 
   if (eIsExpanded) {
-    // Collapse the overlay
-    advancedFeatures.css({ display: 'none' });
-    overlay.animate({ height: '134px' }, 300); // Adjust this height to fit non-advanced content
+    advancedFeatures.hide();
+    overlay.animate({ height: '134px' }, 300);
     icon.removeClass('bi-chevron-down').addClass('bi-chevron-up');
   } else {
-    // Expand the overlay
     advancedFeatures.css({ display: 'inline-flex' });
-    overlay.animate({ height: '248px' }, 300); // Adjust to the original size you want
+    overlay.animate({ height: '248px' }, 300);
     icon.removeClass('bi-chevron-up').addClass('bi-chevron-down');
   }
 
   eIsExpanded = !eIsExpanded;
 });
 
-// Handle radio button changes to call fetchEarthquakes
+// Handles radio button changes to fetch earthquakes for the selected period
 $('input[name="inlineRadioOptions"]').on('change', function() {
   const selectedPeriod = $(this).val();
   map.removeLayer(earthquakesGeoJSON);
@@ -186,7 +201,9 @@ $('input[name="inlineRadioOptions"]').on('change', function() {
   fetchEarthquakes(selectedPeriod);
 });
 
-
+/**
+ * Displays the earthquake overlay and fetches earthquakes if not already loaded.
+ */
 export const showEarthquakesOverlay = () => {
   hideCustomOverlays();
   $("#earthquakeOverlay").css("display", "flex");
@@ -195,4 +212,4 @@ export const showEarthquakesOverlay = () => {
   } else {
     earthquakesGeoJSON.addTo(map);
   }
-}
+};
