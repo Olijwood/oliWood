@@ -356,5 +356,5 @@ export const showDemographicsOverlay = () => {
   $('#currentDemo-tab').addClass('tab-active');
 
   // Show the demographics overlay
-  $('#demoContainer').show();
+  $('#demoContainer').css({ display: 'flex' });
 };

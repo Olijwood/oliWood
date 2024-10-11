@@ -11,12 +11,12 @@
 
 /* Demographics Chart */
 .demographics-chart {
-  width: 100%;
+  width: 100% !important;
 }
 
 .demographics-chart canvas {
   height: 80px;
-  width: 100%;
+  width: 100% !important;
 }
 
 /* Chart Table */

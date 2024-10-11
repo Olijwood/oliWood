@@ -145,6 +145,20 @@
   background-color: var(--tab-active-bg-color) !important;
 }
 
+/* Responsive Overlay Styles */
+
+@media (min-width: 1024px) {
+  #demoOverlay {
+    left: auto !important;
+    right: auto !important;
+    width: 80%;
+    bottom: 2%;
+  }
+  #infoOverlay {
+    width: 50%;
+  }
+}
+
 /* ------------------------------------------------------------------------------
    EARTHQUAKE OVERLAY STYLES
 ------------------------------------------------------------------------------ */
