@@ -19,6 +19,10 @@ import 'leaflet-providers';
 import 'leaflet/dist/leaflet.css'; 
 import 'leaflet.markercluster';
 import 'leaflet.markercluster/dist/MarkerCluster.css';
+
+import 'beautifymarker/leaflet-beautify-marker-icon.css';
+import 'beautifymarker/leaflet-beautify-marker-icon.js'
+
 import '@turf/turf'; // Turf.js for spatial analysis
 
 // Leaflet icons

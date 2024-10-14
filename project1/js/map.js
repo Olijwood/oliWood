@@ -35,11 +35,11 @@ class SelectedCountry {
 
     // Create marker cluster groups
     this.borderLayer = null;
-    this.cityLayer = createCustomClusterGroup('#919090', 38, 15, 24, false);
-    this.airportLayer = createCustomClusterGroup('#9eceec', 40, 15, 24, false);
-    this.railwayStationLayer = createCustomClusterGroup('#ff3131', 50, 16, 24, false, 0.88);
-    this.hotelLayer = createCustomClusterGroup('#f08080', 40, 15, 24, true);
-    this.museumLayer = createCustomClusterGroup('#dccd8b', 24, 14, 24, true);
+    this.cityLayer = createCustomClusterGroup('#919090', 38, 15, 30, false);
+    this.airportLayer = createCustomClusterGroup('#9eceec', 40, 15, 30, false);
+    this.railwayStationLayer = createCustomClusterGroup('#ff3131', 60, 16, 30, false, 0.88);
+    this.hotelLayer = createCustomClusterGroup('#ff177f', 50, 15, 30, true);
+    this.museumLayer = createCustomClusterGroup('#dccd8b', 26, 14, 30, true);
   }
 
   /* Fetch country info, borders, and weather */
@@ -85,12 +85,12 @@ class SelectedCountry {
   }
 
   /* Fetch Points of Interest (POIs) like Hotels, Museums, etc. */
-  async fetchPOIs(featureCode, layer, iconClass, markerColor) {
+  async fetchPOIs(featureCode, layer, iconClass, markerColor, bgColor='#fff', borderColor='') {
     try {
       const pois = await this.fetchData(`php/fetchPOIs.php?code=${this.countryCode}&fCode=${featureCode}`, 'POIs');
       layer.clearLayers();
       const markers = pois.results.map(item => {
-        const icon = createCustomIcon(iconClass, `marker-${featureCode.toLowerCase()}`);
+        const icon = createCustomIcon(iconClass, markerColor, bgColor, borderColor);
         return L.marker([item.lat, item.lon], { icon })
           .bindPopup(`<strong>${toTitleCase(item.name)}</strong>`);
       });
@@ -100,9 +100,9 @@ class SelectedCountry {
     }
   }
 
-  fetchPOIsOnce(featureCode, flagName, layer, iconClass, markerColor) {
+  fetchPOIsOnce(featureCode, flagName, layer, iconClass, markerColor, bgColor='#fff', borderColor='') {
     if (!this[flagName]) {
-      this.fetchPOIs(featureCode, layer, iconClass, markerColor)
+      this.fetchPOIs(featureCode, layer, iconClass, markerColor, bgColor, borderColor)
         .then(() => { this[flagName] = true; })
         .catch(error => console.error(`Error fetching ${featureCode}:`, error));
     }
@@ -141,7 +141,7 @@ class SelectedCountry {
       }
 
       this.cities = cityData;
-      this.populateLayer(this.cityLayer, cityData, 'fa-city', '#8f8f8f', 'marker-city');
+      this.populateLayer(this.cityLayer, cityData, 'city', '#8f8f8f');
     } catch (error) {
       console.error(`Error fetching cities for ${this.countryCode}: ${error.message}`);
     }
@@ -151,21 +151,21 @@ class SelectedCountry {
     return this.fetchData(`php/fetchAirports.php?code=${this.countryCode}`, 'airports')
       .then(airports => {
         this.airports = airports;
-        this.populateLayer(this.airportLayer, this.airports, 'fa-plane-departure', '#78bfeb', 'marker-airport');
+        this.populateLayer(this.airportLayer, this.airports, 'plane-departure', '#78bfeb');
       })
       .catch(error => console.error(`Error fetching airports for ${this.countryCode}: ${error.message}`));
   }
 
   fetchHotels() {
-    this.fetchPOIsOnce('HTL', 'hasFetchedHotels', this.hotelLayer, 'fa-bell-concierge', '#dc4d8d');
+    this.fetchPOIsOnce('HTL', 'hasFetchedHotels', this.hotelLayer, 'bell-concierge', '#dc4d8d');
   }
 
   fetchMuseums() {
-    this.fetchPOIsOnce('MUS', 'hasFetchedMuseums', this.museumLayer, 'fa-landmark', '#dccd8b');
+    this.fetchPOIsOnce('MUS', 'hasFetchedMuseums', this.museumLayer, 'landmark', '#8d8149', '#fff');
   }
 
   fetchRailwayStations() {
-    this.fetchPOIsOnce('RSTN', 'hasFetchedRailwayStations', this.railwayStationLayer, 'fa-train', '#ff0000');
+    this.fetchPOIsOnce('RSTN', 'hasFetchedRailwayStations', this.railwayStationLayer, 'train', '#ff0000');
   }
 
   /* Populate map layers */
@@ -196,19 +196,18 @@ class SelectedCountry {
     return layers;
   }
 
-  populateLayer(layer, data, iconClass, color, className = 'custom-div-icon') {
+
+  populateLayer(layer, data, iconClass, color, borderColor='') {
     layer.clearLayers();
     data.forEach(item => {
-      let markerIconClass = iconClass;
-      let markerColor = color;
-
+      let bgColor = 'white';
       if (item.isCapital) {
-        markerIconClass = 'fa-star';
-        markerColor = 'black';
-        className = 'marker-capital';
+        iconClass = 'star';
+        bgColor = 'black';
+        color = 'gold';
       }
 
-      const icon = createCustomIcon(markerIconClass, className);
+      const icon = createCustomIcon(iconClass, color, bgColor, borderColor );
       const marker = L.marker([item.lat, item.lon], { icon })
         .bindPopup(`<strong>${toTitleCase(item.name)}</strong>`);
       layer.addLayer(marker);
@@ -266,9 +265,16 @@ function createCustomClusterGroup(markerColor, maxRadius = 30, disZoomAt = 16, s
       const count = cluster.getChildCount();
       const adjustedColor = adjustColorBrightness(markerColor, -Math.min(100, count * 2));
       const borderStyle = borderBlack ? '2px solid rgba(0, 0, 0, 0.7)' : '';
-      const fontSize = customFontSize !== '' ? `font-size: ${customFontSize}rem;` : '';
+      const innerSize = Math.floor(size / 1.35);
+      
       return L.divIcon({
-        html: `<div style="background-color: ${adjustedColor}; ${borderStyle}; height: ${size}px; width: ${size}px; color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; ${fontSize}">${count}</div>`,
+        html: `
+          <div  class = "outer-cluster-circle" style="background-color: ${adjustedColor}47; ${borderStyle}; height: ${size}px; width: ${size}px; border-radius: 50%; display: flex; justify-content: center; align-items: center;">
+            <div class="inner-cluster-circle" style="background-color: ${adjustedColor}b8; ${borderStyle}; height: ${innerSize}px; width: ${innerSize}px; border-radius: 50%; display: flex; justify-content: center; align-items: center;">
+              <h6 class="cluster-h6">${count}</h6>
+            </div>
+          </div>
+        `,
         className: 'custom-cluster-icon',
         iconSize: [size, size],
         popupAnchor: [0, -20]
@@ -284,28 +290,29 @@ function createCustomClusterGroup(markerColor, maxRadius = 30, disZoomAt = 16, s
   });
 }
 
+
 /**
- * Creates a custom icon for markers.
- * Uses an internal cache to avoid redundant icon creation.
- * @param {string} iconClass - The CSS class for the icon.
- * @param {string} [className='custom-div-icon'] - The class name for the marker.
- * @param {string} [size='28px'] - Size of the icon.
- * @returns {L.DivIcon} - The created custom icon.
+ * Creates a custom marker icon with a FontAwesome icon.
+ * @param {string} iconClass - The FontAwesome icon class (without the 'fa' prefix).
+ * @param {string} color - The color of the FontAwesome icon.
+ * @param {string} [bgColor='#fff'] - Background color of the marker.
+ * @param {string} [borderColor=''] - Border color of the marker. If empty, the border color is the same as the icon color.
+ * @returns {L.Icon} - The custom marker icon.
  */
-const iconCache = {};
-function createCustomIcon(iconClass, className = 'custom-div-icon', size = '28px') {
-  const key = `${iconClass}-${className}-${size}`;
-  if (!iconCache[key]) {
-    iconCache[key] = L.divIcon({
-      html: `<div style="border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-               <i class="fa ${iconClass}"></i>
-             </div>`,
-      className,
-      iconSize: [parseInt(size) * 0.8, parseInt(size) * 0.8],
-      popupAnchor: [0, -15]
-    });
-  }
-  return iconCache[key];
+function createCustomIcon(iconClass, color, bgColor='#fff', borderColor='') {
+  const options = {
+    icon: iconClass,          // The FontAwesome icon class (without the 'fa' prefix)
+    iconShape: 'marker',      // The shape of the icon
+    borderColor: borderColor !== '' ? borderColor : color, // The border color
+    textColor: color,         // The color of the FontAwesome icon
+    backgroundColor: bgColor, // Background color of the marker
+    iconSize: [24, 24],       // Adjusted icon size (width, height)
+    iconAnchor: [12, 24],     // Anchor point of the icon (half of width and full height)
+    popupAnchor: [0, -24],    // Position of the popup relative to the icon
+    innerIconStyle: 'font-size:0.6rem; margin-top:4px;', // Adjusted font size and margin
+  };
+
+  return L.BeautifyIcon.icon(options);
 }
 
 /* ------------------------------------------------------------------------------

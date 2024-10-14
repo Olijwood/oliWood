@@ -169,10 +169,29 @@ input.leaflet-control-layers-selector {
   height: 25px;
 }
 
-.custom-cluster-icon div {
+.custom-cluster-icon {
+  position: relative;
   font-weight: bold;
   font-size: 1rem;
 }
+
+.inner-cluster-circle {
+  position: absolute !important;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  
+}
+
+.cluster-h6 {
+  font-size: 0.75rem;
+  font-weight: 600;
+  opacity: 1; /* Make the count fully opaque */
+  color: white; /* Ensure the text is white */
+  margin-bottom: 0;
+}
+
+
 
 .marker-city div {
   background-color: #6d6c6c;
