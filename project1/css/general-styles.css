@@ -8,6 +8,14 @@
   --tab-active-border: #007bff;
   --tab-active-bg-color: #ecf6ff;
 }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
 /* Font Styles */
 .o-text-muted {
   color: rgba(0, 0, 0, 0.6);
@@ -30,4 +38,258 @@
 .list-unstyled {
   padding-left: 0;
   margin-bottom: 0 !important;
+}
+
+/* ------------------------------------------------------------------------------
+   LOADER STYLES
+------------------------------------------------------------------------------ */
+
+#pre-load {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9999;
+  overflow: hidden;
+  background: #fff;
+}
+
+#pre-load:before {
+    content: "";
+    position: fixed;
+    top: calc(50% - 30px);
+    left: calc(50% - 30px);
+    border: 6px solid #f2f2f2;
+    border-top: 6px solid #2D8E5D ;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    -webkit-animation: animate-preloader 1s linear infinite;
+    animation: animate-preloader 1s linear infinite;
+}
+
+@-webkit-keyframes animate-preloader {
+    0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+    }
+    100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+    }
+    }
+    @keyframes animate-preloader {
+    0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+    }
+    100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+    }
+}
+
+.fadeOut {
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0s 1s, opacity 1s linear;
+}
+
+
+/* ------------------------------------------------------------------------------
+   MAP STYLES
+------------------------------------------------------------------------------ */
+
+#map {
+  flex-grow: 1;
+  position: relative;
+}
+
+#selectContainer {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 899;
+  padding: 0;
+  margin-top: 10px;
+}
+
+/* Leaflet Easy Button Styles */
+.leaflet-bar .easy-button-button {
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  display: flex;
+}
+
+.easy-button-button span {
+  font-size: 18px;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  line-height: 1;
+}
+
+.easy-button-button {
+  width: 30px;
+  height: 30px;
+}
+
+.easy-button-button .bi {
+  font-size: 18px;
+  line-height: 1;
+}
+
+.easy-button-button .bi::before {
+  line-height: 30px !important;
+}
+
+/* Leaflet Layers Control */
+.leaflet-control-attribution {
+  display: none !important;
+}
+
+input.leaflet-control-layers-selector {
+  margin-top: 2px;
+  position: relative;
+  top: 0.12rem !important;
+}
+
+/* ------------------------------------------------------------------------------
+      CUSTOM MARKER STYLES
+------------------------------------------------------------------------------ */
+.custom-div-icon div {
+  color: white;
+  font-size: 0.8rem;
+  width: 28px;
+  height: 28px;
+}
+
+.custom-cluster-icon div {
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+.marker-city div {
+  background-color: #6d6c6c;
+  color: white;
+  width: 28px;
+  height: 28px;
+}
+
+.marker-capital div {
+  background-color: black;
+  color: white;
+  width: 28px;
+  height: 28px;
+  font-size: 0.85rem;
+}
+
+.marker-airport div {
+  background-color: #78bfeb;
+  color: white;
+  width: 28px;
+  height: 28px;
+}
+
+.marker-rstn div {
+  color: white;
+  background-color: #ff0000;
+  font-size: 0.9rem;
+  height: 28px;
+  width: 28px;
+}
+
+.marker-mus div {
+  color: black;
+  background-color: #fff4c4;
+  border: 2px solid rgba(0, 0, 0, 0.7);
+  font-size: 0.86rem;
+  height: 25px;
+  width: 25px;
+}
+
+.marker-htl div {
+  color: black;
+  background-color: #f0a7a7;
+  border: 2px solid rgba(0, 0, 0, 0.7);
+  font-size: 0.7rem;
+  height: 25px;
+  width: 25px;
+}
+
+/* ------------------------------------------------------------------------------
+   CHARTS
+------------------------------------------------------------------------------ */
+
+/* Chart Container */
+.chart-container {
+  display: block;
+  margin: auto;
+  max-width: 100%;
+}
+
+/* Demographics Chart */
+.demographics-chart {
+  width: 100% !important;
+}
+
+.demographics-chart canvas {
+  height: 80px;
+  width: 100% !important;
+}
+
+/* Chart Table */
+.chart-td {
+  padding: 0.4rem 0.2rem !important;
+}
+
+.chart-td h4 {
+  margin-block-end: 0.2rem;
+  margin-block-start: 0.2rem;
+  margin-bottom: 0;
+}
+
+/* Legend Styling */
+.chartjs-legend {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: -100 !important;
+  padding-top: -100 !important;
+}
+
+.chartjs-legend li {
+  list-style: none;
+  padding: 0 5px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.chartjs-legend li span {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-right: 5px;
+  border-radius: 50%;
+}
+
+
+/* Responsive Improvements */
+@media (max-width: 768px) {
+  .card-body {
+    padding: 0.75rem;
+  }
+
+  .chartjs-size-monitor {
+    width: 100%;
+  }
+
+  .hist-chart-container {
+    height: auto;
+  }
 }

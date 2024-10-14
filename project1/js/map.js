@@ -414,11 +414,7 @@ export function initializeMap() {
 function handleLocationFound(e) {
   const { latlng, accuracy } = e;
   userLat = latlng.lat;
-  userLon = latlng.lng;
-
-  // Add a marker and circle to indicate user's position
-  L.marker(latlng).addTo(map).bindPopup("You are here").openPopup();
-  L.circle(latlng, { radius: accuracy }).addTo(map);
+  userLon = latlng.lng; 
 
   // Reverse geocode the user's location to get the country code
   $.getJSON(`php/reverseGeocode.php?lat=${latlng.lat}&lon=${latlng.lng}`, data => {
@@ -467,7 +463,7 @@ function initializeSelectedCountry(countryCode) {
   loadCurrenciesForCountry(countryCode);
 
   // Update the control section with the country's layers
-  updateControlSectionWithCountryLayers();
+  updateControlSectionWithCountryLayers();  
 }
 
 /**
@@ -575,10 +571,14 @@ function showModalBtns() {
  * Initializes the map, loads countries, handles country selection, and adds modal buttons.
  */
 $(document).ready(() => {
+  $('#pre-load').removeClass("fadeOut");
+
   initializeMap();
   loadCountries();
   handleCountrySelection();
   showModalBtns();
+
+  $('#pre-load').addClass("fadeOut");
 });
 
 /**
@@ -596,4 +596,4 @@ function adjustMapHeight() {
 
 // Adjust the map height on page load and window resize
 window.addEventListener('load', adjustMapHeight);
-window.addEventListener('resize', adjustMapHeight);
+window.addEventListener('resize', () => { adjustMapHeight(); });
