@@ -7,7 +7,7 @@ if (isset($_GET['code'])) {
     $username = getenv('GNAMES_USERNAME');  
 
     // GeoNames API URL to fetch airports in the specified country
-    $apiUrl = "http://api.geonames.org/searchJSON?country=$countryCode&featureCode=AIRP&maxRows=50&username=$username";
+    $apiUrl = "http://api.geonames.org/searchJSON?country=$countryCode&featureCode=AIRP&maxRows=100&username=$username";
 
     // Initialize cURL to fetch data from the API
     $curl = curl_init();

@@ -33,7 +33,7 @@ foreach ($capitals as $countryCode => $capitalInfo) {
     }
 
     // GeoNames Search API URL to fetch the most populous cities for the country
-    $apiUrl = "http://api.geonames.org/searchJSON?country=$countryCode&featureClass=P&orderby=population&maxRows=50&username=$username";
+    $apiUrl = "http://api.geonames.org/searchJSON?country=$countryCode&featureClass=P&orderby=population&maxRows=100&username=$username";
 
     // Initialize cURL
     $curl = curl_init();

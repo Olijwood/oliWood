@@ -165,8 +165,8 @@ input.leaflet-control-layers-selector {
 .custom-div-icon div {
   color: white;
   font-size: 0.8rem;
-  width: 28px;
-  height: 28px;
+  width: 25px;
+  height: 25px;
 }
 
 .custom-cluster-icon div {
@@ -177,8 +177,9 @@ input.leaflet-control-layers-selector {
 .marker-city div {
   background-color: #6d6c6c;
   color: white;
-  width: 28px;
-  height: 28px;
+  width: 27px;
+  height: 27px;
+  font-size: 0.76rem;
 }
 
 .marker-capital div {
@@ -190,18 +191,18 @@ input.leaflet-control-layers-selector {
 }
 
 .marker-airport div {
-  background-color: #78bfeb;
+  background-color: #7cc0eb;
   color: white;
-  width: 28px;
-  height: 28px;
+  width: 26px;
+  height: 26px;
 }
 
 .marker-rstn div {
   color: white;
   background-color: #ff0000;
-  font-size: 0.9rem;
-  height: 28px;
-  width: 28px;
+  font-size: 0.8rem;
+  height: 25px;
+  width: 25px;
 }
 
 .marker-mus div {

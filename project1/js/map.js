@@ -35,11 +35,11 @@ class SelectedCountry {
 
     // Create marker cluster groups
     this.borderLayer = null;
-    this.cityLayer = createClusterGroup();
-    this.airportLayer = createClusterGroup();
-    this.railwayStationLayer = createCustomClusterGroup('#ff3131', 50, 16, 24, false);
-    this.hotelLayer = createCustomClusterGroup('#f08080', 40, 15);
-    this.museumLayer = createCustomClusterGroup('#dccd8b', 20, 14);
+    this.cityLayer = createCustomClusterGroup('#919090', 38, 15, 24, false);
+    this.airportLayer = createCustomClusterGroup('#9eceec', 40, 15, 24, false);
+    this.railwayStationLayer = createCustomClusterGroup('#ff3131', 50, 16, 24, false, 0.88);
+    this.hotelLayer = createCustomClusterGroup('#f08080', 40, 15, 24, true);
+    this.museumLayer = createCustomClusterGroup('#dccd8b', 24, 14, 24, true);
   }
 
   /* Fetch country info, borders, and weather */
@@ -247,27 +247,6 @@ class SelectedCountry {
 ------------------------------------------------------------------------------ */
 
 /**
- * Creates a marker cluster group for cities and airports.
- * @param {number} [maxRadius=22] - Maximum cluster radius.
- * @param {number} [disZoomAt=8] - Zoom level to disable clustering.
- * @returns {L.MarkerClusterGroup} - The created cluster group.
- */
-function createClusterGroup(maxRadius = 22, disZoomAt = 8) {
-  return L.markerClusterGroup({
-    maxClusterRadius: maxRadius,
-    disableClusteringAtZoom: disZoomAt,
-    spiderfyOnMaxZoom: false,
-    showCoverageOnHover: false,
-    zoomToBoundsOnClick: false,
-    iconCreateFunction: cluster => L.divIcon({
-      html: '',
-      className: 'c-cluster-icon',
-      iconSize: [28, 28]
-    }),
-  });
-}
-
-/**
  * Creates a custom marker cluster group for POIs like hotels, museums, and railway stations.
  * @param {string} markerColor - Color for the marker cluster.
  * @param {number} [maxRadius=30] - Maximum cluster radius.
@@ -276,7 +255,7 @@ function createClusterGroup(maxRadius = 22, disZoomAt = 8) {
  * @param {boolean} [borderBlack=true] - Whether to add a black border around the marker.
  * @returns {L.MarkerClusterGroup} - The created custom cluster group.
  */
-function createCustomClusterGroup(markerColor, maxRadius = 30, disZoomAt = 16, size = 30, borderBlack = true) {
+function createCustomClusterGroup(markerColor, maxRadius = 30, disZoomAt = 16, size = 30, borderBlack = true, customFontSize = '') {
   return L.markerClusterGroup({
     maxClusterRadius: maxRadius,
     disableClusteringAtZoom: disZoomAt,
@@ -287,12 +266,20 @@ function createCustomClusterGroup(markerColor, maxRadius = 30, disZoomAt = 16, s
       const count = cluster.getChildCount();
       const adjustedColor = adjustColorBrightness(markerColor, -Math.min(100, count * 2));
       const borderStyle = borderBlack ? '2px solid rgba(0, 0, 0, 0.7)' : '';
+      const fontSize = customFontSize !== '' ? `font-size: ${customFontSize}rem;` : '';
       return L.divIcon({
-        html: `<div style="background-color: ${adjustedColor}; ${borderStyle}; height: ${size}px; width: ${size}px; color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center;">${count}</div>`,
+        html: `<div style="background-color: ${adjustedColor}; ${borderStyle}; height: ${size}px; width: ${size}px; color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; ${fontSize}">${count}</div>`,
         className: 'custom-cluster-icon',
         iconSize: [size, size],
         popupAnchor: [0, -20]
       });
+    },
+    polygonOptions: {
+      fillColor: markerColor,
+      color: '#000',
+      weight: 2,
+      opacity: 0.75,
+      fillOpacity: 0.4
     }
   });
 }
