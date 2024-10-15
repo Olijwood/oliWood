@@ -250,15 +250,15 @@ $('#wAdvancedToggleBtn').on('click', function() {
  */
 export const showWeatherOverlay = () => {
   hideCustomOverlays();
-
+  $('#weatherOverlay').css('display', 'flex');
   if (userCountryCode === currentCountry.countryCode) {
-    fetchWeather(userLat, userLon);
+    fetchWeather(userLat, userLon)
+    
   } else if (currentCountry.weather) {
     updateWeatherUI(currentCountry.weather);
-    fetchWeatherForecast(currentCountry.capitalData.lat, currentCountry.capitalData.lon);
+    fetchWeatherForecast(currentCountry.capitalData.lat, currentCountry.capitalData.lon)
   } else {
     console.log('No weather data available.');
   }
-
-  $('#weatherOverlay').css('display', 'flex');
+  
 };

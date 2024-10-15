@@ -96,6 +96,7 @@
 
       <!-- Weather Overlay -->
       <div id="weatherOverlay" class="overlay-container">
+        <div class="o-load"></div>
         <div id="weatherHeader" class="overlay-header">
           <button class="btn eBtn" id="wAdvancedToggleBtn">
             <i class="bi bi-chevron-up"></i>
@@ -163,6 +164,7 @@
           </ul>
         </div>
         <div class="overlay-content">
+          <div class="o-load"></div>
           <!-- Tab Content -->
           <div class="tab-content" id="generalInfoContent">
             <!-- General Info Tab -->
@@ -216,6 +218,7 @@
             </div>
           </div>
           <div class="tab-content" id="moreInfoContent">
+            <div class="o-load"></div>
             <!-- More Info Tab -->
             <div id="moreInfo" >
               <table class="table table-bordered table-hover o-info-table">
@@ -280,8 +283,10 @@
         <div class="overlay-content" id="dOverlayContent">
             <!-- Overview Tab -->
           <div class="tab-content" id="currentDemoContent">
-            <div id="currentDemo">
-            
+           
+            <div class="o-load"></div>
+
+            <div id="currentDemo" class="tab-content-inner">  
               <div id="populationOverview"></div>
               <div id="economicOverview"></div>
               <div id="healthOverview"></div>
@@ -290,7 +295,9 @@
           </div>
             <!-- Population Tab -->
           <div class="tab-content" id="populationDemoContent">
-            <div id="populationDemo">
+            <div class="o-load"></div>
+
+            <div id="populationDemo" class="tab-content-inner">
               <div id="popGeneral"></div>
               <div id="popDistributions"></div>
               <div id="popEducation"></div>
@@ -300,7 +307,9 @@
           
             <!-- Health Tab -->
           <div class="tab-content" id="healthDemoContent">
-            <div id="healthDemo">
+            <div class="o-load"></div>
+
+            <div id="healthDemo" class="tab-content-inner">
               <div id="mortalityLifeExpectancy"></div>
               <div id="healthcareAccess"></div>
               <div id="immunizationCoverage"></div>
@@ -310,7 +319,8 @@
 
             <!-- Economy Tab -->
           <div class="tab-content" id="economyDemoContent"> 
-            <div id="economyDemoTab">
+            <div class="o-load"></div>
+            <div id="economyDemoTab" class="tab-content-inner">
               <div id="econGeneral"></div>
               <div id="incomeInequality"></div>
               <div id="econMoreInfo"></div>
@@ -320,7 +330,9 @@
 
             <!-- Environment Tab -->
           <div class="tab-content" id="environmentDemoContent">
-            <div id="environmentDemo">
+            <div class="o-load"></div>
+
+            <div id="environmentDemo" class="tab-content-inner">
               <div id="airQuality"></div>
               <div id="energySustainability"></div>
               <div id="landUse"></div>

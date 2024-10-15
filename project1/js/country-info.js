@@ -110,6 +110,7 @@ export const updateCountryInfo = (countryData, countryInfoConfig) => {
  */
 $('.o-tabs-link').on('click', function () {
   // Remove active class from all tabs
+  $('.o-load').removeClass('fadeOut'); 
   $('.o-tabs-link').removeClass('tab-active');
 
   // Add active class to the clicked tab
@@ -121,6 +122,7 @@ $('.o-tabs-link').on('click', function () {
 
   // Show the target content section
   $(`#${targetContentId}`).show().addClass('show');
+  $('.o-load').addClass('fadeOut'); 
 });
 
 /**
@@ -135,7 +137,9 @@ $('#iOverlayCloseBtn').on('click', () => {
  */
 export const showGeneralInfoOverlay = () => {
   hideCustomOverlays();
-
+  $('.o-load').removeClass('fadeOut'); 
+  $("#infoContainer").css("display", "flex");
+  
   // Update the modal with the selected country's data
   updateCountryInfo(currentCountry.info, countryInfoConfig);
 
@@ -152,5 +156,5 @@ export const showGeneralInfoOverlay = () => {
   $('#generalInfoContent').show();
 
   // Show the info container
-  $("#infoContainer").css("display", "flex");
+  $('.o-load').addClass('fadeOut'); 
 };

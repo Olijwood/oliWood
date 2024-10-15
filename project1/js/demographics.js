@@ -271,58 +271,60 @@ class DemographicsUI {
 $('.d-tabs-link').on('click', function () {
   // Remove the active class from all tabs
   $('.d-tabs-link').removeClass('tab-active');
-  
+  $('.o-load').removeClass('fadeOut');
+
   // Add the active class to the clicked tab
   $(this).addClass('tab-active');
 
-   // Get the target content ID from the clicked tab
+  // Get the target content ID from the clicked tab
   const targetContentId = $(this).data('target');
-   // Hide all tab content sections
-   $('.tab-content').css({
-     display: 'none'
-   });
-   $('.tab-content').removeClass('show');
- 
-   // Show the target content section
-   $(`#${targetContentId}`).css(
-     {
-       display: 'block'
-     }
-   );
 
-   const countryCode = $('#hiddenCountrySelected').val();
+  // Hide all tab content sections
+  $('.tab-content').hide();
+  $('.tab-content').removeClass('show');
 
+  // Show the target content section
+  $(`#${targetContentId}`).show();
+
+  const countryCode = $('#hiddenCountrySelected').val();
   if (!countryCode) {
     console.log('no country selected');
     return;
   }
-  let targetId = '#' + targetContentId.slice(0, -7)
+
+  let targetId = '#' + targetContentId.slice(0, -7);
   const demographicsUI = new DemographicsUI(countryCode);
+
+  // Reusable function to handle tab data injection and spinner
+  const loadTabData = (injectTabFunction, injectDataFunction) => {
+    injectTabFunction.call(demographicsUI);
+    injectDataFunction.call(demographicsUI)
+      .then(() => {
+        $('.o-load').addClass('fadeOut'); // Hide loading spinner after data is ready
+      });
+  };
+
+  // Switch logic for different tabs
   switch (targetId) {
     case '#populationDemo':
-      demographicsUI.injectPopulationTab();
-      demographicsUI.injectDataForTab('population');
+      loadTabData(demographicsUI.injectPopulationTab, demographicsUI.injectDataForTab.bind(demographicsUI, 'population'));
       break;
     case '#healthDemo':
-      demographicsUI.injectHealthTab();
-      demographicsUI.injectDataForTab('health');
+      loadTabData(demographicsUI.injectHealthTab, demographicsUI.injectDataForTab.bind(demographicsUI, 'health'));
       break;
     case '#environmentDemo':
-      demographicsUI.injectEnvironmentTab();
-      demographicsUI.injectDataForTab('environment');
+      loadTabData(demographicsUI.injectEnvironmentTab, demographicsUI.injectDataForTab.bind(demographicsUI, 'environment'));
       break;
     case '#economyDemo':
-      demographicsUI.injectEcomomicTab();
-      demographicsUI.injectDataForTab('economy');
+      loadTabData(demographicsUI.injectEcomomicTab, demographicsUI.injectDataForTab.bind(demographicsUI, 'economy'));
       break;
     case '#currentDemo':
-      demographicsUI.injectOverviewTab();
-      demographicsUI.injectDataForTab('overview');
+      loadTabData(demographicsUI.injectOverviewTab, demographicsUI.injectDataForTab.bind(demographicsUI, 'overview'));
       break;
     default:
       break;
   }
-  });
+});
 
 $('#dOverlayCloseBtn').on('click', () => {
   $('#demoContainer').hide();
@@ -330,7 +332,8 @@ $('#dOverlayCloseBtn').on('click', () => {
 
 export const showDemographicsOverlay = () => {
   hideCustomOverlays();
-  
+  $('#demoContainer').css({ display: 'flex' });
+  $('.o-load').removeClass('fadeOut'); 
   // Get the current country code
   const countryCode = currentCountry.countryCode;
   if (!countryCode) {
@@ -343,7 +346,10 @@ export const showDemographicsOverlay = () => {
   
   // Inject the overview tab content and data before displaying the tab
   demographicsUI.injectOverviewTab();
-  demographicsUI.injectDataForTab('overview');
+  demographicsUI.injectDataForTab('overview')
+    .then(() => {
+      $('.o-load').addClass('fadeOut'); 
+    });
 
   // Hide all tab contents
   $('.tab-content').hide();
@@ -356,5 +362,6 @@ export const showDemographicsOverlay = () => {
   $('#currentDemo-tab').addClass('tab-active');
 
   // Show the demographics overlay
-  $('#demoContainer').css({ display: 'flex' });
+  $('.o-load').addClass('fadeOut'); 
+  
 };

@@ -399,6 +399,7 @@ export function initializeMap() {
   map.locate({ setView: true, maxZoom: 12 });
   map.on('locationfound', handleLocationFound);
   map.on('locationerror', handleLocationError);
+  
 }
 
 /**
@@ -425,7 +426,8 @@ function handleLocationFound(e) {
  * @param {L.ErrorEvent} e - Event containing error data.
  */
 function handleLocationError(e) {
-  console.error(`Location error: ${e.message}`);
+  initializeSelectedCountry('gb');
+  $('#hiddenCountrySelected').val('gb').trigger('change');
 }
 
 /**
@@ -450,7 +452,10 @@ function initializeSelectedCountry(countryCode) {
   currentCountry.fetchAirports();
  
   currentCountry.fetchCountryBorderData()
-    .then(() => displayBorderData(currentCountry.borderData))
+    .then(() => {
+      displayBorderData(currentCountry.borderData);
+      $('#pre-load').addClass("fadeOut");
+    })
     .catch(error => console.error('Error fetching border data:', error));
 
   // Load currency information for the country
@@ -572,7 +577,7 @@ $(document).ready(() => {
   handleCountrySelection();
   showModalBtns();
 
-  $('#pre-load').addClass("fadeOut");
+  
 });
 
 /**

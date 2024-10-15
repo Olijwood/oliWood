@@ -30,7 +30,7 @@
   position: absolute;
   right: 50%;
   transform: translateX(50%);
-  z-index: 900;
+  z-index: 1000;
   padding: 2px;
   bottom: 10px;
   width: 96%;
@@ -531,6 +531,10 @@
   display: none;
 }
 
+#infoOverlay {
+  max-height: 80%;
+}
+
 #iOverlayHeader {
   padding: 0px 8px 0px 12px;
 }
@@ -608,6 +612,8 @@ ul#demographicsTab {
   min-width: 30%;
 }
 
+
+
 /* Demographics Content */
 #dOverlayContent {
   border: 1px solid var(--border-color);
@@ -625,4 +631,92 @@ ul#demographicsTab {
 
 .demo-subtitle {
   margin-bottom: 0px;
+}
+
+.tab-content {
+  position: relative; /* Ensure relative positioning for the spinner to fit within the tab content */
+}
+
+.d-fadeOut {
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 2s ease-out, visibility 2s ease-out;
+}
+
+
+
+/* Loading spinner styles */
+.demoLoading {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.8); /* Slight transparency */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10; /* Ensure it overlays the tab content */
+}
+
+.demoLoading:before {
+  content: "";
+  border: 6px solid #f2f2f2;
+  border-top: 6px solid #2D8E5D;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  animation: animate-preloader 1s linear infinite;
+}
+
+.o-load {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9999;
+  overflow: hidden;
+  background: #fff;
+}
+
+.o-load:before {
+    content: "";
+    position: fixed;
+    top: calc(50% - 30px);
+    left: calc(50% - 30px);
+    border: 6px solid #f2f2f2;
+    border-top: 6px solid #2D8E5D ;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    -webkit-animation: animate-preloader 1s linear infinite;
+    animation: animate-preloader 1s linear infinite;
+}
+
+@-webkit-keyframes animate-preloader {
+  0% {
+  -webkit-transform: rotate(0deg);
+  transform: rotate(0deg);
+  }
+  100% {
+  -webkit-transform: rotate(360deg);
+  transform: rotate(360deg);
+  }
+  }
+  @keyframes animate-preloader {
+  0% {
+  -webkit-transform: rotate(0deg);
+  transform: rotate(0deg);
+  }
+  100% {
+  -webkit-transform: rotate(360deg);
+  transform: rotate(360deg);
+  }
+}
+
+.fadeOut {
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0s 1s, opacity 1s linear;
 }

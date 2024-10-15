@@ -69,6 +69,7 @@ html, body {
     animation: animate-preloader 1s linear infinite;
 }
 
+
 @-webkit-keyframes animate-preloader {
     0% {
     -webkit-transform: rotate(0deg);
