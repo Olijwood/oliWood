@@ -332,8 +332,13 @@ $('#dOverlayCloseBtn').on('click', () => {
 
 export const showDemographicsOverlay = () => {
   hideCustomOverlays();
+
+  // Show the demographics overlay
   $('#demoContainer').css({ display: 'flex' });
+
+  // Show the loading spinner
   $('.o-load').removeClass('fadeOut'); 
+  
   // Get the current country code
   const countryCode = currentCountry.countryCode;
   if (!countryCode) {
@@ -360,8 +365,4 @@ export const showDemographicsOverlay = () => {
   // Set the 'Overview' tab as active
   $('.d-tabs-link').removeClass('tab-active');
   $('#currentDemo-tab').addClass('tab-active');
-
-  // Show the demographics overlay
-  $('.o-load').addClass('fadeOut'); 
-  
 };
