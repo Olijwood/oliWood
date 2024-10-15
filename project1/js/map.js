@@ -463,6 +463,9 @@ function initializeSelectedCountry(countryCode) {
 
   // Update the control section with the country's layers
   updateControlSectionWithCountryLayers();  
+
+  // Automatically add the Cities layer to the map after control is updated
+  map.addLayer(currentCountry.cityLayer);
 }
 
 /**
