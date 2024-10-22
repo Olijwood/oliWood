@@ -210,7 +210,7 @@
               </div>
     
               <div class="form-floating mb-3">
-                <input type="text" class="form-control" id="editPersonnelJobTitle" placeholder="Job title" required>
+                <input type="text" class="form-control" id="editPersonnelJobTitle" placeholder="Job title">
                 <label for="editPersonnelJobTitle">Job Title</label>
               </div>          
     
@@ -240,6 +240,60 @@
       
     </div>
 
+    <div id="editDepartmentModal" class="modal fade" tabindex="-1" aria-labelledby="editDepartmentModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-sm modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content shadow">
+          <div class="modal-header bg-primary bg-gradient text-white">
+            <h5 class="modal-title" id="editDepartmentModalLabel">Edit Department</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form id="editDepartmentForm" class="needs-validation" novalidate>
+              <input type="hidden" id="editDepartmentID">
+              <div class="form-floating mb-3">
+                <input type="text" class="form-control" id="editDepartmentName" placeholder="Department Name" required>
+                <label for="editDepartmentName">Department Name</label>
+              </div>
+              <div class="form-floating mb-3">
+                <select class="form-select" id="editDepartmentLocation" required></select>
+                <label for="editDepartmentLocation">Location</label>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" form="editDepartmentForm" class="btn btn-outline-primary btn-sm myBtn">SAVE</button>
+            <button type="button" class="btn btn-outline-primary btn-sm myBtn" data-bs-dismiss="modal">CANCEL</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    
+    <div id="editLocationModal" class="modal fade" tabindex="-1" aria-labelledby="editLocationModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-sm modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content shadow">
+          <div class="modal-header bg-primary bg-gradient text-white">
+            <h5 class="modal-title" id="editLocationModalLabel">Edit Location</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form id="editLocationForm" class="needs-validation" novalidate>
+              <input type="hidden" id="editLocationID">
+              <div class="form-floating mb-3">
+                <input type="text" class="form-control" id="editLocationName" placeholder="Location Name" required>
+                <label for="editLocationName">Location Name</label>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" form="editLocationForm" class="btn btn-outline-primary btn-sm myBtn">SAVE</button>
+            <button type="button" class="btn btn-outline-primary btn-sm myBtn" data-bs-dismiss="modal">CANCEL</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    
     <div id="addModal" class="modal fade" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-sm modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content shadow">

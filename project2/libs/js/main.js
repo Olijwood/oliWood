@@ -217,6 +217,16 @@ class Validate{
   validateID = (id) => {
     return !isNaN(id) && Number.isInteger(parseFloat(id));
   };
+
+  validateJobTitle = (jobTitle) => {
+    const jobTitlePattern = /^[A-Za-z]+(?:\s[A-Za-z]+)*$/;
+    return jobTitlePattern.test(jobTitle);
+  };
+
+  validateNameMultiple = (jobTitle) => {
+    const jobTitlePattern = /^[A-Za-z]+(?:\s[A-Za-z]+)*$/;
+    return jobTitlePattern.test(jobTitle);
+  };
 }
 
 const V = new Validate();
@@ -373,17 +383,271 @@ $("#editPersonnelModal").on("show.bs.modal", function (e) {
   });
 });
 
+const validateEditFormData = (data) => {
+  let isFormValid = true;
+
+  const setValidity = (selector, isValid, message) => {
+    if (!isValid) { isFormValid = false; }
+    $(selector)[0].setCustomValidity(isValid ? "" : message);
+  };
+
+  setValidity("#editPersonnelFirstName", V.validateNameMultiple(data.firstName), "Please enter a valid name.");
+  setValidity("#editPersonnelLastName", V.validateNameMultiple(data.lastName), "Please enter a valid name.");
+  setValidity("#editPersonnelEmailAddress", V.validateEmail(data.email), "Please enter a valid email.");
+  setValidity("#editPersonnelDepartment", V.validateID(data.departmentID), "Please select a valid department.");
+
+  // Job title is optional, but if provided, it should be validated
+  if (data.jobTitle.trim() !== "") {
+    setValidity("#editPersonnelJobTitle", V.validateJobTitle(data.jobTitle), "Please enter a valid job title.");
+  } else {
+    // If jobTitle is empty, it's valid by default
+    $("#editPersonnelJobTitle")[0].setCustomValidity("");
+  }
+
+  return isFormValid;
+};
+
 // Executes when the form button with type="submit" is clicked
 
 $("#editPersonnelForm").on("submit", function (e) {
-  
-  // Executes when the form button with type="submit" is clicked
-  // stop the default browser behviour
+  e.preventDefault(); // Prevent default form submission
 
-  e.preventDefault();
+  // Sanitize and collect form data
+  const data = {
+    id: sanitizeInput($("#editPersonnelEmployeeID").val()),
+    firstName: sanitizeName($("#editPersonnelFirstName").val()),
+    lastName: sanitizeName($("#editPersonnelLastName").val()),
+    jobTitle: sanitizeInput($("#editPersonnelJobTitle").val()),
+    email: sanitizeInput($("#editPersonnelEmailAddress").val()),
+    departmentID: sanitizeInput($("#editPersonnelDepartment").val())
+  };
 
-  // AJAX call to save form data
-  
+  // Validate the data before sending
+  const isValid = validateEditFormData(data);
+
+  if (isValid) {
+    // Perform the AJAX request to update personnel
+    $.ajax({
+      url: 'libs/php/updatePersonnelByID.php',
+      type: 'POST',
+      data: data,
+      success: function (response) {
+        if (response.status.code === "200") {
+          // Refresh the personnel table after updating
+          refreshTable('personnel');
+          // Close the modal
+          $("#editPersonnelModal").modal("hide");
+        } else {
+          console.error("Error: Failed to update personnel.");
+        }
+      },
+      error: function (e) {
+        console.error("Error updating personnel:", e);
+      }
+    });
+  } else {
+    // If validation fails, display the invalid messages
+    this.classList.add("was-validated");
+  }
+});
+
+function populateLocationEditDropdown(selectedLocationID) {
+  let url = 'libs/php/getAllLocations.php';
+  $.ajax({
+    url: url,
+    type: 'GET',
+    dataType: 'json',
+    success: function(response) {
+      if (response.status.code === "200") {
+        let dropdown = $("#editDepartmentLocation");
+        dropdown.empty();
+        
+        response.data.forEach(function(item) {
+          let option = $("<option>", {
+            value: item.id,
+            text: item.name
+          });
+          
+          // Set the current department location as selected
+          if (item.id == selectedLocationID) {
+            option.attr("selected", "selected");
+          }
+
+          dropdown.append(option);
+        });
+      }
+    },
+    error: function() {
+      console.error(`Error fetching ${type} data.`);
+    }
+  });
+}
+
+$("#editDepartmentModal").on("show.bs.modal", function (e) {
+  let id = $(e.relatedTarget).attr("data-id");
+  $.ajax({
+    url: "libs/php/getDepartmentByID.php",
+    type: "POST",
+    dataType: "json",
+    data: {
+      id: id
+    },
+    success: function (result) {
+      var resultCode = result.status.code;
+
+      if (resultCode == 200) {
+        // Update the hidden input with the department id so that
+        // it can be referenced when the form is submitted
+        $("#editDepartmentID").val(result.data[0].id);
+        $("#editDepartmentName").val(result.data[0].name);
+
+        // Populate the dropdown and set the current location as selected
+        populateLocationEditDropdown(result.data[0].locationID);
+      } else {
+        $("#editDepartmentModal .modal-title").replaceWith(
+          "Error retrieving data"
+        );
+      }
+    },
+    error: function (jqXHR, textStatus, errorThrown) {
+      $("#editDepartmentModal .modal-title").replaceWith(
+        "Error retrieving data"
+      );
+    }
+  });
+});
+
+const validateEditDepartmentFormData = (data) => {
+  isFormValid = true;
+
+  const setValidity = (selector, isValid, message) => {
+    if (!isValid) { isFormValid = false; }
+    $(selector)[0].setCustomValidity(isValid ? "" : message);
+  };
+
+  setValidity("#editDepartmentName", V.validateNameMultiple(data.name), "Please enter a valid name.");
+  setValidity("#editDepartmentLocation", V.validateID(data.locationID), "Please select a valid location.");
+
+  return isFormValid;
+}
+
+$("#editDepartmentForm").on("submit", function (e) {
+  e.preventDefault(); // Prevent default form submission
+
+  // Get the form data
+  const departmentID = sanitizeInput($("#editDepartmentID").val());
+  const departmentName = sanitizeName($("#editDepartmentName").val());
+  const locationID = sanitizeInput($("#editDepartmentLocation").val());
+
+  // Validate inputs (you can reuse the validation logic like in other forms)
+  const isValid = validateEditDepartmentFormData({
+    name: departmentName,
+    locationID: locationID
+  });
+
+  if (isValid) {
+    // Send AJAX request to update department
+    $.ajax({
+      url: 'libs/php/updateDepartmentByID.php',
+      type: 'POST',
+      data: {
+        id: departmentID,
+        name: departmentName,
+        locationID: locationID
+      },
+      success: function (response) {
+        if (response.status.code === "200") {
+          refreshTable('departments');
+          $("#editDepartmentModal").modal("hide");
+        } else {
+          console.error("Error: Failed to update department.");
+        }
+      },
+      error: function (e) {
+        console.error("Error updating department:", e);
+      }
+    });
+  } else {
+    // If validation fails, display the invalid messages
+    this.classList.add("was-validated");
+  }
+});
+
+$("#editLocationModal").on("show.bs.modal", function (e) {
+  let id = $(e.relatedTarget).attr("data-id");
+  $.ajax({
+    url: "libs/php/getLocationByID.php",
+    type: "POST",
+    dataType: "json",
+    data: {
+      id: id
+    },
+    success: function (result) {
+      var resultCode = result.status.code;
+      if (resultCode == 200) {
+        // Update the hidden input with the location id so that
+        // it can be referenced when the form is submitted
+        $("#editLocationID").val(result.data.id);
+        $("#editLocationName").val(result.data.name);
+      } else {
+        $("#editLocationModal .modal-title").replaceWith(
+          "Error retrieving data"
+        );
+      }
+    },
+    error: function (jqXHR, textStatus, errorThrown) {
+      $("#editLocationModal .modal-title").replaceWith(
+        "Error retrieving data"
+      );
+      console.log(errorThrown);
+    }
+  });
+});
+
+const validateEditLocationFormData = (data) => {
+  isFormValid = true;
+
+  const setValidity = (selector, isValid, message) => {
+    if (!isValid) { isFormValid = false; }
+    $(selector)[0].setCustomValidity(isValid ? "" : message);
+  };  
+
+  setValidity("#editLocationName", V.validateNameMultiple(data.name), "Please enter a valid name.");
+
+  return isFormValid;
+};
+
+// Executes when the location form button with type="submit" is clicked
+$("#editLocationForm").on("submit", function (e) {
+  e.preventDefault(); // Prevent default form submission
+
+  // Get the form data
+  const locationID = sanitizeInput($("#editLocationID").val());
+  const locationName = sanitizeName($("#editLocationName").val());
+  // Validate inputs (reuse validation logic)
+  const isValid = validateEditLocationFormData({ name: locationName });
+
+  if (isValid) { 
+    // Send AJAX request to update location
+    $.ajax({
+      url: 'libs/php/updateLocationByID.php',
+      type: 'POST',
+      data: { id: locationID, name: locationName },
+      success: function (response) {
+        if (response.status.code === "200") {
+          refreshTable('locations');
+          $("#editLocationModal").modal("hide");
+        } else {
+          console.error("Error: Failed to update location.");
+        }
+      },
+      error: function (e) {
+        console.error("Error updating location:", e);
+      }
+    });
+  } else {
+    this.classList.add("was-validated");
+  }
 });
 
 function refreshTable(type) {
