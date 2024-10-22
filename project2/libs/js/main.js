@@ -322,17 +322,13 @@ $("#locationsBtn").click(function () {
 });
 
 $("#editPersonnelModal").on("show.bs.modal", function (e) {
-  
+  let id = $(e.relatedTarget).attr("data-id");
   $.ajax({
-    url:
-      "https://coding.itcareerswitch.co.uk/companydirectory/libs/php/getPersonnelByID.php",
+    url: "libs/php/getPersonnelByID.php",
     type: "POST",
     dataType: "json",
     data: {
-      // Retrieve the data-id attribute from the calling button
-      // see https://getbootstrap.com/docs/5.0/components/modal/#varying-modal-content
-      // for the non-jQuery JavaScript alternative
-      id: $(e.relatedTarget).attr("data-id") 
+      id: id
     },
     success: function (result) {
       var resultCode = result.status.code;
@@ -372,6 +368,7 @@ $("#editPersonnelModal").on("show.bs.modal", function (e) {
       $("#editPersonnelModal .modal-title").replaceWith(
         "Error retrieving data"
       );
+      console.log(errorThrown);
     }
   });
 });

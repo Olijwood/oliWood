@@ -37,7 +37,9 @@
 
 	$query = $conn->prepare('SELECT `id`, `firstName`, `lastName`, `email`, `jobTitle`, `departmentID` FROM `personnel` WHERE `id` = ?');
 
-	$query->bind_param("i", $_REQUEST['id']);
+	$id = $_POST['id'];
+	$output['input']['id'] = $id;
+	$query->bind_param("i", $id);
 
 	$query->execute();
 	
