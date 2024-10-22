@@ -248,14 +248,12 @@
             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <form id="addForm">
-              <div id="dynamicFields">
-                <!-- Dynamic fields will be inserted here based on active tab -->
-              </div>
+            <form id="addForm" class="needs-validation" novalidate>
+              <div id="dynamicFields"></div>
             </form>
           </div>
           <div class="modal-footer">
-            <button type="submit" form="addForm" class="btn btn-outline-primary btn-sm myBtn">SAVE</button>
+            <button type="submit" form="addForm" class="btn btn-outline-primary btn-sm myBtn">ADD</button>
             <button type="button" class="btn btn-outline-primary btn-sm myBtn" data-bs-dismiss="modal">CANCEL</button>
           </div>
         </div>
@@ -265,8 +263,9 @@
     <!-- External JS Scripts -->
     <script src="libs/js/bootstrap.bundle.min.js"></script>
     <script src="libs/js/jquery-3.7.1.min.js"></script>
+    <script src="libs/js/purify.min.js"></script>
 
     <!-- Custom JS Script -->
-    <script src="libs/js/main.js"></script>
+    <script type="text/javascript" src="libs/js/main.js"></script>
   </body>
 </html>

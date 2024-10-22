@@ -91,11 +91,11 @@ $("#searchInp").on("keyup", function () {
 
 $("#refreshBtn").click(function () {
   if ($("#personnelBtn").hasClass("active")) {  
-    refreshPersonnelTable(); 
+    refreshTable('personnel'); 
   } else if ($("#departmentsBtn").hasClass("active")) { 
-    refreshDepartmentTable(); 
+    refreshTable('departments');
   } else {  
-    refreshLocationTable();
+    refreshTable('locations');
   }
 });
 
@@ -105,67 +105,6 @@ $("#filterBtn").click(function () {
   
 });
 
-$("#addBtn").click(function () {
-  setupAddModal();
-  $("#addModal").modal("show");
-});
-
-// Dynamically setup add modal based on active tab
-function setupAddModal() {
-  let dynamicFields = $("#dynamicFields");
-  dynamicFields.empty();
-
-  // Check which tab is active
-  if ($("#personnelBtn").hasClass("active")) {  
-    // Setup form for personnel
-    $("#addModalLabel").text("Add Personnel");
-
-    dynamicFields.append(`
-      <div class="form-floating mb-3">
-        <input type="text" class="form-control" id="addFirstName" placeholder="First Name" required>
-        <label for="addFirstName">First Name</label>
-      </div>
-      <div class="form-floating mb-3">
-        <input type="text" class="form-control" id="addLastName" placeholder="Last Name" required>
-        <label for="addLastName">Last Name</label>
-      </div>
-      <div class="form-floating mb-3">
-        <input type="email" class="form-control" id="addEmail" placeholder="Email" required>
-        <label for="addEmail">Email</label>
-      </div>
-      <div class="form-floating mb-3">
-        <select class="form-select" id="addDepartment" required></select>
-        <label for="addDepartment">Department</label>
-      </div>
-    `);
-    populateDropdown('department');
-
-  } else if ($("#departmentsBtn").hasClass("active")) { 
-    // Setup form for department
-    $("#addModalLabel").text("Add Department");
-    dynamicFields.append(`
-      <div class="form-floating mb-3">
-        <input type="text" class="form-control" id="addDepartmentName" placeholder="Department Name" required>
-        <label for="addDepartmentName">Department Name</label>
-      </div>
-      <div class="form-floating mb-3">
-        <select class="form-select" id="addLocation" required></select>
-        <label for="addLocation">Location</label>
-      </div>
-    `);
-    populateDropdown('location');
-
-  } else if ($("#locationsBtn").hasClass("active")) { 
-    // Setup form for location
-    $("#addModalLabel").text("Add Location");
-    dynamicFields.append(`
-      <div class="form-floating mb-3">
-        <input type="text" class="form-control" id="addLocationName" placeholder="Location Name" required>
-        <label for="addLocationName">Location Name</label>
-      </div>
-    `);
-  }
-}
 
 // Populate dropdowns dynamically based on type
 function populateDropdown(type) {
@@ -195,66 +134,191 @@ function populateDropdown(type) {
   });
 }
 
+$("#addBtn").click(function () {
+  setupAddModal();
+  $("#addModal").modal("show");
+});
+
+// Dynamically setup add modal based on active tab
+function setupAddModal() {
+  let dynamicFields = $("#dynamicFields");
+  dynamicFields.empty();
+
+  // Check which tab is active
+  if ($("#personnelBtn").hasClass("active")) {  
+    // Setup form for personnel
+    $("#addModalLabel").text("Add Personnel");
+
+    dynamicFields.append(`
+      <div class="form-floating mb-3">
+        <input type="text" class="form-control" id="addFirstName" placeholder="First Name" required>
+        <label for="addFirstName">First Name</label>
+        <div class="invalid-feedback"></div>
+      </div>
+      <div class="form-floating mb-3">
+        <input type="text" class="form-control" id="addLastName" placeholder="Last Name" required>
+        <label for="addLastName">Last Name</label>
+        <div class="invalid-feedback"></div>
+      </div>
+      <div class="form-floating mb-3">
+        <input type="email" class="form-control" id="addEmail" placeholder="Email" required>
+        <label for="addEmail">Email</label>
+        <div class="invalid-feedback"></div>
+      </div>
+      <div class="form-floating mb-3">
+        <select class="form-select" id="addDepartment" required></select>
+        <label for="addDepartment">Department</label>
+        <div class="invalid-feedback"></div>
+      </div>
+    `);
+    populateDropdown('department');
+
+  } else if ($("#departmentsBtn").hasClass("active")) { 
+    // Setup form for department
+    $("#addModalLabel").text("Add Department");
+    dynamicFields.append(`
+      <div class="form-floating mb-3">
+        <input type="text" class="form-control" id="addDepartmentName" placeholder="Department Name" required>
+        <label for="addDepartmentName">Department Name</label>
+        <div class="invalid-feedback"></div>
+      </div>
+      <div class="form-floating mb-3">
+        <select class="form-select" id="addLocation" required></select>
+        <label for="addLocation">Location</label>]
+        <div class="invalid-feedback"></div>
+      </div>
+    `);
+    populateDropdown('location');
+
+  } else if ($("#locationsBtn").hasClass("active")) { 
+    // Setup form for location
+    $("#addModalLabel").text("Add Location");
+    dynamicFields.append(`
+      <div class="form-floating mb-3">
+        <input type="text" class="form-control" id="addLocationName" placeholder="Location Name" required>
+        <label for="addLocationName">Location Name</label>
+        <div class="invalid-feedback"></div>
+      </div>
+    `);
+  }
+}
+
+class Validate{
+  validateEmail = (email) => {
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailPattern.test(email);
+  };
+
+  validateName = (name) => {
+    const namePattern = /^[A-Za-z]+$/;
+    return namePattern.test(name);
+  };
+
+  validateID = (id) => {
+    return !isNaN(id) && Number.isInteger(parseFloat(id));
+  };
+}
+
+const V = new Validate();
+
+const validateAddFormData = (table, data) => {
+  let isFormValid = true;
+
+  const setValidity = (selector, isValid, message) => {
+    if (!isValid) { isFormValid = false;}
+    $(selector)[0].setCustomValidity(isValid ? "" : message);
+  };
+
+  if (table === "personnel") {
+    setValidity("#addFirstName", V.validateName(data.firstName), "Please enter a valid name.");
+    setValidity("#addLastName", V.validateName(data.lastName), "Please enter a valid name.");
+    setValidity("#addEmail", V.validateEmail(data.email), "Please enter a valid email.");
+    setValidity("#addDepartment", V.validateID(data.departmentID), "Please enter a valid ID.");
+  } else if (table === "departments") {
+    setValidity("#addDepartmentName", V.validateName(data.name), "Please enter a valid name.");
+    setValidity("#addLocation", V.validateID(data.locationID), "Please enter a valid ID.");
+  } else if (table === "locations") {
+    setValidity("#addLocationName", V.validateName(data.name), "Please enter a valid name.");
+  }
+
+  return isFormValid;
+};
+
+const capitalizeFirst = (string) => {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+};
+const sanitizeInput = (input) => DOMPurify.sanitize(input.trim());
+const sanitizeName = (name) => DOMPurify.sanitize(capitalizeFirst(name.trim()));
+
 // Handle form submission for adding records dynamically
 $("#addForm").on("submit", function (e) {
   e.preventDefault(); // Prevent default form submission
-  let table, data = {};
+  
+  let table, data = {};  
 
+  // Collect data based on the active tab
   if ($("#personnelBtn").hasClass("active")) {
     table = "personnel"; 
     data = {
       table: table,
-      firstName: $("#addFirstName").val(),
-      lastName: $("#addLastName").val(),
-      email: $("#addEmail").val(),
-      departmentID: $("#addDepartment").val()
+      firstName: sanitizeName($("#addFirstName").val()),
+      lastName: sanitizeName($("#addLastName").val()),
+      email: sanitizeInput($("#addEmail").val()),
+      departmentID: sanitizeInput($("#addDepartment").val())
     };
   } else if ($("#departmentsBtn").hasClass("active")) {
     table = "departments";  
     data = {
       table: table,
-      name: $("#addDepartmentName").val(),
-      locationID: $("#addLocation").val()
+      name: sanitizeName($("#addDepartmentName").val()),
+      locationID: sanitizeInput($("#addLocation").val())
     };
   } else if ($("#locationsBtn").hasClass("active")) {
     table = "locations";  
     data = {
       table: table,
-      name: $("#addLocationName").val()
+      name: sanitizeNames($("#addLocationName").val())
     };
   }
 
-  $.ajax({
-    url: 'libs/php/insertRecord.php',
-    type: 'POST',
-    data: data,
-    success: function (response) {
-      if (response.status.code === "200") {
-        if (table === "personnel") refreshPersonnelTable();
-        else if (table === "departments") refreshDepartmentTable();
-        else refreshLocationTable();
-      } else {
-        console.error("Error: Failed to add record.");
-      }
-    },
-    error: function (e) {
-      console.error("Error adding record:", e);
-    }
-  });
+  const form = this;
+  const isValid = validateAddFormData(table, data);
 
-  $("#addModal").modal("hide");
+  if (!isValid || !form.checkValidity()) {
+    e.preventDefault();
+    e.stopPropagation();
+    form.reportValidity();
+    form.classList.add("was-validated");
+  } else {
+    $.ajax({
+      url: 'libs/php/insertRecord.php',
+      type: 'POST',
+      data,
+      success: function (response) {
+        if (response.status.code === "200") {
+          refreshTable(table);
+          $("#addModal").modal("hide");
+        } else {
+          console.error("Error: Failed to add record.");
+        }
+      },
+      error: function (e) {
+        console.error("Error adding record:", e);
+      }
+    });
+  }
 });
 
 $("#personnelBtn").click(function () {
-  refreshPersonnelTable();
+  refreshTable('personnel');
 });
 
 $("#departmentsBtn").click(function () {
-  refreshDepartmentTable();
+  refreshTable('departments');
 });
 
 $("#locationsBtn").click(function () {
-  refreshLocationTable();
+  refreshTable('locations');
 });
 
 $("#editPersonnelModal").on("show.bs.modal", function (e) {
@@ -325,114 +389,95 @@ $("#editPersonnelForm").on("submit", function (e) {
   
 });
 
-function refreshPersonnelTable() {
+function refreshTable(type) {
+  let url, tableBody;
+
+  if (type === "personnel") {
+    url = 'libs/php/getAll.php';
+    tableBody = $("#personnelTableBody");
+  } else if (type === "departments") {
+    url = 'libs/php/getAllDepartments.php';
+    tableBody = $("#departmentTableBody");
+  } else if (type === "locations") {
+    url = 'libs/php/getAllLocations.php';
+    tableBody = $("#locationTableBody");
+  }
+
   $.ajax({
-    url: 'libs/php/getAll.php',  // Ensure this URL is correct
+    url: url,
     type: 'GET',
-    dataType: 'json',  // Expecting a JSON response
-    success: function(response) {
+    dataType: 'json',
+    success: function (response) {
       if (response.status.code === "200") {
-        let personnelRows = "";
-        response.data.forEach(function(person) {
-          personnelRows += `
-            <tr>
-              <td class="align-middle text-nowrap">${person.lastName}, ${person.firstName}</td>
-              <td class="align-middle text-nowrap d-none d-md-table-cell">${person.department}</td>
-              <td class="align-middle text-nowrap d-none d-md-table-cell">${person.location}</td>
-              <td class="align-middle text-nowrap d-none d-md-table-cell">${person.email}</td>
-              <td class="text-end text-nowrap">
-                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editPersonnelModal" data-id="${person.id}">
-                  <i class="fa-solid fa-pencil fa-fw"></i>
-                </button>
-                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#deletePersonnelModal" data-id="${person.id}">
-                  <i class="fa-solid fa-trash fa-fw"></i>
-                </button>
-              </td>
-            </tr>
-          `;
-        });
-        // Insert the generated rows into the table body
-        $("#personnelTableBody").html(personnelRows);
+        let rows = "";
+
+        if (type === "personnel") {
+          response.data.forEach(function (person) {
+            rows += `
+              <tr>
+                <td class="align-middle text-nowrap">${person.lastName}, ${person.firstName}</td>
+                <td class="align-middle text-nowrap d-none d-md-table-cell">${person.department}</td>
+                <td class="align-middle text-nowrap d-none d-md-table-cell">${person.location}</td>
+                <td class="align-middle text-nowrap d-none d-md-table-cell">${person.email}</td>
+                <td class="text-end text-nowrap">
+                  <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editPersonnelModal" data-id="${person.id}">
+                    <i class="fa-solid fa-pencil fa-fw"></i>
+                  </button>
+                  <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#deletePersonnelModal" data-id="${person.id}">
+                    <i class="fa-solid fa-trash fa-fw"></i>
+                  </button>
+                </td>
+              </tr>
+            `;
+          });
+        } else if (type === "departments") {
+          response.data.forEach(function (department) {
+            rows += `
+              <tr>
+                <td class="align-middle text-nowrap">${department.departmentName}</td>
+                <td class="align-middle text-nowrap d-none d-md-table-cell">${department.locationName}</td>
+                <td class="text-end text-nowrap">
+                  <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editDepartmentModal" data-id="${department.id}">
+                    <i class="fa-solid fa-pencil fa-fw"></i>
+                  </button>
+                  <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#deleteDepartmentModal" data-id="${department.id}">
+                    <i class="fa-solid fa-trash fa-fw"></i>
+                  </button>
+                </td>
+              </tr>
+            `;
+          });
+        } else if (type === "locations") {
+          response.data.forEach(function (location) {
+            rows += `
+              <tr>
+                <td class="align-middle text-nowrap">${location.name}</td>
+                <td class="text-end text-nowrap">
+                  <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editLocationModal" data-id="${location.id}">
+                    <i class="fa-solid fa-pencil fa-fw"></i>
+                  </button>
+                  <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#deleteLocationModal" data-id="${location.id}">
+                    <i class="fa-solid fa-trash fa-fw"></i>
+                  </button>
+                </td>
+              </tr>
+            `;
+          });
+        }
+
+        tableBody.html(rows);
       } else {
-        console.error("Error: Failed to fetch personnel data.");
+        console.error(`Error: Failed to fetch ${type} data.`);
       }
     },
-    error: function() {
-      console.error("Error fetching personnel data.");
+    error: function () {
+      console.error(`Error fetching ${type} data.`);
     }
   });
 }
 
-// Refresh Department Table
-function refreshDepartmentTable() {
-  $.ajax({
-    url: 'libs/php/getAllDepartments.php',  
-    type: 'GET',
-    dataType: 'json',
-    success: function(response) {
-      if (response.status.code === "200") {
-        let departmentRows = "";
-        response.data.forEach(function(department) {
-          departmentRows += `
-            <tr>
-              <td class="align-middle text-nowrap">${department.departmentName}</td>
-              <td class="align-middle text-nowrap d-none d-md-table-cell">${department.locationName}</td>
-              <td class="text-end text-nowrap">
-                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editDepartmentModal" data-id="${department.id}">
-                  <i class="fa-solid fa-pencil fa-fw"></i>
-                </button>
-                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#deleteDepartmentModal" data-id="${department.id}">
-                  <i class="fa-solid fa-trash fa-fw"></i>
-                </button>
-              </td>
-            </tr>
-          `;
-        });
-        $("#departmentTableBody").html(departmentRows);
-      } else {
-        console.error("Error: Failed to fetch department data.");
-      }
-    },
-    error: function() {
-      console.error("Error fetching department data.");
-    }
-  });
-}
-
-function refreshLocationTable() {
-  $.ajax({
-    url: 'libs/php/getAllLocations.php',  
-    type: 'GET',
-    dataType: 'json',
-    success: function(response) {
-      if (response.status.code === "200") {
-        let locationRows = "";
-        response.data.forEach(function(location) {
-          locationRows += `
-            <tr>
-              <td class="align-middle text-nowrap">${location.name}</td>
-              <td class="text-end text-nowrap">
-                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editLocationModal" data-id="${location.id}">
-                  <i class="fa-solid fa-pencil fa-fw"></i>
-                </button>
-                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#deleteLocationModal" data-id="${location.id}">
-                  <i class="fa-solid fa-trash fa-fw"></i>
-                </button>
-              </td>
-            </tr>
-          `;
-        });
-        $("#locationTableBody").html(locationRows);
-      } else {
-        console.error("Error: Failed to fetch location data.");
-      }
-    },
-    error: function() {
-      console.error("Error fetching location data.");
-    }
-  });
-}
 
 $(document).ready(function() {
-  refreshPersonnelTable();
+  refreshTable('personnel');
 });
+
