@@ -36,20 +36,23 @@
 														FROM `personnel` `p`
 														LEFT JOIN `department` `d` ON `d`.`id` = `p`.`departmentID`
 														LEFT JOIN `location` `l` ON `l`.`id` = `d`.`locationID`
-														WHERE `p`.`firstName` LIKE ? OR `p`.`lastName` LIKE ? OR `p`.`email` LIKE ? OR `p`.`jobTitle` LIKE ? OR `d`.`name` LIKE ? OR `l`.`name` LIKE ?');
+														WHERE `p`.`firstName` LIKE ? OR `p`.`lastName` LIKE ? OR `p`.`email` LIKE ? OR `p`.`jobTitle` LIKE ? OR `d`.`name` LIKE ? OR `l`.`name` LIKE ?
+														ORDER BY `p`.`firstName`, `p`.`lastName`');
 	} 
 	// SQL for department search
 	else if ($activeTab === 'departments') {
 		$query = $conn->prepare('SELECT `d`.`id`, `d`.`name` AS `departmentName`, `l`.`name` AS `locationName`
 														FROM `department` `d`
 														LEFT JOIN `location` `l` ON `d`.`locationID` = `l`.`id`
-														WHERE `d`.`name` LIKE ? OR `l`.`name` LIKE ?');
+														WHERE `d`.`name` LIKE ? OR `l`.`name` LIKE ?
+														ORDER BY `d`.`name`, l.`name`');
 	} 
 	// SQL for location search
 	else if ($activeTab === 'locations') {
 		$query = $conn->prepare('SELECT `l`.`id`, `l`.`name`
 														FROM `location` `l`
-														WHERE `l`.`name` LIKE ?');
+														WHERE `l`.`name` LIKE ?
+														ORDER BY `l`.`name`');
 	}
 
 	$likeText = "%" . $searchQuery . "%";
