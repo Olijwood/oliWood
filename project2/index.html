@@ -239,6 +239,28 @@
       </div>
       
     </div>
+
+    <div id="addModal" class="modal fade" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-sm modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content shadow">
+          <div class="modal-header bg-primary bg-gradient text-white">
+            <h5 class="modal-title" id="addModalLabel">Add Record</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form id="addForm">
+              <div id="dynamicFields">
+                <!-- Dynamic fields will be inserted here based on active tab -->
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" form="addForm" class="btn btn-outline-primary btn-sm myBtn">SAVE</button>
+            <button type="button" class="btn btn-outline-primary btn-sm myBtn" data-bs-dismiss="modal">CANCEL</button>
+          </div>
+        </div>
+      </div>
+    </div>
         
     <!-- External JS Scripts -->
     <script src="libs/js/bootstrap.bundle.min.js"></script>

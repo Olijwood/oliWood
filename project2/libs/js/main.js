@@ -19,7 +19,6 @@ $("#searchInp").on("keyup", function () {
     },
     success: function(response) {
       if (response.status.code === "200") {
-        console.log(response);
         if (activeTab === "personnel") {
           let personnelRows = "";
           response.data.found.forEach(function(person) {
@@ -94,9 +93,9 @@ $("#refreshBtn").click(function () {
   if ($("#personnelBtn").hasClass("active")) {  
     refreshPersonnelTable(); 
   } else if ($("#departmentsBtn").hasClass("active")) { 
-      refreshDepartmentTable(); 
+    refreshDepartmentTable(); 
   } else {  
-      refreshLocationTable();
+    refreshLocationTable();
   }
 });
 
@@ -107,9 +106,143 @@ $("#filterBtn").click(function () {
 });
 
 $("#addBtn").click(function () {
-  
-  // Replicate the logic of the refresh button click to open the add modal for the table that is currently on display
-  
+  setupAddModal();
+  $("#addModal").modal("show");
+});
+
+// Dynamically setup add modal based on active tab
+function setupAddModal() {
+  let dynamicFields = $("#dynamicFields");
+  dynamicFields.empty();
+
+  // Check which tab is active
+  if ($("#personnelBtn").hasClass("active")) {  
+    // Setup form for personnel
+    $("#addModalLabel").text("Add Personnel");
+
+    dynamicFields.append(`
+      <div class="form-floating mb-3">
+        <input type="text" class="form-control" id="addFirstName" placeholder="First Name" required>
+        <label for="addFirstName">First Name</label>
+      </div>
+      <div class="form-floating mb-3">
+        <input type="text" class="form-control" id="addLastName" placeholder="Last Name" required>
+        <label for="addLastName">Last Name</label>
+      </div>
+      <div class="form-floating mb-3">
+        <input type="email" class="form-control" id="addEmail" placeholder="Email" required>
+        <label for="addEmail">Email</label>
+      </div>
+      <div class="form-floating mb-3">
+        <select class="form-select" id="addDepartment" required></select>
+        <label for="addDepartment">Department</label>
+      </div>
+    `);
+    populateDropdown('department');
+
+  } else if ($("#departmentsBtn").hasClass("active")) { 
+    // Setup form for department
+    $("#addModalLabel").text("Add Department");
+    dynamicFields.append(`
+      <div class="form-floating mb-3">
+        <input type="text" class="form-control" id="addDepartmentName" placeholder="Department Name" required>
+        <label for="addDepartmentName">Department Name</label>
+      </div>
+      <div class="form-floating mb-3">
+        <select class="form-select" id="addLocation" required></select>
+        <label for="addLocation">Location</label>
+      </div>
+    `);
+    populateDropdown('location');
+
+  } else if ($("#locationsBtn").hasClass("active")) { 
+    // Setup form for location
+    $("#addModalLabel").text("Add Location");
+    dynamicFields.append(`
+      <div class="form-floating mb-3">
+        <input type="text" class="form-control" id="addLocationName" placeholder="Location Name" required>
+        <label for="addLocationName">Location Name</label>
+      </div>
+    `);
+  }
+}
+
+// Populate dropdowns dynamically based on type
+function populateDropdown(type) {
+  let url = (type === 'department') ? 'libs/php/getAllDepartments.php' : 'libs/php/getAllLocations.php';
+  $.ajax({
+    url: url,
+    type: 'GET',
+    dataType: 'json',
+    success: function(response) {
+      if (response.status.code === "200") {
+        let dropdown = (type === 'department') ? $("#addDepartment") : $("#addLocation");
+        dropdown.empty();
+        if (type === 'department') {
+          response.data.forEach(function(item) {
+            dropdown.append(`<option value="${item.id}">${item.departmentName}</option>`);
+          });
+        } else {
+          response.data.forEach(function(item) {
+            dropdown.append(`<option value="${item.id}">${item.name}</option>`);
+          });
+        }
+      }
+    },
+    error: function() {
+      console.error(`Error fetching ${type} data.`);
+    }
+  });
+}
+
+// Handle form submission for adding records dynamically
+$("#addForm").on("submit", function (e) {
+  e.preventDefault(); // Prevent default form submission
+  let table, data = {};
+
+  if ($("#personnelBtn").hasClass("active")) {
+    table = "personnel"; 
+    data = {
+      table: table,
+      firstName: $("#addFirstName").val(),
+      lastName: $("#addLastName").val(),
+      email: $("#addEmail").val(),
+      departmentID: $("#addDepartment").val()
+    };
+  } else if ($("#departmentsBtn").hasClass("active")) {
+    table = "departments";  
+    data = {
+      table: table,
+      name: $("#addDepartmentName").val(),
+      locationID: $("#addLocation").val()
+    };
+  } else if ($("#locationsBtn").hasClass("active")) {
+    table = "locations";  
+    data = {
+      table: table,
+      name: $("#addLocationName").val()
+    };
+  }
+
+  $.ajax({
+    url: 'libs/php/insertRecord.php',
+    type: 'POST',
+    data: data,
+    success: function (response) {
+      if (response.status.code === "200") {
+        if (table === "personnel") refreshPersonnelTable();
+        else if (table === "departments") refreshDepartmentTable();
+        else refreshLocationTable();
+      } else {
+        console.error("Error: Failed to add record.");
+      }
+    },
+    error: function (e) {
+      console.error("Error adding record:", e);
+    }
+  });
+
+  $("#addModal").modal("hide");
 });
 
 $("#personnelBtn").click(function () {
@@ -238,7 +371,6 @@ function refreshDepartmentTable() {
     dataType: 'json',
     success: function(response) {
       if (response.status.code === "200") {
-        console.log(response);
         let departmentRows = "";
         response.data.forEach(function(department) {
           departmentRows += `
