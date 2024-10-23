@@ -58,9 +58,9 @@
 	$likeText = "%" . $searchQuery . "%";
 	if ($activeTab === 'personnel') {
 		$query->bind_param("ssssss", $likeText, $likeText, $likeText, $likeText, $likeText, $likeText);
-	} else if ($activeTab === 'departments') {
+	} else if ($activeTab === 'department') {
 		$query->bind_param("ss", $likeText, $likeText);
-	} else if ($activeTab === 'locations') {
+	} else if ($activeTab === 'location') {
 		$query->bind_param("s", $likeText);
 	}
 

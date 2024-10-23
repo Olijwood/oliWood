@@ -5,9 +5,9 @@ $("#searchInp").on("keyup", function () {
   if ($("#personnelBtn").hasClass("active")) {
     activeTab = "personnel";
   } else if ($("#departmentsBtn").hasClass("active")) {
-    activeTab = "departments";
+    activeTab = "department";
   } else if ($("#locationsBtn").hasClass("active")) {
-    activeTab = "locations";
+    activeTab = "location";
   }
 
   $.ajax({
@@ -40,7 +40,7 @@ $("#searchInp").on("keyup", function () {
             `;
           });
           $("#personnelTableBody").html(personnelRows);
-        } else if (activeTab === "departments") {
+        } else if (activeTab === "department") {
           let departmentRows = "";
           response.data.found.forEach(function(department) {
             departmentRows += `
@@ -59,7 +59,7 @@ $("#searchInp").on("keyup", function () {
             `;
           });
           $("#departmentTableBody").html(departmentRows);
-        } else if (activeTab === "locations") {
+        } else if (activeTab === "location") {
           let locationRows = "";
           response.data.found.forEach(function(location) {
             locationRows += `
