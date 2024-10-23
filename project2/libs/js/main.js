@@ -203,6 +203,8 @@ function setupAddModal() {
   }
 }
 
+// Validate
+
 class Validate{
   validateEmail = (email) => {
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -218,11 +220,6 @@ class Validate{
     return !isNaN(id) && Number.isInteger(parseFloat(id));
   };
 
-  validateJobTitle = (jobTitle) => {
-    const jobTitlePattern = /^[A-Za-z]+(?:\s[A-Za-z]+)*$/;
-    return jobTitlePattern.test(jobTitle);
-  };
-
   validateNameMultiple = (jobTitle) => {
     const jobTitlePattern = /^[A-Za-z]+(?:\s[A-Za-z]+)*$/;
     return jobTitlePattern.test(jobTitle);
@@ -232,12 +229,7 @@ class Validate{
 const V = new Validate();
 
 const validateAddFormData = (table, data) => {
-  let isFormValid = true;
-
-  const setValidity = (selector, isValid, message) => {
-    if (!isValid) { isFormValid = false;}
-    $(selector)[0].setCustomValidity(isValid ? "" : message);
-  };
+  isFormValid = true;
 
   if (table === "personnel") {
     setValidity("#addFirstName", V.validateName(data.firstName), "Please enter a valid name.");
@@ -245,10 +237,10 @@ const validateAddFormData = (table, data) => {
     setValidity("#addEmail", V.validateEmail(data.email), "Please enter a valid email.");
     setValidity("#addDepartment", V.validateID(data.departmentID), "Please enter a valid ID.");
   } else if (table === "departments") {
-    setValidity("#addDepartmentName", V.validateName(data.name), "Please enter a valid name.");
+    setValidity("#addDepartmentName", V.validateNameMultiple(data.name), "Please enter a valid name.");
     setValidity("#addLocation", V.validateID(data.locationID), "Please enter a valid ID.");
   } else if (table === "locations") {
-    setValidity("#addLocationName", V.validateName(data.name), "Please enter a valid name.");
+    setValidity("#addLocationName", V.validateNameMultiple(data.name), "Please enter a valid name.");
   }
 
   return isFormValid;
@@ -262,6 +254,8 @@ const sanitizeName = (name) => DOMPurify.sanitize(capitalizeFirst(name.trim()));
 
 // Handle form submission for adding records dynamically
 $("#addForm").on("submit", function (e) {
+  resetFormValidation("#addForm");
+
   e.preventDefault(); // Prevent default form submission
   
   let table, data = {};  
@@ -317,6 +311,10 @@ $("#addForm").on("submit", function (e) {
       }
     });
   }
+  $('#addForm input').on("input", function () {
+    this.setCustomValidity("");
+    this.reportValidity();
+  });
 });
 
 $("#personnelBtn").click(function () {
@@ -331,7 +329,26 @@ $("#locationsBtn").click(function () {
   refreshTable('location');
 });
 
+const resetFormValidation = (formName)  => {
+  let form = $(formName)[0];
+  form.classList.remove("was-validated");
+
+  $(`${formName} input`).each(function() {
+    this.setCustomValidity("");
+  });
+};
+
 $("#editPersonnelModal").on("show.bs.modal", function (e) {
+  
+  resetFormValidation("#editPersonnelForm");
+
+  // Add real-time validation reset for input fields
+  $("#editPersonnelForm input").on("input", function () {
+    this.setCustomValidity("");  // Reset custom validity
+    this.reportValidity();  // Show updated validation feedback
+  });
+
+
   let id = $(e.relatedTarget).attr("data-id");
   $.ajax({
     url: "libs/php/getPersonnelByID.php",
@@ -383,22 +400,28 @@ $("#editPersonnelModal").on("show.bs.modal", function (e) {
   });
 });
 
+let isFormValid = true;
+const setValidity = (selector, isValid, message) => {
+  if (!isValid) { 
+    isFormValid = false;  
+    $(selector)[0].setCustomValidity(message); // Set custom validity message
+  } else {
+    $(selector)[0].setCustomValidity(""); // Clear custom validity if valid
+  }
+  $(selector)[0].reportValidity(); // Show browser tooltip
+};
+
 const validateEditFormData = (data) => {
-  let isFormValid = true;
+  isFormValid = true;
 
-  const setValidity = (selector, isValid, message) => {
-    if (!isValid) { isFormValid = false; }
-    $(selector)[0].setCustomValidity(isValid ? "" : message);
-  };
-
-  setValidity("#editPersonnelFirstName", V.validateNameMultiple(data.firstName), "Please enter a valid name.");
-  setValidity("#editPersonnelLastName", V.validateNameMultiple(data.lastName), "Please enter a valid name.");
+  setValidity("#editPersonnelFirstName", V.validateName(data.firstName), "Please enter a valid name.");
+  setValidity("#editPersonnelLastName", V.validateName(data.lastName), "Please enter a valid name.");
   setValidity("#editPersonnelEmailAddress", V.validateEmail(data.email), "Please enter a valid email.");
   setValidity("#editPersonnelDepartment", V.validateID(data.departmentID), "Please select a valid department.");
 
   // Job title is optional, but if provided, it should be validated
   if (data.jobTitle.trim() !== "") {
-    setValidity("#editPersonnelJobTitle", V.validateJobTitle(data.jobTitle), "Please enter a valid job title.");
+    setValidity("#editPersonnelJobTitle", V.validateNameMultiple(data.jobTitle), "Please enter a valid job title.");
   } else {
     // If jobTitle is empty, it's valid by default
     $("#editPersonnelJobTitle")[0].setCustomValidity("");
@@ -407,10 +430,8 @@ const validateEditFormData = (data) => {
   return isFormValid;
 };
 
-// Executes when the form button with type="submit" is clicked
-
 $("#editPersonnelForm").on("submit", function (e) {
-  e.preventDefault(); // Prevent default form submission
+  e.preventDefault(); 
 
   // Sanitize and collect form data
   const data = {
@@ -433,9 +454,7 @@ $("#editPersonnelForm").on("submit", function (e) {
       data: data,
       success: function (response) {
         if (response.status.code === "200") {
-          // Refresh the personnel table after updating
           refreshTable('personnel');
-          // Close the modal
           $("#editPersonnelModal").modal("hide");
         } else {
           console.error("Error: Failed to update personnel.");
@@ -449,6 +468,11 @@ $("#editPersonnelForm").on("submit", function (e) {
     // If validation fails, display the invalid messages
     this.classList.add("was-validated");
   }
+
+  $(`#editPersonnelForm input`).on("input", function () {
+    this.setCustomValidity("");  
+    this.reportValidity();  
+  });
 });
 
 function populateLocationEditDropdown(selectedLocationID) {
@@ -484,6 +508,8 @@ function populateLocationEditDropdown(selectedLocationID) {
 }
 
 $("#editDepartmentModal").on("show.bs.modal", function (e) {
+  resetFormValidation("#editDepartmentForm");
+  
   let id = $(e.relatedTarget).attr("data-id");
   $.ajax({
     url: "libs/php/getDepartmentByID.php",
@@ -496,12 +522,9 @@ $("#editDepartmentModal").on("show.bs.modal", function (e) {
       var resultCode = result.status.code;
 
       if (resultCode == 200) {
-        // Update the hidden input with the department id so that
-        // it can be referenced when the form is submitted
         $("#editDepartmentID").val(result.data[0].id);
         $("#editDepartmentName").val(result.data[0].name);
 
-        // Populate the dropdown and set the current location as selected
         populateLocationEditDropdown(result.data[0].locationID);
       } else {
         $("#editDepartmentModal .modal-title").replaceWith(
@@ -519,11 +542,6 @@ $("#editDepartmentModal").on("show.bs.modal", function (e) {
 
 const validateEditDepartmentFormData = (data) => {
   isFormValid = true;
-
-  const setValidity = (selector, isValid, message) => {
-    if (!isValid) { isFormValid = false; }
-    $(selector)[0].setCustomValidity(isValid ? "" : message);
-  };
 
   setValidity("#editDepartmentName", V.validateNameMultiple(data.name), "Please enter a valid name.");
   setValidity("#editDepartmentLocation", V.validateID(data.locationID), "Please select a valid location.");
@@ -571,9 +589,16 @@ $("#editDepartmentForm").on("submit", function (e) {
     // If validation fails, display the invalid messages
     this.classList.add("was-validated");
   }
+
+  $(`#editDepartmentForm input`).on("input", function () {
+    this.setCustomValidity("");  
+    this.reportValidity();  
+  });
 });
 
 $("#editLocationModal").on("show.bs.modal", function (e) {
+  resetFormValidation("#editLocationForm");
+
   let id = $(e.relatedTarget).attr("data-id");
   $.ajax({
     url: "libs/php/getLocationByID.php",
@@ -606,11 +631,6 @@ $("#editLocationModal").on("show.bs.modal", function (e) {
 
 const validateEditLocationFormData = (data) => {
   isFormValid = true;
-
-  const setValidity = (selector, isValid, message) => {
-    if (!isValid) { isFormValid = false; }
-    $(selector)[0].setCustomValidity(isValid ? "" : message);
-  };  
 
   setValidity("#editLocationName", V.validateNameMultiple(data.name), "Please enter a valid name.");
 
@@ -648,6 +668,11 @@ $("#editLocationForm").on("submit", function (e) {
   } else {
     this.classList.add("was-validated");
   }
+
+  $(`#editLocationForm input`).on("input", function () {
+    this.setCustomValidity("");  
+    this.reportValidity(); 
+  });
 });
 
 function refreshTable(type) {
