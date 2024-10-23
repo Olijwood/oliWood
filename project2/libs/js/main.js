@@ -32,7 +32,7 @@ $("#searchInp").on("keyup", function () {
                   <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editPersonnelModal" data-id="${person.id}">
                     <i class="fa-solid fa-pencil fa-fw"></i>
                   </button>
-                  <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#deletePersonnelModal" data-id="${person.id}">
+                  <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" data-type="personnel" data-name="${person.lastName}, ${person.firstName}" data-id="${person.id}">
                     <i class="fa-solid fa-trash fa-fw"></i>
                   </button>
                 </td>
@@ -51,7 +51,7 @@ $("#searchInp").on("keyup", function () {
                   <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editDepartmentModal" data-id="${department.id}">
                     <i class="fa-solid fa-pencil fa-fw"></i>
                   </button>
-                  <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#deleteDepartmentModal" data-id="${department.id}">
+                  <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" data-type="department" data-name="${department.departmentName}" data-id="${department.id}">
                     <i class="fa-solid fa-trash fa-fw"></i>
                   </button>
                 </td>
@@ -69,7 +69,7 @@ $("#searchInp").on("keyup", function () {
                   <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editLocationModal" data-id="${location.id}">
                     <i class="fa-solid fa-pencil fa-fw"></i>
                   </button>
-                  <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#deleteLocationModal" data-id="${location.id}">
+                  <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" data-type="location" data-name="${location.name}" data-id="${location.id}">
                     <i class="fa-solid fa-trash fa-fw"></i>
                   </button>
                 </td>
@@ -684,7 +684,7 @@ function refreshTable(type) {
                   <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editPersonnelModal" data-id="${person.id}">
                     <i class="fa-solid fa-pencil fa-fw"></i>
                   </button>
-                  <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" data-type="personnel" data-id="${person.id}">
+                  <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" data-type="personnel" data-name="${person.lastName}, ${person.firstName}" data-id="${person.id}">
                     <i class="fa-solid fa-trash fa-fw"></i>
                   </button>
                 </td>
@@ -701,7 +701,7 @@ function refreshTable(type) {
                   <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editDepartmentModal" data-id="${department.id}">
                     <i class="fa-solid fa-pencil fa-fw"></i>
                   </button>
-                  <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" data-type="department" data-id="${department.id}">
+                  <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" data-type="department" data-name="${department.departmentName}" data-id="${department.id}">
                     <i class="fa-solid fa-trash fa-fw"></i>
                   </button>
                 </td>
@@ -717,7 +717,7 @@ function refreshTable(type) {
                   <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editLocationModal" data-id="${location.id}">
                     <i class="fa-solid fa-pencil fa-fw"></i>
                   </button>
-                  <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" data-type="location" data-id="${location.id}">
+                  <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" data-type="location" data-name="${location.name}" data-id="${location.id}">
                     <i class="fa-solid fa-trash fa-fw"></i>
                   </button>
                 </td>
@@ -740,40 +740,38 @@ function refreshTable(type) {
 // Delete 
 
 $("#deleteModal").on("show.bs.modal", function (e) {
-  let recordID = $(e.relatedTarget).attr("data-id");
-  let recordType = $(e.relatedTarget).attr("data-type");
+  let id = Number($(e.relatedTarget).data("id"));
+  let name = $(e.relatedTarget).data("name");
+  let table = $(e.relatedTarget).data("type");
   
-  // Store record ID and type in hidden fields within the modal
-  $("#deleteRecordID").val(recordID);
-  $("#deleteRecordType").val(recordType);
+  // Inject the name into the modal
+  $("#deleteRecordName").text(name);
+
+  // Remove the event listener and add it back to prevent multiple clicks
+  $("#confirmDeleteBtn").off("click").on("click", function () {
+    deleteRecord(id, table);
+  });
 });
 
-// Handle the delete confirmation
-$("#confirmDeleteBtn").on("click", function () {
-  const recordID = Number($("#deleteRecordID").val());
-  const recordType = $("#deleteRecordType").val();
-
+function deleteRecord(id, table) {
   $.ajax({
     url: 'libs/php/deleteRecordByID.php',
     type: 'POST',
-    data: {
-      id: recordID,
-      table: recordType 
-    },
-    success: function (response) {
+    data: { id: id, table: table },
+    success: function(response) {
       if (response.status.code === 200) {
-        // Refresh the correct table based on the type
-        refreshTable(recordType);
+        refreshTable(table);
         $("#deleteModal").modal("hide");
       } else {
         console.error("Error: Failed to delete record.");
       }
     },
-    error: function (e) {
+    error: function(e) {
       console.error("Error deleting record:", e);
     }
   });
-});
+}
+
 
 $(document).ready(function() {
   refreshTable('personnel');
