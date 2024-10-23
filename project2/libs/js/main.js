@@ -93,9 +93,9 @@ $("#refreshBtn").click(function () {
   if ($("#personnelBtn").hasClass("active")) {  
     refreshTable('personnel'); 
   } else if ($("#departmentsBtn").hasClass("active")) { 
-    refreshTable('departments');
+    refreshTable('department');
   } else {  
-    refreshTable('locations');
+    refreshTable('location');
   }
 });
 
@@ -277,14 +277,14 @@ $("#addForm").on("submit", function (e) {
       departmentID: sanitizeInput($("#addDepartment").val())
     };
   } else if ($("#departmentsBtn").hasClass("active")) {
-    table = "departments";  
+    table = "department";  
     data = {
       table: table,
       name: sanitizeName($("#addDepartmentName").val()),
       locationID: sanitizeInput($("#addLocation").val())
     };
   } else if ($("#locationsBtn").hasClass("active")) {
-    table = "locations";  
+    table = "location";  
     data = {
       table: table,
       name: sanitizeNames($("#addLocationName").val())
@@ -324,11 +324,11 @@ $("#personnelBtn").click(function () {
 });
 
 $("#departmentsBtn").click(function () {
-  refreshTable('departments');
+  refreshTable('department');
 });
 
 $("#locationsBtn").click(function () {
-  refreshTable('locations');
+  refreshTable('location');
 });
 
 $("#editPersonnelModal").on("show.bs.modal", function (e) {
@@ -557,7 +557,7 @@ $("#editDepartmentForm").on("submit", function (e) {
       },
       success: function (response) {
         if (response.status.code === "200") {
-          refreshTable('departments');
+          refreshTable('department');
           $("#editDepartmentModal").modal("hide");
         } else {
           console.error("Error: Failed to update department.");
@@ -635,7 +635,7 @@ $("#editLocationForm").on("submit", function (e) {
       data: { id: locationID, name: locationName },
       success: function (response) {
         if (response.status.code === "200") {
-          refreshTable('locations');
+          refreshTable('location');
           $("#editLocationModal").modal("hide");
         } else {
           console.error("Error: Failed to update location.");
@@ -656,10 +656,10 @@ function refreshTable(type) {
   if (type === "personnel") {
     url = 'libs/php/getAll.php';
     tableBody = $("#personnelTableBody");
-  } else if (type === "departments") {
+  } else if (type === "department") {
     url = 'libs/php/getAllDepartments.php';
     tableBody = $("#departmentTableBody");
-  } else if (type === "locations") {
+  } else if (type === "location") {
     url = 'libs/php/getAllLocations.php';
     tableBody = $("#locationTableBody");
   }
@@ -684,14 +684,14 @@ function refreshTable(type) {
                   <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editPersonnelModal" data-id="${person.id}">
                     <i class="fa-solid fa-pencil fa-fw"></i>
                   </button>
-                  <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#deletePersonnelModal" data-id="${person.id}">
+                  <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" data-type="personnel" data-id="${person.id}">
                     <i class="fa-solid fa-trash fa-fw"></i>
                   </button>
                 </td>
               </tr>
             `;
           });
-        } else if (type === "departments") {
+        } else if (type === "department") {
           response.data.forEach(function (department) {
             rows += `
               <tr>
@@ -701,14 +701,14 @@ function refreshTable(type) {
                   <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editDepartmentModal" data-id="${department.id}">
                     <i class="fa-solid fa-pencil fa-fw"></i>
                   </button>
-                  <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#deleteDepartmentModal" data-id="${department.id}">
+                  <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" data-type="department" data-id="${department.id}">
                     <i class="fa-solid fa-trash fa-fw"></i>
                   </button>
                 </td>
               </tr>
             `;
           });
-        } else if (type === "locations") {
+        } else if (type === "location") {
           response.data.forEach(function (location) {
             rows += `
               <tr>
@@ -717,7 +717,7 @@ function refreshTable(type) {
                   <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editLocationModal" data-id="${location.id}">
                     <i class="fa-solid fa-pencil fa-fw"></i>
                   </button>
-                  <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#deleteLocationModal" data-id="${location.id}">
+                  <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" data-type="location" data-id="${location.id}">
                     <i class="fa-solid fa-trash fa-fw"></i>
                   </button>
                 </td>
@@ -737,6 +737,43 @@ function refreshTable(type) {
   });
 }
 
+// Delete 
+
+$("#deleteModal").on("show.bs.modal", function (e) {
+  let recordID = $(e.relatedTarget).attr("data-id");
+  let recordType = $(e.relatedTarget).attr("data-type");
+  
+  // Store record ID and type in hidden fields within the modal
+  $("#deleteRecordID").val(recordID);
+  $("#deleteRecordType").val(recordType);
+});
+
+// Handle the delete confirmation
+$("#confirmDeleteBtn").on("click", function () {
+  const recordID = Number($("#deleteRecordID").val());
+  const recordType = $("#deleteRecordType").val();
+
+  $.ajax({
+    url: 'libs/php/deleteRecordByID.php',
+    type: 'POST',
+    data: {
+      id: recordID,
+      table: recordType 
+    },
+    success: function (response) {
+      if (response.status.code === 200) {
+        // Refresh the correct table based on the type
+        refreshTable(recordType);
+        $("#deleteModal").modal("hide");
+      } else {
+        console.error("Error: Failed to delete record.");
+      }
+    },
+    error: function (e) {
+      console.error("Error deleting record:", e);
+    }
+  });
+});
 
 $(document).ready(function() {
   refreshTable('personnel');

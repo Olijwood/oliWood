@@ -40,7 +40,7 @@
 														ORDER BY `p`.`firstName`, `p`.`lastName`');
 	} 
 	// SQL for department search
-	else if ($activeTab === 'departments') {
+	else if ($activeTab === 'department') {
 		$query = $conn->prepare('SELECT `d`.`id`, `d`.`name` AS `departmentName`, `l`.`name` AS `locationName`
 														FROM `department` `d`
 														LEFT JOIN `location` `l` ON `d`.`locationID` = `l`.`id`
@@ -48,7 +48,7 @@
 														ORDER BY `d`.`name`, l.`name`');
 	} 
 	// SQL for location search
-	else if ($activeTab === 'locations') {
+	else if ($activeTab === 'location') {
 		$query = $conn->prepare('SELECT `l`.`id`, `l`.`name`
 														FROM `location` `l`
 														WHERE `l`.`name` LIKE ?

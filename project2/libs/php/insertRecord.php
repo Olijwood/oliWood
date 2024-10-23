@@ -25,10 +25,10 @@
   if ($table == "personnel") {
     $stmt = $conn->prepare('INSERT INTO personnel (firstName, lastName, email, departmentID) VALUES (?, ?, ?, ?)');
     $stmt->bind_param("sssi", $_POST['firstName'], $_POST['lastName'], $_POST['email'], $_POST['departmentID']);
-  } else if ($table == "departments") {
+  } else if ($table == "department") {
     $stmt = $conn->prepare('INSERT INTO department (name, locationID) VALUES (?, ?)');
     $stmt->bind_param("si", $_POST['name'], $_POST['locationID']);
-  } else if ($table == "locations") {
+  } else if ($table == "location") {
     $stmt = $conn->prepare('INSERT INTO `location` (name) VALUES (?)');
     $stmt->bind_param("s", $_POST['name']);
   }
