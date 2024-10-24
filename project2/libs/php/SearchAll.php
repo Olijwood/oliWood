@@ -37,7 +37,7 @@
 														LEFT JOIN `department` `d` ON `d`.`id` = `p`.`departmentID`
 														LEFT JOIN `location` `l` ON `l`.`id` = `d`.`locationID`
 														WHERE `p`.`firstName` LIKE ? OR `p`.`lastName` LIKE ? OR `p`.`email` LIKE ? OR `p`.`jobTitle` LIKE ? OR `d`.`name` LIKE ? OR `l`.`name` LIKE ?
-														ORDER BY `p`.`firstName`, `p`.`lastName`');
+														ORDER BY `p`.`lastName`, `p`.`firstName`');
 	} 
 	// SQL for department search
 	else if ($activeTab === 'department') {
