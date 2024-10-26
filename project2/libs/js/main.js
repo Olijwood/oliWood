@@ -16,11 +16,11 @@ function setupAddModal() {
   if ($('#personnelBtn').hasClass('active')) {
     $('#addModalLabel').text('Add Personnel');
     dynamicFields.append(createPersonnelFormFields());
-    populateDropdown('department');
+    populateDropdownByType('department');
   } else if ($('#departmentsBtn').hasClass('active')) {
     $('#addModalLabel').text('Add Department');
     dynamicFields.append(createDepartmentFormFields());
-    populateDropdown('location');
+    populateDropdownByType('location');
   } else if ($('#locationsBtn').hasClass('active')) {
     $('#addModalLabel').text('Add Location');
     dynamicFields.append(createLocationFormFields());
@@ -433,9 +433,91 @@ $('#searchInp').on('keyup', function () {
 //          FILTER
 // ================================
 
+// Object to hold selected filters
+let selectedFilters = {
+  department: [],
+  location: [],
+};
+
+// Show filter modal and populate checkboxes
 $('#filterBtn').click(function () {
-  // Open a modal of your own design that allows the user to apply a filter to the personnel table on either department or location
+  populateFilterCheckboxes(
+    'department',
+    '#filterDepartmentContainer',
+    selectedFilters.department,
+    '#selectAllDepartments',
+  );
+  populateFilterCheckboxes(
+    'location',
+    '#filterLocationContainer',
+    selectedFilters.location,
+    '#selectAllLocations',
+  );
+  $('#filterModal').modal('show');
 });
+
+// Handle "Select All" logic for departments and locations
+$('#selectAllDepartments').change(function () {
+  $('#filterDepartmentContainer input[type="checkbox"]').prop(
+    'checked',
+    this.checked,
+  );
+});
+
+$('#selectAllLocations').change(function () {
+  $('#filterLocationContainer input[type="checkbox"]').prop(
+    'checked',
+    this.checked,
+  );
+});
+
+// Collect selected department and location IDs from checkboxes
+$('#applyFilterBtn').click(function () {
+  selectedFilters.department = $('#filterDepartmentContainer input:checked')
+    .map(function () {
+      return $(this).val();
+    })
+    .get();
+
+  selectedFilters.location = $('#filterLocationContainer input:checked')
+    .map(function () {
+      return $(this).val();
+    })
+    .get();
+
+  // Apply filters with default behavior if no location or department selected
+  applyFilter(
+    selectedFilters.department.length ? selectedFilters.department : 'ALL',
+    selectedFilters.location.length ? selectedFilters.location : 'ALL',
+  );
+
+  $('#filterModal').modal('hide');
+});
+
+/**
+ * Applies the selected filters to the personnel table.
+ * @param {Array|string} departmentIDs - Array of department IDs or "ALL".
+ * @param {Array|string} locationIDs - Array of location IDs or "ALL".
+ */
+function applyFilter(departmentIDs, locationIDs) {
+  console.log('Department IDs:', departmentIDs, 'Location IDs:', locationIDs);
+  $.ajax({
+    url: 'libs/php/filterPersonnel.php',
+    type: 'POST',
+    dataType: 'json',
+    data: { departmentIDs, locationIDs },
+    success: function (response) {
+      if (response.status.code === 200) {
+        updateTableRows(response.data, 'personnel');
+      } else {
+        console.error('Error fetching filtered data.');
+      }
+    },
+    error: function (e) {
+      console.error('Error applying filter:', e);
+    },
+  });
+}
 
 // ================================
 //          VALIDATION HELPERS
@@ -680,6 +762,57 @@ function populateDropdownByType(type) {
 }
 
 /**
+ * Populates the filter checkboxes based on type (department/location).
+ * @param {string} type - The type of filter (department/location).
+ * @param {string} containerSelector - The container for the checkboxes.
+ * @param {Array} selectedIds - Array of previously selected IDs for the filter type.
+ * @param {string} selectAllSelector - The "Select All" checkbox selector for the container.
+ */
+function populateFilterCheckboxes(
+  type,
+  containerSelector,
+  selectedIds,
+  selectAllSelector,
+) {
+  const url =
+    type === 'department'
+      ? 'libs/php/getAllDepartments.php'
+      : 'libs/php/getAllLocations.php';
+
+  $.ajax({
+    url: url,
+    type: 'GET',
+    dataType: 'json',
+    success: function (response) {
+      if (response.status.code === '200') {
+        const container = $(containerSelector);
+        container.empty();
+        let allSelected = true;
+
+        response.data.forEach((item) => {
+          const isChecked = selectedIds.includes(item.id.toString());
+          allSelected = allSelected && isChecked; // Check if all are selected
+
+          container.append(`
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" value="${item.id}" id="${type}${item.id}" ${isChecked ? 'checked' : ''}>
+              <label class="form-check-label" for="${type}${item.id}">${item.name}</label>
+            </div>
+          `);
+        });
+
+        $(selectAllSelector).prop('checked', allSelected); // Set "Select All" checkbox
+      } else {
+        console.error(`Error: Failed to fetch ${type} data for filter.`);
+      }
+    },
+    error: function () {
+      console.error(`Error fetching ${type} data for filter.`);
+    },
+  });
+}
+
+/**
  * Populate the location dropdown for the edit department form.
  * @param {number} selectedLocationID - The ID of the currently selected location.
  */
@@ -747,7 +880,7 @@ function updateTableRows(data, activeTab) {
     data.forEach(function (department) {
       rows += `
         <tr>
-          <td class="align-middle text-nowrap">${department.departmentName}</td>
+          <td class="align-middle text-nowrap">${department.name}</td>
           <td class="align-middle text-nowrap d-none d-md-table-cell">${department.locationName}</td>
           <td class="text-end text-nowrap">
             <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editDepartmentModal" data-id="${department.id}" data-name="${department.departmentName}">

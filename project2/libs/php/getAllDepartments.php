@@ -34,7 +34,7 @@
 
 	// SQL does not accept parameters and so is not prepared
 
-	$query = 'SELECT d.id, d.name as departmentName, l.name as locationName
+	$query = 'SELECT d.id, d.name as name, l.name as locationName
 						FROM department d
 						LEFT JOIN location l ON d.locationID = l.id
 						ORDER BY d.name, l.name';
