@@ -1,6 +1,5 @@
 
 <?php
-
 	// connection details for MySQL database
 
 	$cd_host = "127.0.0.1";
@@ -12,5 +11,4 @@
 	$cd_dbname = "companydirectory";
 	$cd_user = "companydirectory";
 	$cd_password = "companydirectory";
-
 ?>
