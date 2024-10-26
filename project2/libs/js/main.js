@@ -884,7 +884,6 @@ function updateTableRows(data, activeTab) {
     $('#personnelTableBody').html(rows);
   } else if (activeTab === 'department') {
     data.forEach(function (department) {
-      console.log(department);
       rows += `
         <tr>
           <td class="align-middle text-nowrap">${department.name}</td>
