@@ -1,7 +1,6 @@
-// CRUD OPERATIONS
-
-// Create
-
+// ================================
+//          CREATE OPERATIONS
+// ================================
 $('#addBtn').click(function () {
   setupAddModal();
   $('#addModal').modal('show');
@@ -14,7 +13,6 @@ function setupAddModal() {
   let dynamicFields = $('#dynamicFields');
   dynamicFields.empty();
 
-  // Check which tab is active
   if ($('#personnelBtn').hasClass('active')) {
     $('#addModalLabel').text('Add Personnel');
     dynamicFields.append(createPersonnelFormFields());
@@ -29,60 +27,39 @@ function setupAddModal() {
   }
 }
 
-function createPersonnelFormFields() {
-  return `
-    <div class="form-floating mb-3">
-      <input type="text" class="form-control" id="addFirstName" placeholder="First Name" required>
-      <label for="addFirstName">First Name</label>
-      <div class="invalid-feedback"></div>
-    </div>
-    <div class="form-floating mb-3">
-      <input type="text" class="form-control" id="addLastName" placeholder="Last Name" required>
-      <label for="addLastName">Last Name</label>
-      <div class="invalid-feedback"></div>
-    </div>
-    <div class="form-floating mb-3">
-      <input type="email" class="form-control" id="addEmail" placeholder="Email" required>
-      <label for="addEmail">Email</label>
-      <div class="invalid-feedback"></div>
-    </div>
-    <div class="form-floating mb-3">
-      <select class="form-select" id="addDepartment" required></select>
-      <label for="addDepartment">Department</label>
-      <div class="invalid-feedback"></div>
-    </div>
-  `;
-}
-
-function createDepartmentFormFields() {
-  return `
-    <div class="form-floating mb-3">
-      <input type="text" class="form-control" id="addDepartmentName" placeholder="Department Name" required>
-      <label for="addDepartmentName">Department Name</label>
-      <div class="invalid-feedback"></div>
-    </div>
-    <div class="form-floating mb-3">
-      <select class="form-select" id="addLocation" required></select>
-      <label for="addLocation">Location</label>
-      <div class="invalid-feedback"></div>
-    </div>
-  `;
-}
-
-function createLocationFormFields() {
-  return `
-    <div class="form-floating mb-3">
-      <input type="text" class="form-control" id="addLocationName" placeholder="Location Name" required>
-      <label for="addLocationName">Location Name</label>
-      <div class="invalid-feedback"></div>
-    </div>
-  `;
+/**
+ * Collects form data for adding personnel, departments, or locations.
+ * @param {string} table - The active table (personnel, department, location).
+ * @returns {Object} - The collected form data.
+ */
+function collectAddFormData(table) {
+  let data = {};
+  if (table === 'personnel') {
+    data = {
+      table: table,
+      firstName: sanitizeName($('#addFirstName').val()),
+      lastName: sanitizeName($('#addLastName').val()),
+      email: sanitizeInput($('#addEmail').val()),
+      departmentID: sanitizeInput($('#addDepartment').val()),
+    };
+  } else if (table === 'department') {
+    data = {
+      table: table,
+      name: sanitizeName($('#addDepartmentName').val()),
+      locationID: sanitizeInput($('#addLocation').val()),
+    };
+  } else if (table === 'location') {
+    data = {
+      table: table,
+      name: sanitizeName($('#addLocationName').val()),
+    };
+  }
+  return data;
 }
 
 // Form submission for adding records
 $('#addForm').on('submit', function (e) {
-  e.preventDefault(); // Prevent default form submission
-
+  e.preventDefault();
   const table = getActiveTabTable();
   const data = collectAddFormData(table);
 
@@ -110,51 +87,28 @@ $('#addForm').on('submit', function (e) {
   attachRealTimeValidationReset('#addForm');
 });
 
-function getActiveTabTable() {
-  if ($('#personnelBtn').hasClass('active')) return 'personnel';
-  if ($('#departmentsBtn').hasClass('active')) return 'department';
-  if ($('#locationsBtn').hasClass('active')) return 'location';
-}
-
-function collectAddFormData(table) {
-  if (table === 'personnel') {
-    return {
-      table: table,
-      firstName: sanitizeName($('#addFirstName').val()),
-      lastName: sanitizeName($('#addLastName').val()),
-      email: sanitizeInput($('#addEmail').val()),
-      departmentID: sanitizeInput($('#addDepartment').val()),
-    };
-  } else if (table === 'department') {
-    return {
-      table: table,
-      name: sanitizeName($('#addDepartmentName').val()),
-      locationID: sanitizeInput($('#addLocation').val()),
-    };
-  } else if (table === 'location') {
-    return {
-      table: table,
-      name: sanitizeName($('#addLocationName').val()),
-    };
-  }
-}
-
-// Read
+// ================================
+//          READ OPERATIONS
+// ================================
 $('#personnelBtn').click(function () {
   refreshTable('personnel');
 });
+
 $('#departmentsBtn').click(function () {
   refreshTable('department');
 });
+
 $('#locationsBtn').click(function () {
   refreshTable('location');
 });
+
 $('#refreshBtn').click(function () {
   refreshTable(getActiveTabTable());
 });
 
-// UPDATE LOGIC
-
+// ================================
+//          UPDATE OPERATIONS
+// ================================
 // Edit Personnel Modal
 $('#editPersonnelModal').on('show.bs.modal', function (e) {
   resetFormValidation('#editPersonnelForm');
@@ -202,8 +156,34 @@ $('#editPersonnelForm').on('submit', function (e) {
   }
 });
 
+/**
+ * Populates the edit form for personnel.
+ * @param {Object} result - The data received from the server.
+ */
+function populatePersonnelEditForm(result) {
+  $('#editPersonnelEmployeeID').val(result.data.personnel[0].id);
+  $('#editPersonnelFirstName').val(result.data.personnel[0].firstName);
+  $('#editPersonnelLastName').val(result.data.personnel[0].lastName);
+  $('#editPersonnelJobTitle').val(result.data.personnel[0].jobTitle);
+  $('#editPersonnelEmailAddress').val(result.data.personnel[0].email);
+
+  // Populate department dropdown
+  $('#editPersonnelDepartment').html('');
+  $.each(result.data.department, function () {
+    $('#editPersonnelDepartment').append(
+      $('<option>', {
+        value: this.id,
+        text: this.name,
+      }),
+    );
+  });
+
+  $('#editPersonnelDepartment').val(result.data.personnel[0].departmentID);
+}
+
 function collectEditPersonnelFormData() {
   return {
+    table: 'personnel',
     id: sanitizeInput($('#editPersonnelEmployeeID').val()),
     firstName: sanitizeName($('#editPersonnelFirstName').val()),
     lastName: sanitizeName($('#editPersonnelLastName').val()),
@@ -211,22 +191,6 @@ function collectEditPersonnelFormData() {
     email: sanitizeInput($('#editPersonnelEmailAddress').val()),
     departmentID: sanitizeInput($('#editPersonnelDepartment').val()),
   };
-}
-
-function populatePersonnelEditForm(result) {
-  if (result.status.code === '200') {
-    $('#editPersonnelEmployeeID').val(result.data.personnel[0].id);
-    $('#editPersonnelFirstName').val(result.data.personnel[0].firstName);
-    $('#editPersonnelLastName').val(result.data.personnel[0].lastName);
-    $('#editPersonnelJobTitle').val(result.data.personnel[0].jobTitle);
-    $('#editPersonnelEmailAddress').val(result.data.personnel[0].email);
-    populatePersonnelDepartmentDropdown(
-      result.data.department,
-      result.data.personnel[0].departmentID,
-    );
-  } else {
-    console.error('Error retrieving data');
-  }
 }
 
 // Edit Department Modal
@@ -270,13 +234,9 @@ $('#editDepartmentModal').on('show.bs.modal', function (e) {
 $('#editDepartmentForm').on('submit', function (e) {
   e.preventDefault();
 
-  const departmentData = {
-    id: sanitizeInput($('#editDepartmentID').val()),
-    name: sanitizeName($('#editDepartmentName').val()),
-    locationID: sanitizeInput($('#editDepartmentLocation').val()),
-  };
+  const departmentData = collectEditDepartmentFormData();
 
-  const isValid = validateEditDepartmentFormData(departmentData);
+  const isValid = validateEditFormData(departmentData);
 
   if (isValid) {
     $.ajax({
@@ -299,6 +259,15 @@ $('#editDepartmentForm').on('submit', function (e) {
     this.classList.add('was-validated');
   }
 });
+
+function collectEditDepartmentFormData() {
+  return {
+    table: 'department',
+    id: sanitizeInput($('#editDepartmentID').val()),
+    name: sanitizeName($('#editDepartmentName').val()),
+    locationID: sanitizeInput($('#editDepartmentLocation').val()),
+  };
+}
 
 // Edit Location Modal
 $('#editLocationModal').on('show.bs.modal', function (e) {
@@ -338,11 +307,12 @@ $('#editLocationForm').on('submit', function (e) {
   e.preventDefault();
 
   const locationData = {
+    table: 'location',
     id: sanitizeInput($('#editLocationID').val()),
     name: sanitizeName($('#editLocationName').val()),
   };
 
-  const isValid = validateEditLocationFormData(locationData);
+  const isValid = validateEditFormData(locationData);
 
   if (isValid) {
     $.ajax({
@@ -366,21 +336,9 @@ $('#editLocationForm').on('submit', function (e) {
   }
 });
 
-function populatePersonnelDepartmentDropdown(
-  departments,
-  selectedDepartmentID,
-) {
-  const dropdown = $('#editPersonnelDepartment');
-  dropdown.empty();
-  $.each(departments, function () {
-    const option = $('<option>', { value: this.id, text: this.name });
-    if (this.id == selectedDepartmentID) option.attr('selected', 'selected');
-    dropdown.append(option);
-  });
-}
-
-// DELETE RECORD LOGIC
-
+// ================================
+//          DELETE OPERATIONS
+// ================================
 $('#deleteModal').on('show.bs.modal', function (e) {
   const id = $(e.relatedTarget).data('id');
   const name = $(e.relatedTarget).data('name');
@@ -413,13 +371,43 @@ function deleteRecord(id, table) {
   });
 }
 
-// Filter
+// ================================
+//          TABLE REFRESH
+// ================================
 
-$('#filterBtn').click(function () {
-  // Open a modal of your own design that allows the user to apply a filter to the personnel table on either department or location
-});
+/**
+ * Fetches the data for a given table type and updates the table rows.
+ * @param {string} type - The type of table to refresh (personnel, department, location).
+ */
+function refreshTable(type) {
+  let url =
+    type === 'personnel'
+      ? 'libs/php/getAll.php'
+      : type === 'department'
+        ? 'libs/php/getAllDepartments.php'
+        : 'libs/php/getAllLocations.php';
 
-// SEARCH FUNCTIONALITY
+  $.ajax({
+    url: url,
+    type: 'GET',
+    dataType: 'json',
+    success: function (response) {
+      if (response.status.code === '200') {
+        updateTableRows(response.data, type);
+      } else {
+        console.error(`Error: Failed to fetch ${type} data.`);
+      }
+    },
+    error: function () {
+      console.error(`Error fetching ${type} data.`);
+    },
+  });
+}
+
+// ================================
+//          SEARCH
+// ================================
+
 $('#searchInp').on('keyup', function () {
   const searchQuery = $(this).val();
   const activeTab = getActiveTabTable();
@@ -440,6 +428,292 @@ $('#searchInp').on('keyup', function () {
     },
   });
 });
+
+// ================================
+//          FILTER
+// ================================
+
+$('#filterBtn').click(function () {
+  // Open a modal of your own design that allows the user to apply a filter to the personnel table on either department or location
+});
+
+// ================================
+//          VALIDATION HELPERS
+// ================================
+
+class Validate {
+  validateEmail = (email) => {
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailPattern.test(email);
+  };
+
+  validateName = (name) => {
+    const namePattern = /^[A-Za-z]+$/;
+    return namePattern.test(name);
+  };
+
+  validateID = (id) => {
+    return !isNaN(id) && Number.isInteger(parseFloat(id));
+  };
+
+  validateNameMultiple = (jobTitle) => {
+    const jobTitlePattern = /^[A-Za-z]+(?:\s[A-Za-z]+)*$/;
+    return jobTitlePattern.test(jobTitle);
+  };
+}
+
+// --- Global Validation Variables ---
+const V = new Validate();
+let isFormValid = true;
+const validateAddFormData = (table, data) => {
+  isFormValid = true;
+  if (table === 'personnel') {
+    setValidity(
+      '#addFirstName',
+      V.validateName(data.firstName),
+      'Please enter a valid name.',
+    );
+    setValidity(
+      '#addLastName',
+      V.validateName(data.lastName),
+      'Please enter a valid name.',
+    );
+    setValidity(
+      '#addEmail',
+      V.validateEmail(data.email),
+      'Please enter a valid email.',
+    );
+    setValidity(
+      '#addDepartment',
+      V.validateID(data.departmentID),
+      'Please enter a valid ID.',
+    );
+  } else if (table === 'department') {
+    setValidity(
+      '#addDepartmentName',
+      V.validateNameMultiple(data.name),
+      'Please enter a valid name.',
+    );
+    setValidity(
+      '#addLocation',
+      V.validateID(data.locationID),
+      'Please enter a valid ID.',
+    );
+  } else if (table === 'location') {
+    setValidity(
+      '#addLocationName',
+      V.validateName(data.name),
+      'Please enter a valid location name.',
+    );
+  }
+  return isFormValid;
+};
+
+/**
+ * Validate edit form data for personnel, departments, and locations
+ * @param {Object} data - The form data to validate
+ * @returns {Boolean} - Whether the form data is valid
+ */
+const validateEditFormData = (data) => {
+  isFormValid = true;
+
+  // Validate personnel form
+  if (data.table === 'personnel') {
+    setValidity(
+      '#editPersonnelFirstName',
+      V.validateName(data.firstName),
+      'Please enter a valid first name.',
+    );
+    setValidity(
+      '#editPersonnelLastName',
+      V.validateName(data.lastName),
+      'Please enter a valid last name.',
+    );
+    setValidity(
+      '#editPersonnelEmailAddress',
+      V.validateEmail(data.email),
+      'Please enter a valid email.',
+    );
+    setValidity(
+      '#editPersonnelDepartment',
+      V.validateID(data.departmentID),
+      'Please select a valid department.',
+    );
+
+    // Validate job title only if provided
+    if (data.jobTitle.trim() !== '') {
+      setValidity(
+        '#editPersonnelJobTitle',
+        V.validateNameMultiple(data.jobTitle),
+        'Please enter a valid job title.',
+      );
+    } else {
+      $('#editPersonnelJobTitle')[0].setCustomValidity('');
+    }
+  }
+
+  // Validate department form
+  else if (data.table === 'department') {
+    setValidity(
+      '#editDepartmentName',
+      V.validateNameMultiple(data.name),
+      'Please enter a valid department name.',
+    );
+    setValidity(
+      '#editDepartmentLocation',
+      V.validateID(data.locationID),
+      'Please select a valid location.',
+    );
+  }
+
+  // Validate location form
+  else if (data.table === 'location') {
+    setValidity(
+      '#editLocationName',
+      V.validateName(data.name),
+      'Please enter a valid location name.',
+    );
+  }
+
+  return isFormValid;
+};
+
+/**
+ * Sets the custom validity for the given selector and displays a
+ * tooltip if the input is not valid.
+ * @param {string} selector - The selector for the input element
+ * @param {boolean} isValid - Whether the input is valid
+ * @param {string} message - The custom validity message to display
+ */
+const setValidity = (selector, isValid, message) => {
+  if (!isValid) {
+    isFormValid = false;
+    $(selector)[0].setCustomValidity(message); // Set custom validity message
+  } else {
+    $(selector)[0].setCustomValidity(''); // Clear custom validity if valid
+  }
+  $(selector)[0].reportValidity(); // Show browser tooltip
+};
+
+// Add real-time validation reset for input fields
+function attachRealTimeValidationReset(formName) {
+  $(`${formName} input`).on('input', function () {
+    this.setCustomValidity(''); // Reset custom validity
+    this.reportValidity(); // Show updated validation feedback
+  });
+}
+
+/**
+ * Resets the form validation when opening a new modal.
+ * @param {string} formName - The name of the form to reset.
+ */
+function resetFormValidation(formName) {
+  const form = $(formName)[0];
+
+  form.classList.remove('was-validated');
+
+  // Clear the custom validity for all input fields
+  $(`${formName} input`).each(function () {
+    this.setCustomValidity('');
+  });
+}
+
+// ================================
+//          DATA SANITIZATION
+// ================================
+
+const sanitizeInput = (input) => DOMPurify.sanitize(input.trim());
+const sanitizeName = (name) => DOMPurify.sanitize(capitalizeFirst(name.trim()));
+
+const capitalizeFirst = (string) => {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+};
+
+// ================================
+//          UTILITY FUNCTIONS
+// ================================
+
+/**
+ * Retrieves the active table based on the selected tab.
+ * @returns {string} - The active table (personnel, department, location).
+ */
+function getActiveTabTable() {
+  if ($('#personnelBtn').hasClass('active')) return 'personnel';
+  if ($('#departmentsBtn').hasClass('active')) return 'department';
+  if ($('#locationsBtn').hasClass('active')) return 'location';
+}
+
+// ================================
+//         POPULATE DROPDOWNS
+// ================================
+
+/**
+ * Populates the dropdowns dynamically by type.
+ * @param {string} type - The type of data to populate (department/location).
+ */
+function populateDropdownByType(type) {
+  let url =
+    type === 'department'
+      ? 'libs/php/getAllDepartments.php'
+      : 'libs/php/getAllLocations.php';
+
+  $.ajax({
+    url: url,
+    type: 'GET',
+    dataType: 'json',
+    success: function (response) {
+      if (response.status.code === '200') {
+        let dropdown =
+          type === 'department'
+            ? $('#addDepartment')
+            : $('#addLocation') || $('#editDepartmentLocation');
+        dropdown.empty();
+        response.data.forEach(function (item) {
+          dropdown.append(`<option value="${item.id}">${item.name}</option>`);
+        });
+      }
+    },
+    error: function () {
+      console.error(`Error fetching ${type} data.`);
+    },
+  });
+}
+
+/**
+ * Populate the location dropdown for the edit department form.
+ * @param {number} selectedLocationID - The ID of the currently selected location.
+ */
+function populateLocationEditDropdown(selectedLocationID) {
+  let url = 'libs/php/getAllLocations.php';
+
+  $.ajax({
+    url: url,
+    type: 'GET',
+    dataType: 'json',
+    success: function (response) {
+      if (response.status.code === '200') {
+        const dropdown = $('#editDepartmentLocation');
+        dropdown.empty();
+
+        // Populate dropdown and set the selected location
+        response.data.forEach(function (item) {
+          let option = $('<option>', { value: item.id, text: item.name });
+          if (item.id == selectedLocationID) {
+            option.attr('selected', 'selected');
+          }
+          dropdown.append(option);
+        });
+      }
+    },
+    error: function () {
+      console.error('Error fetching locations.');
+    },
+  });
+}
+
+// ================================
+//            INJECT HTML
+// ================================
 
 /**
  * Update the table rows based on the search results
@@ -507,267 +781,57 @@ function updateTableRows(data, activeTab) {
   }
 }
 
-// FORM VALIDATION AND SANITIZATION HELPERS
-
-class Validate {
-  validateEmail = (email) => {
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailPattern.test(email);
-  };
-
-  validateName = (name) => {
-    const namePattern = /^[A-Za-z]+$/;
-    return namePattern.test(name);
-  };
-
-  validateID = (id) => {
-    return !isNaN(id) && Number.isInteger(parseFloat(id));
-  };
-
-  validateNameMultiple = (jobTitle) => {
-    const jobTitlePattern = /^[A-Za-z]+(?:\s[A-Za-z]+)*$/;
-    return jobTitlePattern.test(jobTitle);
-  };
+function createPersonnelFormFields() {
+  return `
+    <div class="form-floating mb-3">
+      <input type="text" class="form-control" id="addFirstName" placeholder="First Name" required>
+      <label for="addFirstName">First Name</label>
+      <div class="invalid-feedback"></div>
+    </div>
+    <div class="form-floating mb-3">
+      <input type="text" class="form-control" id="addLastName" placeholder="Last Name" required>
+      <label for="addLastName">Last Name</label>
+      <div class="invalid-feedback"></div>
+    </div>
+    <div class="form-floating mb-3">
+      <input type="email" class="form-control" id="addEmail" placeholder="Email" required>
+      <label for="addEmail">Email</label>
+      <div class="invalid-feedback"></div>
+    </div>
+    <div class="form-floating mb-3">
+      <select class="form-select" id="addDepartment" required></select>
+      <label for="addDepartment">Department</label>
+      <div class="invalid-feedback"></div>
+    </div>
+  `;
 }
 
-const V = new Validate();
-let isFormValid = true;
-
-const validateAddFormData = (table, data) => {
-  isFormValid = true;
-  if (table === 'personnel') {
-    setValidity(
-      '#addFirstName',
-      V.validateName(data.firstName),
-      'Please enter a valid name.',
-    );
-    setValidity(
-      '#addLastName',
-      V.validateName(data.lastName),
-      'Please enter a valid name.',
-    );
-    setValidity(
-      '#addEmail',
-      V.validateEmail(data.email),
-      'Please enter a valid email.',
-    );
-    setValidity(
-      '#addDepartment',
-      V.validateID(data.departmentID),
-      'Please enter a valid ID.',
-    );
-  } else if (table === 'department') {
-    setValidity(
-      '#addDepartmentName',
-      V.validateNameMultiple(data.name),
-      'Please enter a valid name.',
-    );
-    setValidity(
-      '#addLocation',
-      V.validateID(data.locationID),
-      'Please enter a valid ID.',
-    );
-  } else if (table === 'location') {
-    setValidity(
-      '#addLocationName',
-      V.validateNameMultiple(data.name),
-      'Please enter a valid name.',
-    );
-  }
-  return isFormValid;
-};
-
-const validateEditFormData = (data) => {
-  isFormValid = true;
-
-  setValidity(
-    '#editPersonnelFirstName',
-    V.validateName(data.firstName),
-    'Please enter a valid name.',
-  );
-  setValidity(
-    '#editPersonnelLastName',
-    V.validateName(data.lastName),
-    'Please enter a valid name.',
-  );
-  setValidity(
-    '#editPersonnelEmailAddress',
-    V.validateEmail(data.email),
-    'Please enter a valid email.',
-  );
-  setValidity(
-    '#editPersonnelDepartment',
-    V.validateID(data.departmentID),
-    'Please select a valid department.',
-  );
-
-  // Job title is optional, but if provided, it should be validated
-  if (data.jobTitle.trim() !== '') {
-    setValidity(
-      '#editPersonnelJobTitle',
-      V.validateNameMultiple(data.jobTitle),
-      'Please enter a valid job title.',
-    );
-  } else {
-    $('#editPersonnelJobTitle')[0].setCustomValidity('');
-  }
-  return isFormValid;
-};
-
-// Validate Department Data
-const validateEditDepartmentFormData = (data) => {
-  isFormValid = true;
-
-  setValidity(
-    '#editDepartmentName',
-    V.validateNameMultiple(data.name),
-    'Please enter a valid department name.',
-  );
-  setValidity(
-    '#editDepartmentLocation',
-    V.validateID(data.locationID),
-    'Please select a valid location.',
-  );
-
-  return isFormValid;
-};
-
-// Validate Location Data
-const validateEditLocationFormData = (data) => {
-  isFormValid = true;
-
-  setValidity(
-    '#editLocationName',
-    V.validateNameMultiple(data.name),
-    'Please enter a valid location name.',
-  );
-
-  return isFormValid;
-};
-
-// Add real-time validation reset for input fields
-function attachRealTimeValidationReset(formName) {
-  $(`${formName} input`).on('input', function () {
-    this.setCustomValidity(''); // Reset custom validity
-    this.reportValidity(); // Show updated validation feedback
-  });
+function createDepartmentFormFields() {
+  return `
+    <div class="form-floating mb-3">
+      <input type="text" class="form-control" id="addDepartmentName" placeholder="Department Name" required>
+      <label for="addDepartmentName">Department Name</label>
+      <div class="invalid-feedback"></div>
+    </div>
+    <div class="form-floating mb-3">
+      <select class="form-select" id="addLocation" required></select>
+      <label for="addLocation">Location</label>
+      <div class="invalid-feedback"></div>
+    </div>
+  `;
 }
 
-// Reset form validation
-function resetFormValidation(formName) {
-  let form = $(formName)[0];
-  form.classList.remove('was-validated');
-
-  $(`${formName} input`).each(function () {
-    this.setCustomValidity('');
-  });
+function createLocationFormFields() {
+  return `
+    <div class="form-floating mb-3">
+      <input type="text" class="form-control" id="addLocationName" placeholder="Location Name" required>
+      <label for="addLocationName">Location Name</label>
+      <div class="invalid-feedback"></div>
+    </div>
+  `;
 }
 
-// Form validation utility
-const setValidity = (selector, isValid, message) => {
-  if (!isValid) {
-    isFormValid = false;
-    $(selector)[0].setCustomValidity(message); // Set custom validity message
-  } else {
-    $(selector)[0].setCustomValidity(''); // Clear custom validity if valid
-  }
-  $(selector)[0].reportValidity(); // Show browser tooltip
-};
-
-// Utility functions for sanitization
-const sanitizeInput = (input) => DOMPurify.sanitize(input.trim());
-const sanitizeName = (name) =>
-  DOMPurify.sanitize(
-    name.trim().charAt(0).toUpperCase() + name.trim().slice(1),
-  );
-const capitalizeFirst = (string) =>
-  string.charAt(0).toUpperCase() + string.slice(1);
-
-// DROPDOWN HELPERS
-function populateDropdown(type) {
-  let url =
-    type === 'department'
-      ? 'libs/php/getAllDepartments.php'
-      : 'libs/php/getAllLocations.php';
-
-  $.ajax({
-    url: url,
-    type: 'GET',
-    dataType: 'json',
-    success: function (response) {
-      console.log(response);
-      if (response.status.code === '200') {
-        let dropdown =
-          type === 'department' ? $('#addDepartment') : $('#addLocation');
-        dropdown.empty();
-        response.data.forEach(function (item) {
-          dropdown.append(
-            `<option value="${item.id}">${item.departmentName}</option>`,
-          );
-        });
-      }
-    },
-    error: function () {
-      console.error(`Error fetching ${type} data.`);
-    },
-  });
-}
-
-// Populate Location dropdown for the edit form
-function populateLocationEditDropdown(selectedLocationID) {
-  let url = 'libs/php/getAllLocations.php';
-
-  $.ajax({
-    url: url,
-    type: 'GET',
-    dataType: 'json',
-    success: function (response) {
-      if (response.status.code === '200') {
-        const dropdown = $('#editDepartmentLocation');
-        dropdown.empty();
-
-        // Populate dropdown and set the selected location
-        response.data.forEach(function (item) {
-          let option = $('<option>', { value: item.id, text: item.name });
-          if (item.id == selectedLocationID) {
-            option.attr('selected', 'selected');
-          }
-          dropdown.append(option);
-        });
-      }
-    },
-    error: function () {
-      console.error('Error fetching locations.');
-    },
-  });
-}
-
-// TABLE REFRESH
-function refreshTable(type) {
-  let url =
-    type === 'personnel'
-      ? 'libs/php/getAll.php'
-      : type === 'department'
-        ? 'libs/php/getAllDepartments.php'
-        : 'libs/php/getAllLocations.php';
-
-  $.ajax({
-    url: url,
-    type: 'GET',
-    dataType: 'json',
-    success: function (response) {
-      if (response.status.code === '200') {
-        updateTableRows(response.data, type);
-      } else {
-        console.error(`Error: Failed to fetch ${type} data.`);
-      }
-    },
-    error: function () {
-      console.error(`Error fetching ${type} data.`);
-    },
-  });
-}
-
+// Refresh the table when the document is ready
 $(document).ready(function () {
   refreshTable('personnel'); // Default tab is personnel
 });
