@@ -41,7 +41,7 @@
 	} 
 	// SQL for department search
 	else if ($activeTab === 'department') {
-		$query = $conn->prepare('SELECT `d`.`id`, `d`.`name` AS `departmentName`, `l`.`name` AS `locationName`
+		$query = $conn->prepare('SELECT `d`.`id`, `d`.`name` AS `name`, `l`.`name` AS `locationName`
 														FROM `department` `d`
 														LEFT JOIN `location` `l` ON `d`.`locationID` = `l`.`id`
 														WHERE `d`.`name` LIKE ? OR `l`.`name` LIKE ?

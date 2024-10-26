@@ -1,4 +1,22 @@
 // ================================
+//         GLOBAL VARIABLES
+// ================================
+
+class Validate {
+  validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  validateName = (name) => /^[A-Za-z]+$/.test(name);
+  validateID = (id) => !isNaN(id) && Number.isInteger(parseFloat(id));
+  validateNameMultiple = (name) => /^[A-Za-z]+(?:\s[A-Za-z]+)*$/.test(name);
+}
+
+const V = new Validate();
+let isFormValid = true;
+let selectedFilters = {
+  department: [],
+  location: [],
+};
+
+// ================================
 //          CREATE OPERATIONS
 // ================================
 $('#addBtn').click(function () {
@@ -433,12 +451,6 @@ $('#searchInp').on('keyup', function () {
 //          FILTER
 // ================================
 
-// Object to hold selected filters
-let selectedFilters = {
-  department: [],
-  location: [],
-};
-
 // Show filter modal and populate checkboxes
 $('#filterBtn').click(function () {
   populateFilterCheckboxes(
@@ -458,41 +470,59 @@ $('#filterBtn').click(function () {
 
 // Handle "Select All" logic for departments and locations
 $('#selectAllDepartments').change(function () {
+  const isChecked = $(this).is(':checked');
   $('#filterDepartmentContainer input[type="checkbox"]').prop(
     'checked',
-    this.checked,
+    isChecked,
   );
+  selectedFilters.department = isChecked ? getAllFilterIds('department') : [];
 });
 
 $('#selectAllLocations').change(function () {
+  const isChecked = $(this).is(':checked');
   $('#filterLocationContainer input[type="checkbox"]').prop(
     'checked',
-    this.checked,
+    isChecked,
   );
+  selectedFilters.location = isChecked ? getAllFilterIds('location') : [];
 });
 
-// Collect selected department and location IDs from checkboxes
+// Collect selected department and location IDs from checkboxes and apply filters
 $('#applyFilterBtn').click(function () {
-  selectedFilters.department = $('#filterDepartmentContainer input:checked')
-    .map(function () {
-      return $(this).val();
-    })
-    .get();
+  selectedFilters.department = getSelectedFilterIds(
+    '#filterDepartmentContainer',
+  );
+  selectedFilters.location = getSelectedFilterIds('#filterLocationContainer');
 
-  selectedFilters.location = $('#filterLocationContainer input:checked')
-    .map(function () {
-      return $(this).val();
-    })
-    .get();
-
-  // Apply filters with default behavior if no location or department selected
   applyFilter(
-    selectedFilters.department.length ? selectedFilters.department : 'ALL',
-    selectedFilters.location.length ? selectedFilters.location : 'ALL',
+    selectedFilters.department.length
+      ? selectedFilters.department
+      : getAllFilterIds('department'),
+    selectedFilters.location.length
+      ? selectedFilters.location
+      : getAllFilterIds('location'),
   );
 
   $('#filterModal').modal('hide');
 });
+
+// Retrieve all IDs for a filter type (department or location) for "Select All" functionality
+function getAllFilterIds(type) {
+  return $(`#filter${capitalizeFirst(type)}Container input[type="checkbox"]`)
+    .map(function () {
+      return $(this).val();
+    })
+    .get();
+}
+
+// Retrieve selected IDs from checkboxes in a container
+function getSelectedFilterIds(containerSelector) {
+  return $(`${containerSelector} input:checked`)
+    .map(function () {
+      return $(this).val();
+    })
+    .get();
+}
 
 /**
  * Applies the selected filters to the personnel table.
@@ -500,7 +530,6 @@ $('#applyFilterBtn').click(function () {
  * @param {Array|string} locationIDs - Array of location IDs or "ALL".
  */
 function applyFilter(departmentIDs, locationIDs) {
-  console.log('Department IDs:', departmentIDs, 'Location IDs:', locationIDs);
   $.ajax({
     url: 'libs/php/filterPersonnel.php',
     type: 'POST',
@@ -523,30 +552,7 @@ function applyFilter(departmentIDs, locationIDs) {
 //          VALIDATION HELPERS
 // ================================
 
-class Validate {
-  validateEmail = (email) => {
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailPattern.test(email);
-  };
-
-  validateName = (name) => {
-    const namePattern = /^[A-Za-z]+$/;
-    return namePattern.test(name);
-  };
-
-  validateID = (id) => {
-    return !isNaN(id) && Number.isInteger(parseFloat(id));
-  };
-
-  validateNameMultiple = (jobTitle) => {
-    const jobTitlePattern = /^[A-Za-z]+(?:\s[A-Za-z]+)*$/;
-    return jobTitlePattern.test(jobTitle);
-  };
-}
-
 // --- Global Validation Variables ---
-const V = new Validate();
-let isFormValid = true;
 const validateAddFormData = (table, data) => {
   isFormValid = true;
   if (table === 'personnel') {
@@ -791,7 +797,7 @@ function populateFilterCheckboxes(
 
         response.data.forEach((item) => {
           const isChecked = selectedIds.includes(item.id.toString());
-          allSelected = allSelected && isChecked; // Check if all are selected
+          allSelected = allSelected && isChecked;
 
           container.append(`
             <div class="form-check">
@@ -878,15 +884,16 @@ function updateTableRows(data, activeTab) {
     $('#personnelTableBody').html(rows);
   } else if (activeTab === 'department') {
     data.forEach(function (department) {
+      console.log(department);
       rows += `
         <tr>
           <td class="align-middle text-nowrap">${department.name}</td>
           <td class="align-middle text-nowrap d-none d-md-table-cell">${department.locationName}</td>
           <td class="text-end text-nowrap">
-            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editDepartmentModal" data-id="${department.id}" data-name="${department.departmentName}">
+            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editDepartmentModal" data-id="${department.id}" data-name="${department.name}">
               <i class="fa-solid fa-pencil fa-fw"></i>
             </button>
-            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" data-id="${department.id}" data-name="${department.departmentName}" data-type="department">
+            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" data-id="${department.id}" data-name="${department.name}" data-type="department">
               <i class="fa-solid fa-trash fa-fw"></i>
             </button>
           </td>
