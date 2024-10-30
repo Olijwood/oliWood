@@ -580,6 +580,31 @@ $('#selectAllLocations').on('change', function () {
   $("input[name='locationCheckbox']").prop('checked', $(this).prop('checked'));
 });
 
+/**
+ * Clears all filter selections and resets the active filters object.
+ */
+function resetFilters() {
+  // Clear active filters
+  activeFilters.departmentIDs = [];
+  activeFilters.locationIDs = [];
+
+  // Uncheck all checkboxes
+  $("input[name='departmentCheckbox']").prop('checked', false);
+  $("input[name='locationCheckbox']").prop('checked', false);
+
+  // Uncheck "Select All" checkboxes
+  $('#selectAllDepartments').prop('checked', false);
+  $('#selectAllLocations').prop('checked', false);
+
+  refreshTable('personnel');
+}
+
+// Attach reset functionality to the Reset button
+$('#resetFilterBtn').click(function () {
+  resetFilters();
+  $('#filterModal').modal('hide'); // Close the modal after resetting
+});
+
 // ================================
 //          VALIDATION HELPERS
 // ================================
