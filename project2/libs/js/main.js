@@ -480,28 +480,31 @@ $('#searchInp').on('input', function () {
   }
 });
 
+/**
+ * Perform a search query with any active filters.
+ * @param {string} searchQuery - The search query to send to the server.
+ */
 function performSearchWithFilter(searchQuery) {
-  let requestData = {
+  const tab = getActiveTabTable();
+  const requestData = {
     query: searchQuery,
+    tab,
     departmentIDs: activeFilters.departmentIDs,
     locationIDs: activeFilters.locationIDs,
   };
-
   $.ajax({
     url: 'libs/php/searchAll.php',
     type: 'POST',
     dataType: 'json',
     data: requestData,
-    success: function (response) {
-      if (response.status.code === '200') {
-        updateTableRows(response.data.found, 'personnel');
+    success: ({ status: { code }, data: { found } }) => {
+      if (code === '200') {
+        updateTableRows(found, tab);
       } else {
         console.error('Error: Failed to fetch search results.');
       }
     },
-    error: function (e) {
-      console.error(e, 'Error fetching search results.');
-    },
+    error: (e) => console.error(e, 'Error fetching search results.'),
   });
 }
 
