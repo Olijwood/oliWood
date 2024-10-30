@@ -11,9 +11,9 @@ class Validate {
 
 const V = new Validate();
 let isFormValid = true;
-let selectedFilters = {
-  department: [],
-  location: [],
+let activeFilters = {
+  departmentIDs: [],
+  locationIDs: [],
 };
 
 // ================================
@@ -404,149 +404,181 @@ function refreshTable(type) {
       : type === 'department'
         ? 'libs/php/getAllDepartments.php'
         : 'libs/php/getAllLocations.php';
-
-  $.ajax({
-    url: url,
-    type: 'GET',
-    dataType: 'json',
-    success: function (response) {
-      if (response.status.code === '200') {
-        updateTableRows(response.data, type);
-      } else {
-        console.error(`Error: Failed to fetch ${type} data.`);
-      }
-    },
-    error: function () {
-      console.error(`Error fetching ${type} data.`);
-    },
-  });
+  if (type === 'personnel') {
+    // If filters are applied, refresh with filters
+    if (
+      activeFilters.departmentIDs.length > 0 ||
+      activeFilters.locationIDs.length > 0
+    ) {
+      $.ajax({
+        url: 'libs/php/filterPersonnel.php',
+        type: 'POST',
+        data: {
+          departmentIDs: activeFilters.departmentIDs,
+          locationIDs: activeFilters.locationIDs,
+        },
+        success: function (response) {
+          if (response.status.code === 200) {
+            updateTableRows(response.data, 'personnel');
+          } else {
+            console.error('Error refreshing personnel table: ', response);
+          }
+        },
+        error: function (e) {
+          console.error('Error refreshing personnel table: ', e);
+        },
+      });
+    } else {
+      // Default refresh without filters
+      $.ajax({
+        url: 'libs/php/getAll.php',
+        type: 'GET',
+        success: function (response) {
+          if (response.status.code === '200') {
+            updateTableRows(response.data, 'personnel');
+          } else {
+            console.error('Error refreshing personnel table: ', response);
+          }
+        },
+        error: function (e) {
+          console.error('Error refreshing personnel table: ', e);
+        },
+      });
+    }
+  } else {
+    $.ajax({
+      url: url,
+      type: 'GET',
+      dataType: 'json',
+      success: function (response) {
+        if (response.status.code === '200') {
+          updateTableRows(response.data, type);
+        } else {
+          console.error(`Error: Failed to fetch ${type} data.`);
+        }
+      },
+      error: function () {
+        console.error(`Error fetching ${type} data.`);
+      },
+    });
+  }
 }
 
 // ================================
 //          SEARCH
 // ================================
 
-$('#searchInp').on('keyup', function () {
-  const searchQuery = $(this).val();
-  const activeTab = getActiveTabTable();
+$('#searchInp').on('input', function () {
+  const searchQuery = $(this).val().trim();
+
+  if (searchQuery) {
+    performSearchWithFilter(searchQuery);
+  } else {
+    activeFilters.departmentIDs.length || activeFilters.locationIDs.length
+      ? applyCurrentFilters()
+      : refreshTable('personnel'); // Show all personnel when search is empty
+  }
+});
+
+function performSearchWithFilter(searchQuery) {
+  let requestData = {
+    query: searchQuery,
+    departmentIDs: activeFilters.departmentIDs,
+    locationIDs: activeFilters.locationIDs,
+  };
 
   $.ajax({
-    url: 'libs/php/SearchAll.php',
+    url: 'libs/php/searchAll.php',
     type: 'POST',
-    data: { query: searchQuery, tab: activeTab },
+    dataType: 'json',
+    data: requestData,
     success: function (response) {
       if (response.status.code === '200') {
-        updateTableRows(response.data.found, activeTab);
+        updateTableRows(response.data.found, 'personnel');
       } else {
         console.error('Error: Failed to fetch search results.');
       }
     },
     error: function (e) {
-      console.error('Error fetching search results:', e);
+      console.error(e, 'Error fetching search results.');
     },
   });
-});
+}
 
 // ================================
 //          FILTER
 // ================================
 
-// Show filter modal and populate checkboxes
 $('#filterBtn').click(function () {
   populateFilterCheckboxes(
     'department',
     '#filterDepartmentContainer',
-    selectedFilters.department,
+    activeFilters.departmentIDs,
     '#selectAllDepartments',
   );
   populateFilterCheckboxes(
     'location',
     '#filterLocationContainer',
-    selectedFilters.location,
+    activeFilters.locationIDs,
     '#selectAllLocations',
   );
   $('#filterModal').modal('show');
 });
 
-// Handle "Select All" logic for departments and locations
-$('#selectAllDepartments').change(function () {
-  const isChecked = $(this).is(':checked');
-  $('#filterDepartmentContainer input[type="checkbox"]').prop(
-    'checked',
-    isChecked,
-  );
-  selectedFilters.department = isChecked ? getAllFilterIds('department') : [];
-});
-
-$('#selectAllLocations').change(function () {
-  const isChecked = $(this).is(':checked');
-  $('#filterLocationContainer input[type="checkbox"]').prop(
-    'checked',
-    isChecked,
-  );
-  selectedFilters.location = isChecked ? getAllFilterIds('location') : [];
-});
-
-// Collect selected department and location IDs from checkboxes and apply filters
+// Apply filters on click
 $('#applyFilterBtn').click(function () {
-  selectedFilters.department = getSelectedFilterIds(
-    '#filterDepartmentContainer',
-  );
-  selectedFilters.location = getSelectedFilterIds('#filterLocationContainer');
+  const selectedDepartmentIDs = [
+    ...$("input[name='departmentCheckbox']:checked"),
+  ].map((el) => el.value);
+  const selectedLocationIDs = [
+    ...$("input[name='locationCheckbox']:checked"),
+  ].map((el) => el.value);
 
-  applyFilter(
-    selectedFilters.department.length
-      ? selectedFilters.department
-      : getAllFilterIds('department'),
-    selectedFilters.location.length
-      ? selectedFilters.location
-      : getAllFilterIds('location'),
-  );
+  activeFilters.departmentIDs = selectedDepartmentIDs;
+  activeFilters.locationIDs = selectedLocationIDs;
+
+  applyCurrentFilters();
 
   $('#filterModal').modal('hide');
 });
 
-// Retrieve all IDs for a filter type (department or location) for "Select All" functionality
-function getAllFilterIds(type) {
-  return $(`#filter${capitalizeFirst(type)}Container input[type="checkbox"]`)
-    .map(function () {
-      return $(this).val();
-    })
-    .get();
-}
-
-// Retrieve selected IDs from checkboxes in a container
-function getSelectedFilterIds(containerSelector) {
-  return $(`${containerSelector} input:checked`)
-    .map(function () {
-      return $(this).val();
-    })
-    .get();
-}
-
-/**
- * Applies the selected filters to the personnel table.
- * @param {Array|string} departmentIDs - Array of department IDs or "ALL".
- * @param {Array|string} locationIDs - Array of location IDs or "ALL".
- */
-function applyFilter(departmentIDs, locationIDs) {
+// Apply current filters and update the table
+function applyCurrentFilters() {
   $.ajax({
     url: 'libs/php/filterPersonnel.php',
     type: 'POST',
-    dataType: 'json',
-    data: { departmentIDs, locationIDs },
+    data: {
+      departmentIDs: activeFilters.departmentIDs,
+      locationIDs: activeFilters.locationIDs,
+    },
     success: function (response) {
       if (response.status.code === 200) {
         updateTableRows(response.data, 'personnel');
       } else {
-        console.error('Error fetching filtered data.');
+        console.error(
+          'Error refreshing personnel table with filters: ',
+          response,
+        );
       }
     },
     error: function (e) {
-      console.error('Error applying filter:', e);
+      console.error('Error refreshing personnel table with filters: ', e);
     },
   });
 }
+
+// Check/Uncheck all departments
+$('#selectAllDepartments').on('change', function () {
+  $("input[name='departmentCheckbox']").prop(
+    'checked',
+    $(this).prop('checked'),
+  );
+});
+
+// Check/Uncheck all locations
+$('#selectAllLocations').on('change', function () {
+  $("input[name='locationCheckbox']").prop('checked', $(this).prop('checked'));
+});
 
 // ================================
 //          VALIDATION HELPERS
@@ -801,7 +833,7 @@ function populateFilterCheckboxes(
 
           container.append(`
             <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="${item.id}" id="${type}${item.id}" ${isChecked ? 'checked' : ''}>
+              <input class="form-check-input" type="checkbox" name="${type}Checkbox" value="${item.id}" id="${type}${item.id}" ${isChecked ? 'checked' : ''}>
               <label class="form-check-label" for="${type}${item.id}">${item.name}</label>
             </div>
           `);
