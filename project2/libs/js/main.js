@@ -497,7 +497,7 @@ function performSearchWithFilter(searchQuery) {
     type: 'POST',
     dataType: 'json',
     data: requestData,
-    success: ({ status: { code }, data: { found } }) => {
+    success: ({ status: { code, returnedIn }, data: { found } }) => {
       if (code === '200') {
         updateTableRows(found, tab);
       } else {
