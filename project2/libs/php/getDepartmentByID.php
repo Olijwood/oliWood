@@ -1,78 +1,70 @@
 <?php
+$executionStartTime = microtime(true);
 
-	// example use from browser
-	// http://localhost/companydirectory/libs/php/getDepartmentByID.php?id=<id>
+include 'config.php';
 
-	// remove next two lines for production	
+header('Content-Type: application/json; charset=UTF-8');
 
-	ini_set('display_errors', 'On');
-	error_reporting(E_ALL);
+$conn = new mysqli(
+    $cd_host,
+    $cd_user,
+    $cd_password,
+    $cd_dbname,
+    $cd_port,
+    $cd_socket,
+);
 
-	$executionStartTime = microtime(true);
+if (mysqli_connect_errno()) {
+    $output['status']['code'] = '300';
+    $output['status']['name'] = 'failure';
+    $output['status']['description'] = 'database unavailable';
+    $output['status']['returnedIn'] =
+        (microtime(true) - $executionStartTime) / 1000 . ' ms';
+    $output['data'] = [];
 
-	include("config.php");
+    mysqli_close($conn);
 
-	header('Content-Type: application/json; charset=UTF-8');
+    echo json_encode($output);
 
-	$conn = new mysqli($cd_host, $cd_user, $cd_password, $cd_dbname, $cd_port, $cd_socket);
+    exit();
+}
 
-	if (mysqli_connect_errno()) {
-		
-		$output['status']['code'] = "300";
-		$output['status']['name'] = "failure";
-		$output['status']['description'] = "database unavailable";
-		$output['status']['returnedIn'] = (microtime(true) - $executionStartTime) / 1000 . " ms";
-		$output['data'] = [];
-		
-		mysqli_close($conn);
+$query = $conn->prepare(
+    'SELECT id, name, locationID FROM department WHERE id =  ?',
+);
 
-		echo json_encode($output);
-		
-		exit;
+$query->bind_param('i', $_REQUEST['id']);
 
-	}	
+$query->execute();
 
-	// SQL statement accepts parameters and so is prepared to avoid SQL injection.
-	// $_REQUEST used for development / debugging. Remember to change to $_POST for production
+if (false === $query) {
+    $output['status']['code'] = '400';
+    $output['status']['name'] = 'executed';
+    $output['status']['description'] = 'query failed';
+    $output['data'] = [];
 
-	$query = $conn->prepare('SELECT id, name, locationID FROM department WHERE id =  ?');
+    echo json_encode($output);
 
-	$query->bind_param("i", $_REQUEST['id']);
+    mysqli_close($conn);
+    exit();
+}
 
-	$query->execute();
-	
-	if (false === $query) {
+$result = $query->get_result();
 
-		$output['status']['code'] = "400";
-		$output['status']['name'] = "executed";
-		$output['status']['description'] = "query failed";	
-		$output['data'] = [];
+$data = [];
 
-		echo json_encode($output); 
-	
-		mysqli_close($conn);
-		exit;
+while ($row = mysqli_fetch_assoc($result)) {
+    array_push($data, $row);
+}
 
-	}
+$output['status']['code'] = '200';
+$output['status']['name'] = 'ok';
+$output['status']['description'] = 'success';
+$output['status']['returnedIn'] =
+    (microtime(true) - $executionStartTime) / 1000 . ' ms';
+$output['data'] = $data;
 
-	$result = $query->get_result();
+echo json_encode($output);
 
-   	$data = [];
-
-	while ($row = mysqli_fetch_assoc($result)) {
-
-		array_push($data, $row);
-
-	}
-
-	$output['status']['code'] = "200";
-	$output['status']['name'] = "ok";
-	$output['status']['description'] = "success";
-	$output['status']['returnedIn'] = (microtime(true) - $executionStartTime) / 1000 . " ms";
-	$output['data'] = $data;
-
-	echo json_encode($output); 
-
-	mysqli_close($conn);
-
+mysqli_close($conn);
 ?>

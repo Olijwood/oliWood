@@ -1,48 +1,51 @@
 <?php
-  // example use from browser
-  // http://localhost/project2/libs/php/updateDepartmentByID.php
+$executionStartTime = microtime(true);
 
-  // remove next two lines for production	
-  ini_set('display_errors', 'On');
-  error_reporting(E_ALL);
+include 'config.php';
 
-  $executionStartTime = microtime(true);
+header('Content-Type: application/json; charset=UTF-8');
 
-  include("config.php");
+$conn = new mysqli(
+    $cd_host,
+    $cd_user,
+    $cd_password,
+    $cd_dbname,
+    $cd_port,
+    $cd_socket,
+);
 
-  header('Content-Type: application/json; charset=UTF-8');
-
-  $conn = new mysqli($cd_host, $cd_user, $cd_password, $cd_dbname, $cd_port, $cd_socket);
-
-  if (mysqli_connect_errno()) {
-    $output['status']['code'] = "300";
-    $output['status']['name'] = "failure";
-    $output['status']['description'] = "database unavailable";
+if (mysqli_connect_errno()) {
+    $output['status']['code'] = '300';
+    $output['status']['name'] = 'failure';
+    $output['status']['description'] = 'database unavailable';
     $output['data'] = [];
     echo json_encode($output);
-    exit;
-  }
+    exit();
+}
 
-  $departmentID = $_POST['id'];
-  $departmentName = $_POST['name'];
-  $locationID = $_POST['locationID'];
+$departmentID = $_POST['id'];
+$departmentName = $_POST['name'];
+$locationID = $_POST['locationID'];
 
-  $query = $conn->prepare('UPDATE department SET name = ?, locationID = ? WHERE id = ?');
-  $query->bind_param("sii", $departmentName, $locationID, $departmentID);
-  $query->execute();
+$query = $conn->prepare(
+    'UPDATE department SET name = ?, locationID = ? WHERE id = ?',
+);
+$query->bind_param('sii', $departmentName, $locationID, $departmentID);
+$query->execute();
 
-  if (false === $query) {
-    $output['status']['code'] = "400";
-    $output['status']['name'] = "executed";
-    $output['status']['description'] = "query failed";
+if (false === $query) {
+    $output['status']['code'] = '400';
+    $output['status']['name'] = 'executed';
+    $output['status']['description'] = 'query failed';
     $output['data'] = [];
     echo json_encode($output);
-    exit;
-  }
+    exit();
+}
 
-  $output['status']['code'] = "200";
-  $output['status']['name'] = "ok";
-  $output['status']['description'] = "success";
-  $output['data'] = [];
-  echo json_encode($output);
+$output['status']['code'] = '200';
+$output['status']['name'] = 'ok';
+$output['status']['description'] = 'success';
+$output['data'] = [];
+
+echo json_encode($output);
 ?>
