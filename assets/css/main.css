@@ -766,6 +766,11 @@ section,
   border: 2px solid var(--accent-color);
 }
 
+.cv-download-btn {
+  border-color: var(--accent-color) !important;
+  background-color: var(--accent-color) !important;
+}
+
 /*--------------------------------------------------------------
 # Portfolio Section
 --------------------------------------------------------------*/
