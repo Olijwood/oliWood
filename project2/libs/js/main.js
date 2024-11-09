@@ -398,6 +398,8 @@ function deleteRecord(id, table) {
  * @param {string} type - The type of table to refresh (personnel, department, location).
  */
 function refreshTable(type) {
+  $('#searchInput').val(''); // Clear search input
+
   let url =
     type === 'personnel'
       ? 'libs/php/getAll.php'
