@@ -345,6 +345,8 @@
       id="editDepartmentModal"
       class="modal fade"
       tabindex="-1"
+      data-bs-backdrop="false"
+      data-bs-keyboard="false"
       aria-labelledby="editDepartmentModalLabel"
       aria-hidden="true"
     >
@@ -410,6 +412,8 @@
       id="editLocationModal"
       class="modal fade"
       tabindex="-1"
+      data-bs-backdrop="false"
+      data-bs-keyboard="false"
       aria-labelledby="editLocationModalLabel"
       aria-hidden="true"
     >
@@ -467,12 +471,12 @@
       id="addModal"
       class="modal fade"
       tabindex="-1"
+      data-bs-backdrop="false"
+      data-bs-keyboard="false"
       aria-labelledby="addModalLabel"
       aria-hidden="true"
     >
-      <div
-        class="modal-dialog modal-sm modal-dialog-centered modal-dialog-scrollable"
-      >
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content shadow">
           <div class="modal-header bg-primary bg-gradient text-white">
             <h5 class="modal-title" id="addModalLabel">Add Record</h5>
@@ -512,14 +516,14 @@
       id="deleteModal"
       class="modal fade"
       tabindex="-1"
+      data-bs-backdrop="false"
+      data-bs-keyboard="false"
       aria-labelledby="deleteModalLabel"
       aria-hidden="true"
     >
-      <div
-        class="modal-dialog modal-sm modal-dialog-centered modal-dialog-scrollable"
-      >
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content shadow">
-          <div class="modal-header bg-danger text-white">
+          <div class="modal-header bg-primary bg-gradient text-white">
             <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
             <button
               type="button"
@@ -539,17 +543,17 @@
           <div class="modal-footer">
             <button
               type="button"
-              class="btn btn-outline-danger btn-sm"
+              class="btn btn-outline-primary btn-sm myBtn"
               id="confirmDeleteBtn"
             >
-              DELETE
+              YES
             </button>
             <button
               type="button"
-              class="btn btn-outline-secondary btn-sm"
+              class="btn btn-outline-primary btn-sm myBtn"
               data-bs-dismiss="modal"
             >
-              CANCEL
+              NO
             </button>
           </div>
         </div>
@@ -560,6 +564,8 @@
       id="filterModal"
       class="modal fade"
       tabindex="-1"
+      data-bs-backdrop="false"
+      data-bs-keyboard="false"
       aria-labelledby="filterModalLabel"
       aria-hidden="true"
     >
@@ -567,7 +573,7 @@
         class="modal-dialog modal-sm modal-dialog-centered modal-dialog-scrollable"
       >
         <div class="modal-content shadow">
-          <div class="modal-header bg-primary text-white">
+          <div class="modal-header bg-primary bg-gradient text-white">
             <h5 class="modal-title" id="filterModalLabel">Filter Personnel</h5>
             <button
               type="button"
@@ -578,7 +584,7 @@
           </div>
           <div class="modal-body">
             <form id="filterForm">
-              <div class="mb-3">
+              <div class="form-floating mb-3">
                 <h6>
                   <input type="checkbox" id="selectAllDepartments" />
                   Departments
@@ -587,7 +593,7 @@
                   <!-- Department checkboxes will be populated here -->
                 </div>
               </div>
-              <div class="mb-3">
+              <div class="form-floating">
                 <h6>
                   <input type="checkbox" id="selectAllLocations" />
                   Locations
@@ -601,14 +607,14 @@
           <div class="modal-footer">
             <button
               type="button"
-              class="btn btn-outline-secondary btn-sm myBtn"
+              class="btn btn-outline-primary btn-sm myBtn"
               data-bs-dismiss="modal"
             >
               CANCEL
             </button>
             <button
               type="button"
-              class="btn btn-outline-danger btn-sm myBtn"
+              class="btn btn-outline-primary btn-sm myBtn"
               id="resetFilterBtn"
             >
               RESET
