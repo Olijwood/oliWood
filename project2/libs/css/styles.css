@@ -24,3 +24,8 @@ tr {
 .myBtn {
   width: 70px;
 }
+
+.footer {
+  position: fixed;
+  bottom: 0;
+}

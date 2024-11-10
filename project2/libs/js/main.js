@@ -780,11 +780,7 @@ function resetFormValidation(formName) {
 // ================================
 
 const sanitizeInput = (input) => DOMPurify.sanitize(input.trim());
-const sanitizeName = (name) => DOMPurify.sanitize(capitalizeFirst(name.trim()));
-
-const capitalizeFirst = (string) => {
-  return string.charAt(0).toUpperCase() + string.slice(1);
-};
+const sanitizeName = (name) => DOMPurify.sanitize(capitalize(name.trim()));
 
 // ================================
 //          UTILITY FUNCTIONS
@@ -800,60 +796,13 @@ function getActiveTabTable() {
   if ($('#locationsBtn').hasClass('active')) return 'location';
 }
 
+function capitalize(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
 // ================================
 //         POPULATE DROPDOWNS
 // ================================
-
-/**
- * Populates the filter checkboxes based on type (department/location).
- * @param {string} type - The type of filter (department/location).
- * @param {string} containerSelector - The container for the checkboxes.
- * @param {Array} selectedIds - Array of previously selected IDs for the filter type.
- * @param {string} selectAllSelector - The "Select All" checkbox selector for the container.
- */
-function populateFilterCheckboxes(
-  type,
-  containerSelector,
-  selectedIds,
-  selectAllSelector,
-) {
-  const url =
-    type === 'department'
-      ? 'libs/php/getAllDepartments.php'
-      : 'libs/php/getAllLocations.php';
-
-  $.ajax({
-    url: url,
-    type: 'GET',
-    dataType: 'json',
-    success: function (response) {
-      if (response.status.code === '200') {
-        const container = $(containerSelector);
-        container.empty();
-        let allSelected = true;
-
-        response.data.forEach((item) => {
-          const isChecked = selectedIds.includes(item.id.toString());
-          allSelected = allSelected && isChecked;
-
-          container.append(`
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" name="${type}Checkbox" value="${item.id}" id="${type}${item.id}" ${isChecked ? 'checked' : ''}>
-              <label class="form-check-label" for="${type}${item.id}">${item.name}</label>
-            </div>
-          `);
-        });
-
-        $(selectAllSelector).prop('checked', allSelected); // Set "Select All" checkbox
-      } else {
-        console.error(`Error: Failed to fetch ${type} data for filter.`);
-      }
-    },
-    error: function () {
-      console.error(`Error fetching ${type} data for filter.`);
-    },
-  });
-}
 
 /**
  * Populate the location dropdown for the edit department form.
@@ -891,72 +840,137 @@ function populateLocationEditDropdown(selectedLocationID) {
 //            INJECT HTML
 // ================================
 
+const tableBodyMap = {
+  personnel: 'personnelTableBody',
+  department: 'departmentTableBody',
+  location: 'locationTableBody',
+};
+
+const MODAL_TARGETS = {
+  edit: (tab) => `#edit${capitalize(tab)}Modal`,
+  delete: '#deleteModal',
+};
+
+const fieldDefinitions = {
+  personnel: [
+    {
+      classList: ['align-middle', 'text-nowrap'],
+      key: (item) => `${item.lastName}, ${item.firstName}`,
+    },
+    {
+      classList: ['align-middle', 'text-nowrap', 'd-none', 'd-md-table-cell'],
+      key: (item) => item.departmentName,
+    },
+    {
+      classList: ['align-middle', 'text-nowrap', 'd-none', 'd-md-table-cell'],
+      key: (item) => item.locationName,
+    },
+    {
+      classList: ['align-middle', 'text-nowrap', 'd-none', 'd-lg-table-cell'],
+      key: (item) => item.email,
+    },
+  ],
+  department: [
+    { classList: ['align-middle', 'text-nowrap'], key: (item) => item.name },
+    {
+      classList: ['align-middle', 'text-nowrap', 'd-none', 'd-md-table-cell'],
+      key: (item) => item.locationName,
+    },
+  ],
+  location: [
+    { classList: ['align-middle', 'text-nowrap'], key: (item) => item.name },
+  ],
+};
+
 /**
- * Update the table rows based on the search results
+ * Updates the table rows based on returned data
+ *
  * @param {Array} data - The array of search results.
  * @param {String} activeTab - The active table being displayed (personnel, department, or location).
  */
 function updateTableRows(data, activeTab) {
-  let rows = '';
+  const tableBody = document.getElementById(tableBodyMap[activeTab]);
+  const fields = fieldDefinitions[activeTab];
+  const frag = document.createDocumentFragment();
 
-  if (activeTab === 'personnel') {
-    data.forEach(function (person) {
-      rows += `
-        <tr>
-          <td class="align-middle text-nowrap">${person.lastName}, ${person.firstName}</td>
-          <td class="align-middle text-nowrap d-none d-md-table-cell">${person.departmentName}</td>
-          <td class="align-middle text-nowrap d-none d-md-table-cell">${person.locationName}</td>
-          <td class="align-middle text-nowrap d-none d-md-table-cell">${person.email}</td>
-          <td class="text-end text-nowrap">
-            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editPersonnelModal" data-id="${person.id}" data-name="${person.firstName} ${person.lastName}">
-              <i class="fa-solid fa-pencil fa-fw"></i>
-            </button>
-            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" data-id="${person.id}" data-name="${person.firstName} ${person.lastName}" data-type="personnel">
-              <i class="fa-solid fa-trash fa-fw"></i>
-            </button>
-          </td>
-        </tr>
-      `;
+  data.forEach((item) => {
+    const row = document.createElement('tr');
+
+    fields.forEach((field) => {
+      const cell = document.createElement('td');
+      cell.className = field.classList.join(' ');
+      cell.textContent = field.key(item);
+      row.appendChild(cell);
     });
-    $('#personnelTableBody').html(rows);
-  } else if (activeTab === 'department') {
-    data.forEach(function (department) {
-      rows += `
-        <tr>
-          <td class="align-middle text-nowrap">${department.name}</td>
-          <td class="align-middle text-nowrap d-none d-md-table-cell">${department.locationName}</td>
-          <td class="text-end text-nowrap">
-            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editDepartmentModal" data-id="${department.id}" data-name="${department.name}">
-              <i class="fa-solid fa-pencil fa-fw"></i>
-            </button>
-            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" data-id="${department.id}" data-name="${department.name}" data-type="department">
-              <i class="fa-solid fa-trash fa-fw"></i>
-            </button>
-          </td>
-        </tr>
-      `;
-    });
-    $('#departmentTableBody').html(rows);
-  } else if (activeTab === 'location') {
-    data.forEach(function (location) {
-      rows += `
-        <tr>
-          <td class="align-middle text-nowrap">${location.name}</td>
-          <td class="text-end text-nowrap">
-            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editLocationModal" data-id="${location.id}" data-name="${location.name}">
-              <i class="fa-solid fa-pencil fa-fw"></i>
-            </button>
-            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" data-id="${location.id}" data-name="${location.name}" data-type="location">
-              <i class="fa-solid fa-trash fa-fw"></i>
-            </button>
-          </td>
-        </tr>
-      `;
-    });
-    $('#locationTableBody').html(rows);
-  }
+
+    row.appendChild(createActionsCell(activeTab, item));
+    frag.appendChild(row);
+  });
+
+  tableBody.innerHTML = '';
+  tableBody.appendChild(frag);
 }
 
+/**
+ * Create a table cell containing the edit and delete buttons for the given item and tab type
+ * @param {string} tab - The type of tab (personnel, department, or location)
+ * @param {object} item - The item to create the cell for
+ * @return {HTMLTableCellElement} The table cell element
+ */
+function createActionsCell(tab, item) {
+  const actions = document.createElement('td');
+  actions.classList.add('align-middle', 'text-end', 'text-nowrap');
+
+  const editButton = createActionButton('edit', tab, item);
+  const deleteButton = createActionButton('delete', tab, item);
+
+  actions.append(editButton, deleteButton);
+  return actions;
+}
+
+/**
+ * Create a button element for the given actionType, itemType, and itemData
+ *
+ * @param {string} actionType - The type of action to perform (edit or delete)
+ * @param {string} itemType - The type of item to perform the action on (personnel, department, or location)
+ * @param {object} itemData - The data of the item to perform the action on
+ *
+ * @returns {HTMLButtonElement} The button element
+ */
+function createActionButton(actionType, itemType, itemData) {
+  const button = document.createElement('button');
+  button.className = `btn btn-primary btn-sm ${actionType === 'edit' ? 'me-1' : ''}`;
+  button.type = 'button';
+
+  // Set the data attributes for the button
+  button.dataset.id = itemData.id;
+  button.dataset.type = itemType;
+  button.dataset.name = getNameForButtonType(itemType, itemData);
+  button.dataset.bsToggle = 'modal';
+  button.dataset.bsTarget = getModalTargetForAction(actionType, itemType);
+
+  // Create and append the icon
+  const icon = document.createElement('i');
+  icon.classList.add(
+    'fa-solid',
+    actionType === 'edit' ? 'fa-pencil' : 'fa-trash',
+    'fa-fw',
+  );
+  button.appendChild(icon);
+
+  return button;
+}
+function getNameForButtonType(itemType, itemData) {
+  return itemType === 'personnel'
+    ? `${itemData.firstName} ${itemData.lastName}`
+    : itemData.name;
+}
+
+function getModalTargetForAction(actionType, itemType) {
+  return actionType === 'edit'
+    ? MODAL_TARGETS.edit(itemType)
+    : MODAL_TARGETS.delete;
+}
 function createPersonnelFormFields() {
   return `
     <div class="form-floating mb-3">
