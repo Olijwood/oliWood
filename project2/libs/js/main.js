@@ -515,55 +515,49 @@ function performSearchWithFilter(searchQuery) {
 // ================================
 
 $('#filterBtn').click(function () {
-  populateFilterCheckboxes(
-    'department',
-    '#filterDepartmentContainer',
-    activeFilters.departmentIDs,
-    '#selectAllDepartments',
-  );
-  populateFilterCheckboxes(
-    'location',
-    '#filterLocationContainer',
-    activeFilters.locationIDs,
-    '#selectAllLocations',
-  );
-  $('#filterModal').modal('show');
+  $('#filterPersonnelModal').modal('show');
 });
 
-// Apply filters on click
-$('#applyFilterBtn').click(function () {
-  const selectedDepartmentIDs = [
-    ...$("input[name='departmentCheckbox']:checked"),
-  ].map((el) => el.value);
-  const selectedLocationIDs = [
-    ...$("input[name='locationCheckbox']:checked"),
-  ].map((el) => el.value);
-
-  activeFilters.departmentIDs = selectedDepartmentIDs;
-  activeFilters.locationIDs = selectedLocationIDs;
-
-  applyCurrentFilters();
-
-  $('#filterModal').modal('hide');
+// Populate dropdowns when the modal is shown
+$('#filterPersonnelModal').on('shown.bs.modal', function () {
+  populateDropdownByType('department');
+  populateDropdownByType('location');
 });
 
-// Apply current filters and update the table
+// Ensure only one filter (Department OR Location) is applied at a time
+$('#filterPersonnelByDepartment').change(function () {
+  if (this.value > 0) {
+    $('#filterPersonnelByLocation').val(0);
+    applyCurrentFilters();
+  }
+});
+
+$('#filterPersonnelByLocation').change(function () {
+  if (this.value > 0) {
+    $('#filterPersonnelByDepartment').val(0);
+    applyCurrentFilters();
+  }
+});
+
+/**
+ * Apply current filters and update table rows.
+ */
 function applyCurrentFilters() {
+  const departmentID = $('#filterPersonnelByDepartment').val();
+  const locationID = $('#filterPersonnelByLocation').val();
+
   $.ajax({
     url: 'libs/php/filterPersonnel.php',
     type: 'POST',
     data: {
-      departmentIDs: activeFilters.departmentIDs,
-      locationIDs: activeFilters.locationIDs,
+      departmentID: departmentID > 0 ? departmentID : null,
+      locationID: locationID > 0 ? locationID : null,
     },
     success: function (response) {
       if (response.status.code === 200) {
         updateTableRows(response.data, 'personnel');
       } else {
-        console.error(
-          'Error refreshing personnel table with filters: ',
-          response,
-        );
+        console.error('Error applying filter: ', response);
       }
     },
     error: function (e) {
@@ -572,43 +566,53 @@ function applyCurrentFilters() {
   });
 }
 
-// Check/Uncheck all departments
-$('#selectAllDepartments').on('change', function () {
-  $("input[name='departmentCheckbox']").prop(
-    'checked',
-    $(this).prop('checked'),
-  );
-});
-
-// Check/Uncheck all locations
-$('#selectAllLocations').on('change', function () {
-  $("input[name='locationCheckbox']").prop('checked', $(this).prop('checked'));
-});
-
 /**
- * Clears all filter selections and resets the active filters object.
+ * Populate the dropdowns dynamically by type.
+ * @param {string} type - The type of data to populate (department/location).
  */
-function resetFilters() {
-  // Clear active filters
-  activeFilters.departmentIDs = [];
-  activeFilters.locationIDs = [];
+function populateDropdownByType(type) {
+  const url =
+    type === 'department'
+      ? 'libs/php/getAllDepartments.php'
+      : 'libs/php/getAllLocations.php';
+  const dropdown =
+    type === 'department'
+      ? $('#filterPersonnelByDepartment')
+      : $('#filterPersonnelByLocation');
 
-  // Uncheck all checkboxes
-  $("input[name='departmentCheckbox']").prop('checked', false);
-  $("input[name='locationCheckbox']").prop('checked', false);
+  // Cache the previous value
+  const previousValue = dropdown.val();
+  console.log(previousValue);
 
-  // Uncheck "Select All" checkboxes
-  $('#selectAllDepartments').prop('checked', false);
-  $('#selectAllLocations').prop('checked', false);
+  $.ajax({
+    url,
+    type: 'GET',
+    dataType: 'json',
+    success: (response) => {
+      if (response.status.code === '200') {
+        // Only clear and rebuild the dropdown if the response is successful
+        dropdown.empty().append(new Option('All', 0));
 
-  refreshTable('personnel');
+        const fragment = document.createDocumentFragment();
+
+        // Append each department/location option
+        response.data.forEach(({ id, name }) => {
+          const option = document.createElement('option');
+          option.value = id;
+          option.text = name;
+          fragment.appendChild(option);
+        });
+
+        // Append the fragment to the dropdown and restore the previous value
+        dropdown.append(fragment);
+        dropdown.val(previousValue || 0);
+      }
+    },
+    error: () => {
+      console.error(`Error fetching ${type} data.`);
+    },
+  });
 }
-
-// Attach reset functionality to the Reset button
-$('#resetFilterBtn').click(function () {
-  resetFilters();
-  $('#filterModal').modal('hide'); // Close the modal after resetting
-});
 
 // ================================
 //          VALIDATION HELPERS
@@ -796,38 +800,6 @@ function getActiveTabTable() {
 // ================================
 //         POPULATE DROPDOWNS
 // ================================
-
-/**
- * Populates the dropdowns dynamically by type.
- * @param {string} type - The type of data to populate (department/location).
- */
-function populateDropdownByType(type) {
-  let url =
-    type === 'department'
-      ? 'libs/php/getAllDepartments.php'
-      : 'libs/php/getAllLocations.php';
-
-  $.ajax({
-    url: url,
-    type: 'GET',
-    dataType: 'json',
-    success: function (response) {
-      if (response.status.code === '200') {
-        let dropdown =
-          type === 'department'
-            ? $('#addDepartment')
-            : $('#addLocation') || $('#editDepartmentLocation');
-        dropdown.empty();
-        response.data.forEach(function (item) {
-          dropdown.append(`<option value="${item.id}">${item.name}</option>`);
-        });
-      }
-    },
-    error: function () {
-      console.error(`Error fetching ${type} data.`);
-    },
-  });
-}
 
 /**
  * Populates the filter checkboxes based on type (department/location).

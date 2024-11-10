@@ -561,7 +561,7 @@
     </div>
 
     <div
-      id="filterModal"
+      id="filterPersonnelModal"
       class="modal fade"
       tabindex="-1"
       data-bs-backdrop="false"
@@ -574,7 +574,7 @@
       >
         <div class="modal-content shadow">
           <div class="modal-header bg-primary bg-gradient text-white">
-            <h5 class="modal-title" id="filterModalLabel">Filter Personnel</h5>
+            <h5 class="modal-title">Filter employees</h5>
             <button
               type="button"
               class="btn-close btn-close-white"
@@ -582,49 +582,40 @@
               aria-label="Close"
             ></button>
           </div>
+
           <div class="modal-body">
-            <form id="filterForm">
+            <form id="filterPersonnelForm">
               <div class="form-floating mb-3">
-                <h6>
-                  <input type="checkbox" id="selectAllDepartments" />
-                  Departments
-                </h6>
-                <div id="filterDepartmentContainer">
-                  <!-- Department checkboxes will be populated here -->
-                </div>
+                <select
+                  class="form-select"
+                  id="filterPersonnelByDepartment"
+                  placeholder="Department"
+                >
+                  <option value="0">All</option>
+                </select>
+                <label for="filterPersonnelByDepartment">Department</label>
               </div>
+
               <div class="form-floating">
-                <h6>
-                  <input type="checkbox" id="selectAllLocations" />
-                  Locations
-                </h6>
-                <div id="filterLocationContainer">
-                  <!-- Location checkboxes will be populated here -->
-                </div>
+                <select
+                  class="form-select"
+                  id="filterPersonnelByLocation"
+                  placeholder="Location"
+                >
+                  <option value="0">All</option>
+                </select>
+                <label for="filterPersonnelByLocation">Location</label>
               </div>
             </form>
           </div>
+
           <div class="modal-footer">
             <button
               type="button"
               class="btn btn-outline-primary btn-sm myBtn"
               data-bs-dismiss="modal"
             >
-              CANCEL
-            </button>
-            <button
-              type="button"
-              class="btn btn-outline-primary btn-sm myBtn"
-              id="resetFilterBtn"
-            >
-              RESET
-            </button>
-            <button
-              type="button"
-              class="btn btn-outline-primary btn-sm myBtn"
-              id="applyFilterBtn"
-            >
-              FILTER
+              CLOSE
             </button>
           </div>
         </div>

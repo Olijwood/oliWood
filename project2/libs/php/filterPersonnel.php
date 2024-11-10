@@ -1,4 +1,8 @@
 <?php
+
+ini_set('display_errors', 'On');
+error_reporting(E_ALL);
+
 $executionStartTime = microtime(true);
 
 include 'config.php';
@@ -30,67 +34,89 @@ if (mysqli_connect_errno()) {
     exit();
 }
 
-$departmentIDs = isset($_POST['departmentIDs']) ? $_POST['departmentIDs'] : [];
-$locationIDs = isset($_POST['locationIDs']) ? $_POST['locationIDs'] : [];
+// Retrieve and validate filter parameters
+$departmentID =
+    isset($_POST['departmentID']) && $_POST['departmentID'] != 0
+        ? $_POST['departmentID']
+        : '';
+$locationID =
+    isset($_POST['locationID']) && $_POST['locationID'] != 0
+        ? $_POST['locationID']
+        : '';
 
-// Prepare WHERE clause parts based on selected filters
-$conditions = [];
-$bindParams = [];
+// Check if only one filter is set (either departmentID or locationID)
+$filterColumn = null;
+$filterValue = null;
 $types = '';
 
-// Department filter
-if (!empty($departmentIDs)) {
-    $conditions[] =
-        'd.id IN (' .
-        implode(',', array_fill(0, count($departmentIDs), '?')) .
-        ')';
-    $bindParams = array_merge($bindParams, $departmentIDs);
-    $types .= str_repeat('i', count($departmentIDs));
+if ($departmentID === '' && $locationID === '') {
+    mysqli_close($conn);
+
+    echo json_encode([
+        'status' => [
+            'code' => 400,
+            'name' => 'failure',
+            'description' =>
+                'Please provide either a departmentID or a locationID',
+            'returnedIn' =>
+                (microtime(true) - $executionStartTime) / 1000 . ' ms',
+        ],
+    ]);
+
+    exit();
+} elseif ($departmentID !== '') {
+    $filterColumn = 'p.departmentID';
+    $filterValue = $departmentID;
+    $types = 'i';
+} elseif ($locationID !== '') {
+    $filterColumn = 'd.locationID';
+    $filterValue = $locationID;
+    $types = 'i';
 }
 
-// Location filter
-if (!empty($locationIDs)) {
-    $conditions[] =
-        'l.id IN (' .
-        implode(',', array_fill(0, count($locationIDs), '?')) .
-        ')';
-    $bindParams = array_merge($bindParams, $locationIDs);
-    $types .= str_repeat('i', count($locationIDs));
+// Base query
+$query = "SELECT p.id, p.firstName, p.lastName, p.email, d.name AS departmentName, l.name AS locationName
+          FROM personnel p
+          LEFT JOIN department d ON p.departmentID = d.id
+          LEFT JOIN location l ON d.locationID = l.id
+          WHERE $filterColumn = ?
+          ORDER BY p.lastName, p.firstName";
+
+$stmt = $conn->prepare($query);
+
+if ($stmt === false) {
+    echo json_encode([
+        'status' => [
+            'code' => 500,
+            'name' => 'failure',
+            'description' => 'Query preparation failed: ' . $conn->error,
+        ],
+    ]);
+    exit();
 }
 
-// Default to all if no filters are applied
-$whereClause = count($conditions) ? implode(' AND ', $conditions) : '1=1';
-
-$preparedQuery = "SELECT p.id, p.firstName, p.lastName, p.jobTitle, p.email, d.name as departmentName, l.name as locationName 
-            FROM personnel p
-            LEFT JOIN department d ON d.id = p.departmentID
-            LEFT JOIN location l ON l.id = d.locationID
-            WHERE $whereClause
-            ORDER BY p.lastName, p.firstName";
-
-$query = $conn->prepare($preparedQuery);
-
-if (!empty($types)) {
-    $query->bind_param($types, ...$bindParams);
+// Bind parameter only if a filter is set
+if ($filterColumn !== null) {
+    $stmt->bind_param($types, $filterValue);
 }
 
-$query->execute();
-$result = $query->get_result();
+$stmt->execute();
+$result = $stmt->get_result();
 
 $data = [];
-while ($row = mysqli_fetch_assoc($result)) {
+while ($row = $result->fetch_assoc()) {
     $data[] = $row;
 }
 
 echo json_encode([
     'status' => [
         'code' => 200,
-        'name' => 'ok',
         'description' => 'success',
         'returnedIn' => (microtime(true) - $executionStartTime) / 1000 . ' ms',
     ],
     'data' => $data,
 ]);
 
-mysqli_close($conn);
+$stmt->close();
+$conn->close();
 ?>
