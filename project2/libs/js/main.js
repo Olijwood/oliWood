@@ -5,7 +5,7 @@
 class Validate {
   validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   validateName = (name) => /^[A-Za-z]+$/.test(name);
-  validateID = (id) => !isNaN(id) && Number.isInteger(parseFloat(id));
+  validateID = (id) => Number.isInteger(parseFloat(id));
   validateNameMultiple = (name) => /^[A-Za-z]+(?:\s[A-Za-z]+)*$/.test(name);
 }
 
@@ -15,7 +15,6 @@ let activeFilters = {
   departmentIDs: [],
   locationIDs: [],
 };
-
 // ================================
 //          CREATE OPERATIONS
 // ================================
@@ -24,68 +23,19 @@ $('#addBtn').click(function () {
   $('#addModal').modal('show');
 });
 
-/**
- * Set up the add modal according to the active tab.
- */
-function setupAddModal() {
-  let dynamicFields = $('#dynamicFields');
-  dynamicFields.empty();
+$('#addModal').on('hidden.bs.modal', () => resetForm('#addForm'));
 
-  if ($('#personnelBtn').hasClass('active')) {
-    $('#addModalLabel').text('Add Personnel');
-    dynamicFields.append(createPersonnelFormFields());
-    populateDropdownByType('department');
-  } else if ($('#departmentsBtn').hasClass('active')) {
-    $('#addModalLabel').text('Add Department');
-    dynamicFields.append(createDepartmentFormFields());
-    populateDropdownByType('location');
-  } else if ($('#locationsBtn').hasClass('active')) {
-    $('#addModalLabel').text('Add Location');
-    dynamicFields.append(createLocationFormFields());
-  }
-}
-
-/**
- * Collects form data for adding personnel, departments, or locations.
- * @param {string} table - The active table (personnel, department, location).
- * @returns {Object} - The collected form data.
- */
-function collectAddFormData(table) {
-  let data = {};
-  if (table === 'personnel') {
-    data = {
-      table: table,
-      firstName: sanitizeName($('#addFirstName').val()),
-      lastName: sanitizeName($('#addLastName').val()),
-      email: sanitizeInput($('#addEmail').val()),
-      departmentID: sanitizeInput($('#addDepartment').val()),
-    };
-  } else if (table === 'department') {
-    data = {
-      table: table,
-      name: sanitizeName($('#addDepartmentName').val()),
-      locationID: sanitizeInput($('#addLocation').val()),
-    };
-  } else if (table === 'location') {
-    data = {
-      table: table,
-      name: sanitizeName($('#addLocationName').val()),
-    };
-  }
-  return data;
-}
-
-// Form submission for adding records
 $('#addForm').on('submit', function (e) {
   e.preventDefault();
-  const table = getActiveTabTable();
-  const data = collectAddFormData(table);
 
-  if (validateAddFormData(table, data) && this.checkValidity()) {
+  const table = getActiveTabTable();
+  const formData = collectAddFormData(table);
+
+  if (validateAddFormData(table, formData) && this.checkValidity()) {
     $.ajax({
       url: 'libs/php/insertRecord.php',
       type: 'POST',
-      data,
+      data: formData,
       success: function (response) {
         if (response.status.code === '200') {
           refreshTable(table);
@@ -104,6 +54,46 @@ $('#addForm').on('submit', function (e) {
   }
   attachRealTimeValidationReset('#addForm');
 });
+
+function setupAddModal() {
+  const activeTab = getActiveTabTable();
+  const modalConfig = addModalSettings[activeTab];
+
+  // Set modal title
+  document.getElementById('addModalLabel').textContent = modalConfig.label;
+
+  // Clear previous fields and prepare new fields
+  const dynamicFields = document.getElementById('dynamicFields');
+  dynamicFields.innerHTML = ''; // Clear previous fields
+  const fragment = document.createDocumentFragment();
+
+  modalConfig.fields.forEach((field) => {
+    const fieldElement = field.isSelect
+      ? createSelectInput(field.id, field.label)
+      : createFloatingInput(field.id, field.label, field.type);
+    fragment.appendChild(fieldElement);
+  });
+
+  dynamicFields.appendChild(fragment);
+
+  // Populate dropdown if needed
+  if (modalConfig.populateDropdown) {
+    populateCreateDropdownByType(modalConfig.populateDropdown);
+  }
+}
+function collectAddFormData() {
+  const activeTab = getActiveTabTable();
+  const formData = { table: activeTab };
+
+  addModalSettings[activeTab].fields.forEach((field) => {
+    const fieldValue = $(`#${field.id}`).val();
+    formData[firstLetterToLowerCase(field.id.replace('add', ''))] = field.isName
+      ? sanitizeName(fieldValue)
+      : sanitizeInput(fieldValue);
+  });
+
+  return formData;
+}
 
 // ================================
 //          READ OPERATIONS
@@ -523,8 +513,8 @@ $('#filterBtn').click(function () {
 
 // Populate dropdowns when the modal is shown
 $('#filterPersonnelModal').on('shown.bs.modal', function () {
-  populateDropdownByType('department');
-  populateDropdownByType('location');
+  populateFilterDropdownByType('department');
+  populateFilterDropdownByType('location');
 });
 
 // Ensure only one filter (Department OR Location) is applied at a time
@@ -573,7 +563,7 @@ function applyCurrentFilters() {
  * Populate the dropdowns dynamically by type.
  * @param {string} type - The type of data to populate (department/location).
  */
-function populateDropdownByType(type) {
+function populateFilterDropdownByType(type) {
   const url =
     type === 'department'
       ? 'libs/php/getAllDepartments.php'
@@ -585,7 +575,6 @@ function populateDropdownByType(type) {
 
   // Cache the previous value
   const previousValue = dropdown.val();
-  console.log(previousValue);
 
   $.ajax({
     url,
@@ -617,6 +606,40 @@ function populateDropdownByType(type) {
   });
 }
 
+function populateCreateDropdownByType(type) {
+  const url =
+    type === 'department'
+      ? 'libs/php/getAllDepartments.php'
+      : 'libs/php/getAllLocations.php';
+  const dropdown =
+    type === 'department' ? $('#addDepartment') : $('#addLocation');
+
+  $.ajax({
+    url,
+    type: 'GET',
+    dataType: 'json',
+    success: (response) => {
+      if (response.status.code === '200') {
+        dropdown.empty();
+        const disabledOption = document.createElement('option');
+        disabledOption.disabled = true;
+        disabledOption.selected = true;
+        disabledOption.value = 0;
+        disabledOption.text = `Select a ${type}`;
+        dropdown.append(disabledOption);
+        response.data.forEach(({ id, name }) => {
+          const option = document.createElement('option');
+          option.value = id;
+          option.text = name;
+          dropdown.append(option);
+        });
+      }
+    },
+    error: () => {
+      console.error(`Error fetching ${type} data.`);
+    },
+  });
+}
 // ================================
 //          VALIDATION HELPERS
 // ================================
@@ -642,24 +665,24 @@ const validateAddFormData = (table, data) => {
     );
     setValidity(
       '#addDepartment',
-      V.validateID(data.departmentID),
-      'Please enter a valid ID.',
+      V.validateID(data.department),
+      'Please select a department.',
     );
   } else if (table === 'department') {
     setValidity(
       '#addDepartmentName',
-      V.validateNameMultiple(data.name),
+      V.validateNameMultiple(data.departmentName),
       'Please enter a valid name.',
     );
     setValidity(
       '#addLocation',
-      V.validateID(data.locationID),
-      'Please enter a valid ID.',
+      V.validateID(data.location),
+      'Please select a location.',
     );
   } else if (table === 'location') {
     setValidity(
       '#addLocationName',
-      V.validateName(data.name),
+      V.validateName(data.locationName),
       'Please enter a valid location name.',
     );
   }
@@ -779,7 +802,10 @@ function resetFormValidation(formName) {
 //          DATA SANITIZATION
 // ================================
 
-const sanitizeInput = (input) => DOMPurify.sanitize(input.trim());
+const sanitizeInput = (input) => {
+  if (input == null) return ''; // Return an empty string if input is null or undefined
+  return DOMPurify.sanitize(input.trim());
+};
 const sanitizeName = (name) => DOMPurify.sanitize(capitalize(name.trim()));
 
 // ================================
@@ -794,6 +820,18 @@ function getActiveTabTable() {
   if ($('#personnelBtn').hasClass('active')) return 'personnel';
   if ($('#departmentsBtn').hasClass('active')) return 'department';
   if ($('#locationsBtn').hasClass('active')) return 'location';
+}
+
+/**
+ * Reset form, validation, and real-time feedback.
+ */
+function resetForm(formSelector) {
+  $(formSelector)[0].reset();
+  $(formSelector).removeClass('was-validated');
+}
+
+function firstLetterToLowerCase(str) {
+  str.charAt(0).toLowerCase() + str.slice(1);
 }
 
 function capitalize(string) {
@@ -840,47 +878,60 @@ function populateLocationEditDropdown(selectedLocationID) {
 //            INJECT HTML
 // ================================
 
-const tableBodyMap = {
-  personnel: 'personnelTableBody',
-  department: 'departmentTableBody',
-  location: 'locationTableBody',
-};
+/**
+ * Create a floating input form field with a label.
+ * @param {string} id - The id of the input element.
+ * @param {string} label - The label text for the input.
+ * @param {string} type - The type of the input element (text, email, etc.).
+ * @returns {HTMLDivElement} The form field element with label.
+ */
+function createFloatingInput(id, label, type) {
+  const formGroup = document.createElement('div');
+  formGroup.classList.add('form-floating', 'mb-3');
 
-const MODAL_TARGETS = {
-  edit: (tab) => `#edit${capitalize(tab)}Modal`,
-  delete: '#deleteModal',
-};
+  const input = document.createElement('input');
+  input.type = type;
+  input.className = 'form-control';
+  input.id = id;
+  input.placeholder = label;
+  input.required = true;
 
-const fieldDefinitions = {
-  personnel: [
-    {
-      classList: ['align-middle', 'text-nowrap'],
-      key: (item) => `${item.lastName}, ${item.firstName}`,
-    },
-    {
-      classList: ['align-middle', 'text-nowrap', 'd-none', 'd-md-table-cell'],
-      key: (item) => item.departmentName,
-    },
-    {
-      classList: ['align-middle', 'text-nowrap', 'd-none', 'd-md-table-cell'],
-      key: (item) => item.locationName,
-    },
-    {
-      classList: ['align-middle', 'text-nowrap', 'd-none', 'd-lg-table-cell'],
-      key: (item) => item.email,
-    },
-  ],
-  department: [
-    { classList: ['align-middle', 'text-nowrap'], key: (item) => item.name },
-    {
-      classList: ['align-middle', 'text-nowrap', 'd-none', 'd-md-table-cell'],
-      key: (item) => item.locationName,
-    },
-  ],
-  location: [
-    { classList: ['align-middle', 'text-nowrap'], key: (item) => item.name },
-  ],
-};
+  const inputLabel = document.createElement('label');
+  inputLabel.setAttribute('for', id);
+  inputLabel.textContent = label;
+
+  const invalidFeedbackDiv = document.createElement('div');
+  invalidFeedbackDiv.className = 'invalid-feedback';
+
+  formGroup.append(input, inputLabel, invalidFeedbackDiv);
+  return formGroup;
+}
+
+/**
+ * Create a select input form field with a label.
+ * @param {string} id - The id of the select element.
+ * @param {string} label - The label text for the select.
+ * @returns {HTMLDivElement} The select form field element with label.
+ */
+function createSelectInput(id, label) {
+  const formGroup = document.createElement('div');
+  formGroup.classList.add('form-floating', 'mb-3');
+
+  const select = document.createElement('select');
+  select.className = 'form-select';
+  select.id = id;
+  select.required = true;
+
+  const selectLabel = document.createElement('label');
+  selectLabel.setAttribute('for', id);
+  selectLabel.textContent = label;
+
+  const invalidFeedbackDiv = document.createElement('div');
+  invalidFeedbackDiv.className = 'invalid-feedback';
+
+  formGroup.append(select, selectLabel, invalidFeedbackDiv);
+  return formGroup;
+}
 
 /**
  * Updates the table rows based on returned data
@@ -889,7 +940,9 @@ const fieldDefinitions = {
  * @param {String} activeTab - The active table being displayed (personnel, department, or location).
  */
 function updateTableRows(data, activeTab) {
-  const tableBody = document.getElementById(tableBodyMap[activeTab]);
+  const tableBody = document.getElementById(
+    tabTypeMapping[activeTab].tableBodyId,
+  );
   const fields = fieldDefinitions[activeTab];
   const frag = document.createDocumentFragment();
 
@@ -929,25 +982,30 @@ function createActionsCell(tab, item) {
 }
 
 /**
- * Create a button element for the given actionType, itemType, and itemData
+ * Create a button element for the given actionType, tabType, and itemData
  *
  * @param {string} actionType - The type of action to perform (edit or delete)
- * @param {string} itemType - The type of item to perform the action on (personnel, department, or location)
+ * @param {string} tabType - The type of tab to perform the action on (personnel, department, or location)
  * @param {object} itemData - The data of the item to perform the action on
  *
  * @returns {HTMLButtonElement} The button element
  */
-function createActionButton(actionType, itemType, itemData) {
+function createActionButton(actionType, tabType, itemData) {
+  const tabConfig = tabTypeMapping[tabType];
+
   const button = document.createElement('button');
   button.className = `btn btn-primary btn-sm ${actionType === 'edit' ? 'me-1' : ''}`;
   button.type = 'button';
 
   // Set the data attributes for the button
   button.dataset.id = itemData.id;
-  button.dataset.type = itemType;
-  button.dataset.name = getNameForButtonType(itemType, itemData);
+  button.dataset.type = tabType;
+  button.dataset.name = tabConfig.getName(itemData);
   button.dataset.bsToggle = 'modal';
-  button.dataset.bsTarget = getModalTargetForAction(actionType, itemType);
+  button.dataset.bsTarget =
+    actionType === 'edit'
+      ? tabConfig.editModalTarget
+      : tabConfig.deleteModalTarget;
 
   // Create and append the icon
   const icon = document.createElement('i');
@@ -960,66 +1018,124 @@ function createActionButton(actionType, itemType, itemData) {
 
   return button;
 }
-function getNameForButtonType(itemType, itemData) {
-  return itemType === 'personnel'
-    ? `${itemData.firstName} ${itemData.lastName}`
-    : itemData.name;
-}
 
-function getModalTargetForAction(actionType, itemType) {
-  return actionType === 'edit'
-    ? MODAL_TARGETS.edit(itemType)
-    : MODAL_TARGETS.delete;
-}
-function createPersonnelFormFields() {
-  return `
-    <div class="form-floating mb-3">
-      <input type="text" class="form-control" id="addFirstName" placeholder="First Name" required>
-      <label for="addFirstName">First Name</label>
-      <div class="invalid-feedback"></div>
-    </div>
-    <div class="form-floating mb-3">
-      <input type="text" class="form-control" id="addLastName" placeholder="Last Name" required>
-      <label for="addLastName">Last Name</label>
-      <div class="invalid-feedback"></div>
-    </div>
-    <div class="form-floating mb-3">
-      <input type="email" class="form-control" id="addEmail" placeholder="Email" required>
-      <label for="addEmail">Email</label>
-      <div class="invalid-feedback"></div>
-    </div>
-    <div class="form-floating mb-3">
-      <select class="form-select" id="addDepartment" required></select>
-      <label for="addDepartment">Department</label>
-      <div class="invalid-feedback"></div>
-    </div>
-  `;
-}
+/*=============================================================================
+ Mappings
+=============================================================================*/
+const tabTypeMapping = {
+  personnel: {
+    tableBodyId: 'personnelTableBody',
+    editModalTarget: '#editPersonnelModal',
+    deleteModalTarget: '#deleteModal',
+    getName: (data) => `${data.firstName} ${data.lastName}`,
+  },
+  department: {
+    tableBodyId: 'departmentTableBody',
+    editModalTarget: '#editDepartmentModal',
+    deleteModalTarget: '#deleteModal',
+    getName: (data) => data.name,
+  },
+  location: {
+    tableBodyId: 'locationTableBody',
+    editModalTarget: '#editLocationModal',
+    deleteModalTarget: '#deleteModal',
+    getName: (data) => data.name,
+  },
+};
 
-function createDepartmentFormFields() {
-  return `
-    <div class="form-floating mb-3">
-      <input type="text" class="form-control" id="addDepartmentName" placeholder="Department Name" required>
-      <label for="addDepartmentName">Department Name</label>
-      <div class="invalid-feedback"></div>
-    </div>
-    <div class="form-floating mb-3">
-      <select class="form-select" id="addLocation" required></select>
-      <label for="addLocation">Location</label>
-      <div class="invalid-feedback"></div>
-    </div>
-  `;
-}
+const fieldDefinitions = {
+  personnel: [
+    {
+      classList: ['align-middle', 'text-nowrap'],
+      key: (item) => `${item.lastName}, ${item.firstName}`,
+    },
+    {
+      classList: ['align-middle', 'text-nowrap', 'd-none', 'd-md-table-cell'],
+      key: (item) => item.departmentName,
+    },
+    {
+      classList: ['align-middle', 'text-nowrap', 'd-none', 'd-md-table-cell'],
+      key: (item) => item.locationName,
+    },
+    {
+      classList: ['align-middle', 'text-nowrap', 'd-none', 'd-lg-table-cell'],
+      key: (item) => item.email,
+    },
+  ],
+  department: [
+    { classList: ['align-middle', 'text-nowrap'], key: (item) => item.name },
+    {
+      classList: ['align-middle', 'text-nowrap', 'd-none', 'd-md-table-cell'],
+      key: (item) => item.locationName,
+    },
+  ],
+  location: [
+    { classList: ['align-middle', 'text-nowrap'], key: (item) => item.name },
+  ],
+};
 
-function createLocationFormFields() {
-  return `
-    <div class="form-floating mb-3">
-      <input type="text" class="form-control" id="addLocationName" placeholder="Location Name" required>
-      <label for="addLocationName">Location Name</label>
-      <div class="invalid-feedback"></div>
-    </div>
-  `;
-}
+const addModalSettings = {
+  personnel: {
+    label: 'Add Personnel',
+    fields: [
+      {
+        id: 'addFirstName',
+        label: 'First Name',
+        type: 'text',
+        isSelect: false,
+        isName: true,
+      },
+      {
+        id: 'addLastName',
+        label: 'Last Name',
+        type: 'text',
+        isSelect: false,
+        isName: true,
+      },
+      {
+        id: 'addEmail',
+        label: 'Email',
+        type: 'email',
+        isSelect: false,
+        isName: false,
+      },
+      {
+        id: 'addDepartment',
+        label: 'Department',
+        isSelect: true,
+        isName: false,
+      },
+    ],
+    populateDropdown: 'department',
+  },
+  department: {
+    label: 'Add Department',
+    fields: [
+      {
+        id: 'addDepartmentName',
+        label: 'Department Name',
+        type: 'text',
+        isSelect: false,
+        isName: true,
+      },
+      { id: 'addLocation', label: 'Location', isSelect: true, isName: false },
+    ],
+    populateDropdown: 'location',
+  },
+  location: {
+    label: 'Add Location',
+    fields: [
+      {
+        id: 'addLocationName',
+        label: 'Location Name',
+        type: 'text',
+        isSelect: false,
+        isName: true,
+      },
+    ],
+    populateDropdown: null,
+  },
+};
 
 // Refresh the table when the document is ready
 $(document).ready(function () {
