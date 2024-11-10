@@ -109,14 +109,17 @@ $('#addForm').on('submit', function (e) {
 //          READ OPERATIONS
 // ================================
 $('#personnelBtn').click(function () {
+  $('#filterBtn').attr('disabled', false);
   refreshTable('personnel');
 });
 
 $('#departmentsBtn').click(function () {
+  $('#filterBtn').attr('disabled', true);
   refreshTable('department');
 });
 
 $('#locationsBtn').click(function () {
+  $('#filterBtn').attr('disabled', true);
   refreshTable('location');
 });
 
