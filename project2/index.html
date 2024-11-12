@@ -622,6 +622,262 @@
       </div>
     </div>
 
+    <div
+      id="areYouSurePersonnelModal"
+      class="modal fade"
+      tabindex="-1"
+      data-bs-backdrop="false"
+      data-bs-keyboard="false"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <!--   the last two classes centre the modal and, if the content is too long, ensures  -->
+      <!--   that the header and footer are always on display by making the body scroll -->
+
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <!-- As the backdrop is disabled we can use the Bootstrap shadow class to add definition to the dialog -->
+
+        <div class="modal-content shadow">
+          <div class="modal-header bg-primary bg-gradient text-white">
+            <h5 class="modal-title">Remove employee entry?</h5>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+
+          <div class="modal-body">
+            <form id="areYouSurePersonnelForm" class="mb-0">
+              <input id="areYouSurePersonnelID" type="hidden" />
+            </form>
+
+            Are you sure that you want to remove the entry for
+            <span id="areYouSurePersonnelName" class="fw-bold"></span>?
+          </div>
+
+          <div class="modal-footer">
+            <button
+              type="submit"
+              form="areYouSurePersonnelForm"
+              class="btn btn-outline-primary btn-sm myBtn"
+            >
+              YES
+            </button>
+            <button
+              type="button"
+              class="btn btn-outline-primary btn-sm myBtn"
+              data-bs-dismiss="modal"
+            >
+              NO
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      id="cantDeleteDepartmentModal"
+      class="modal fade"
+      tabindex="-1"
+      data-bs-backdrop="false"
+      data-bs-keyboard="false"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <!--   the last two classes centre the modal and, if the content is too long, ensures  -->
+      <!--   that the header and footer are always on display by making the body scroll -->
+
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <!-- As the backdrop is disabled we can use the Bootstrap shadow class to add definition to the dialog -->
+
+        <div class="modal-content shadow">
+          <div class="modal-header bg-primary bg-gradient text-white">
+            <h5 class="modal-title">Cannot remove department ...</h5>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+
+          <div class="modal-body">
+            You cannot remove the entry for
+            <span id="cantDeleteDeptName" class="fw-bold"></span> because it has
+            <span id="personnelCount" class="fw-bold"></span> employees assigned
+            to it.
+          </div>
+
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-outline-primary btn-sm myBtn"
+              data-bs-dismiss="modal"
+            >
+              OK
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      id="areYouSureDeleteDepartmentModal"
+      class="modal fade"
+      tabindex="-1"
+      data-bs-backdrop="false"
+      data-bs-keyboard="false"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <!--   the last two classes centre the modal and, if the content is too long, ensures  -->
+      <!--   that the header and footer are always on display by making the body scroll -->
+
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <!-- As the backdrop is disabled we can use the Bootstrap shadow class to add definition to the dialog -->
+
+        <div class="modal-content shadow">
+          <div class="modal-header bg-primary bg-gradient text-white">
+            <h5 class="modal-title">Remove department?</h5>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+
+          <div class="modal-body">
+            <form id="deleteDepartmentForm">
+              <input type="hidden" id="deleteDepartmentID" />
+              <p>
+                Are you sure that you want to remove the entry for
+                <span id="areYouSureDeptName" class="fw-bold"></span>?
+              </p>
+            </form>
+          </div>
+
+          <div class="modal-footer">
+            <button
+              type="submit"
+              form="deleteDepartmentForm"
+              class="btn btn-outline-primary btn-sm myBtn"
+              data-bs-dismiss="modal"
+            >
+              YES
+            </button>
+            <button
+              type="button"
+              class="btn btn-outline-primary btn-sm myBtn"
+              data-bs-dismiss="modal"
+            >
+              NO
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      id="cantDeleteLocationModal"
+      class="modal fade"
+      tabindex="-1"
+      data-bs-backdrop="false"
+      data-bs-keyboard="false"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content shadow">
+          <div class="modal-header bg-primary bg-gradient text-white">
+            <h5 class="modal-title">Cannot remove location ...</h5>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+
+          <div class="modal-body">
+            You cannot remove the entry for
+            <span id="cantDeleteLocName" class="fw-bold"></span> because it has
+            <span id="departmentCount" class="fw-bold"></span> departments
+            assigned to it.
+          </div>
+
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-outline-primary btn-sm myBtn"
+              data-bs-dismiss="modal"
+            >
+              OK
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      id="areYouSureDeleteLocationModal"
+      class="modal fade"
+      tabindex="-1"
+      data-bs-backdrop="false"
+      data-bs-keyboard="false"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <!--   the last two classes centre the modal and, if the content is too long, ensures  -->
+      <!--   that the header and footer are always on display by making the body scroll -->
+
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <!-- As the backdrop is disabled we can use the Bootstrap shadow class to add definition to the dialog -->
+
+        <div class="modal-content shadow">
+          <div class="modal-header bg-primary bg-gradient text-white">
+            <h5 class="modal-title">Remove location?</h5>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+
+          <div class="modal-body">
+            <form id="deleteLocationForm">
+              <input type="hidden" id="deleteLocationID" />
+              <p>
+                Are you sure that you want to remove the entry for
+                <span id="areYouSureLocName" class="fw-bold"></span>?
+              </p>
+            </form>
+          </div>
+
+          <div class="modal-footer">
+            <button
+              type="submit"
+              form="deleteLocationForm"
+              class="btn btn-outline-primary btn-sm myBtn"
+              data-bs-dismiss="modal"
+            >
+              YES
+            </button>
+            <button
+              type="button"
+              class="btn btn-outline-primary btn-sm myBtn"
+              data-bs-dismiss="modal"
+            >
+              NO
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- External JS Scripts -->
     <script src="libs/js/bootstrap.bundle.min.js"></script>
     <script src="libs/js/jquery-3.7.1.min.js"></script>

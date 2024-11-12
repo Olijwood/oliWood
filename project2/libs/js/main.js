@@ -87,11 +87,11 @@ function collectAddFormData() {
 
   addModalSettings[activeTab].fields.forEach((field) => {
     const fieldValue = $(`#${field.id}`).val();
-    formData[firstLetterToLowerCase(field.id.replace('add', ''))] = field.isName
+    const dataName = firstLetterToLowerCase(field.id.replace('add', ''));
+    formData[dataName] = field.isName
       ? sanitizeName(fieldValue)
       : sanitizeInput(fieldValue);
   });
-
   return formData;
 }
 
@@ -350,17 +350,126 @@ $('#editLocationForm').on('submit', function (e) {
 // ================================
 //          DELETE OPERATIONS
 // ================================
-$('#deleteModal').on('show.bs.modal', function (e) {
-  const id = $(e.relatedTarget).data('id');
-  const name = $(e.relatedTarget).data('name');
-  const table = $(e.relatedTarget).data('type');
 
-  $('#deleteRecordName').text(name);
-  $('#confirmDeleteBtn')
-    .off('click')
-    .on('click', function () {
-      deleteRecord(id, table);
-    });
+// DELETE PERSONNEL
+$('#areYouSurePersonnelModal').on('show.bs.modal', function (e) {
+  $.ajax({
+    url: 'libs/php/getPersonnelByID.php',
+    type: 'POST',
+    dataType: 'json',
+    data: { id: $(e.relatedTarget).data('id') },
+    success: function (result) {
+      if (result.status.code === '200') {
+        $('#areYouSurePersonnelID').val(result.data.personnel[0].id);
+        $('#areYouSurePersonnelName').text(
+          result.data.personnel[0].firstName +
+            ' ' +
+            result.data.personnel[0].lastName,
+        );
+
+        $('#areYouSurePersonnelModal').modal('show');
+      } else {
+        $('#areYouSurePersonnelModal .modal-title').replaceWith(
+          'Error retrieving data',
+        );
+      }
+    },
+    error: function (jqXHR, textStatus, errorThrown) {
+      $('#deleteEmployeeName .modal-title').replaceWith(
+        'Error retrieving data',
+      );
+    },
+  });
+});
+
+$('#areYouSurePersonnelForm').on('submit', function (e) {
+  // stop the default browser behviour
+  e.preventDefault();
+
+  // AJAX call
+  deleteRecord($('#areYouSurePersonnelID').val(), 'personnel');
+
+  // close modal if successfully deleted
+  $('#areYouSurePersonnelModal').modal('hide');
+});
+
+// DELETE DEPARTMENT
+$('#departmentTableBody').on('click', '.deleteDepartmentBtn', function () {
+  const departmentId = $(this).data('id');
+  $.ajax({
+    url: 'libs/php/checkDepartmentUse.php',
+    type: 'POST',
+    dataType: 'json',
+    data: { id: departmentId },
+    success: function (result) {
+      const personnelCount = result.data[0].personnelCount;
+      const departmentName = result.data[0].departmentName;
+
+      if (personnelCount == 0) {
+        $('#areYouSureDeptName').text(departmentName);
+        $('#deleteDepartmentID').val(departmentId);
+        $('#areYouSureDeleteDepartmentModal').modal('show');
+      } else {
+        $('#cantDeleteDeptName').text(departmentName);
+        $('#personnelCount').text(personnelCount);
+        $('#cantDeleteDepartmentModal').modal('show');
+      }
+    },
+    error: function (jqXHR, textStatus, errorThrown) {
+      $('#areYouSureDeleteDepartmentModal .modal-title').replaceWith(
+        'Error retrieving data',
+      );
+    },
+  });
+});
+
+$('#deleteDepartmentForm').on('submit', function (e) {
+  e.preventDefault();
+
+  const departmentId = $('#deleteDepartmentID').val();
+  deleteRecord(departmentId, 'department');
+
+  $('#areYouSureDeleteDepartmentModal').modal('hide');
+});
+
+// DELETE LOCATION
+
+$('#locationTableBody').on('click', '.deleteLocationBtn', function () {
+  const locationId = $(this).data('id');
+  $.ajax({
+    url: 'libs/php/checkLocationUse.php',
+    type: 'POST',
+    dataType: 'json',
+    data: { id: locationId },
+    success: function (result) {
+      const departmentCount = result.data[0].departmentCount;
+      const locationName = result.data[0].locationName;
+
+      if (departmentCount == 0) {
+        $('#areYouSureLocName').text(locationName);
+        $('#deleteLocationID').val(locationId);
+        $('#areYouSureDeleteLocationModal').modal('show');
+      } else {
+        $('#cantDeleteLocName').text(locationName);
+        $('#departmentCount').text(departmentCount);
+        $('#cantDeleteLocationModal').modal('show');
+      }
+    },
+    error: function (jqXHR, textStatus, errorThrown) {
+      $('#areYouSureDeleteLocationModal .modal-title').replaceWith(
+        'Error retrieving data',
+      );
+    },
+  });
+});
+
+$('#deleteLocationForm').on('submit', function (e) {
+  e.preventDefault();
+
+  const locationID = $('#deleteLocationID').val();
+  deleteRecord(locationID, 'location');
+
+  $('#areYouSureDeleteLocationModal').modal('hide');
 });
 
 function deleteRecord(id, table) {
@@ -371,7 +480,7 @@ function deleteRecord(id, table) {
     success: function (response) {
       if (response.status.code === 200) {
         refreshTable(table);
-        $('#deleteModal').modal('hide');
+        return true;
       } else {
         console.error('Error: Failed to delete record.');
       }
@@ -831,7 +940,7 @@ function resetForm(formSelector) {
 }
 
 function firstLetterToLowerCase(str) {
-  str.charAt(0).toLowerCase() + str.slice(1);
+  return str.charAt(0).toLowerCase() + str.slice(1);
 }
 
 function capitalize(string) {
@@ -855,17 +964,25 @@ function populateLocationEditDropdown(selectedLocationID) {
     dataType: 'json',
     success: function (response) {
       if (response.status.code === '200') {
-        const dropdown = $('#editDepartmentLocation');
-        dropdown.empty();
+        const dropdown = document.getElementById('editDepartmentLocation');
+        dropdown.innerHTML = '';
+
+        var frag = document.createDocumentFragment();
 
         // Populate dropdown and set the selected location
         response.data.forEach(function (item) {
-          let option = $('<option>', { value: item.id, text: item.name });
-          if (item.id == selectedLocationID) {
-            option.attr('selected', 'selected');
-          }
-          dropdown.append(option);
+          var option = document.createElement('option');
+          option.value = item.id;
+          option.text = item.name;
+          option.selected = item.id == selectedLocationID;
+          // let option = $('<option>', { value: item.id, text: item.name });
+          // if (item.id == selectedLocationID) {
+          //   option.attr('selected', 'selected');
+          // }
+          frag.append(option);
         });
+
+        dropdown.append(frag);
       }
     },
     error: function () {
@@ -946,22 +1063,52 @@ function updateTableRows(data, activeTab) {
   const fields = fieldDefinitions[activeTab];
   const frag = document.createDocumentFragment();
 
+  // Create rows for each data item
   data.forEach((item) => {
-    const row = document.createElement('tr');
-
-    fields.forEach((field) => {
-      const cell = document.createElement('td');
-      cell.className = field.classList.join(' ');
-      cell.textContent = field.key(item);
-      row.appendChild(cell);
-    });
-
-    row.appendChild(createActionsCell(activeTab, item));
-    frag.appendChild(row);
+    frag.appendChild(createTableRow(item, fields, activeTab));
   });
 
-  tableBody.innerHTML = '';
+  // Clear the table body and append the fragment
+  while (tableBody.firstChild) {
+    tableBody.removeChild(tableBody.firstChild);
+  }
   tableBody.appendChild(frag);
+}
+
+/**
+ * Creates a table row with all necessary cells including action buttons
+ * @param {object} item - Data item to create the row for
+ * @param {array} fields - Definitions of the fields to display for the item
+ * @param {string} activeTab - The active tab type
+ * @returns {HTMLTableRowElement} The created row element
+ */
+function createTableRow(item, fields, activeTab) {
+  const row = document.createElement('tr');
+
+  // Create and append data cells for each field definition
+  fields.forEach((field) => {
+    const cell = createTableCell(field, item);
+    row.appendChild(cell);
+  });
+
+  // Create and append action buttons cell
+  const actionsCell = createActionsCell(activeTab, item);
+  row.appendChild(actionsCell);
+
+  return row;
+}
+
+/**
+ * Create a table cell based on field definitions
+ * @param {object} field - The field definition containing classList and key
+ * @param {object} item - The data item to populate the field
+ * @returns {HTMLTableCellElement} The created table cell
+ */
+function createTableCell(field, item) {
+  const cell = document.createElement('td');
+  cell.className = field.classList.join(' ');
+  cell.textContent = field.key(item);
+  return cell;
 }
 
 /**
@@ -994,28 +1141,33 @@ function createActionButton(actionType, tabType, itemData) {
   const tabConfig = tabTypeMapping[tabType];
 
   const button = document.createElement('button');
-  button.className = `btn btn-primary btn-sm ${actionType === 'edit' ? 'me-1' : ''}`;
+  button.className = `btn btn-primary btn-sm`;
   button.type = 'button';
 
   // Set the data attributes for the button
   button.dataset.id = itemData.id;
   button.dataset.type = tabType;
   button.dataset.name = tabConfig.getName(itemData);
-  button.dataset.bsToggle = 'modal';
-  button.dataset.bsTarget =
-    actionType === 'edit'
-      ? tabConfig.editModalTarget
-      : tabConfig.deleteModalTarget;
 
-  // Create and append the icon
+  // Create  the icon
   const icon = document.createElement('i');
-  icon.classList.add(
-    'fa-solid',
-    actionType === 'edit' ? 'fa-pencil' : 'fa-trash',
-    'fa-fw',
-  );
-  button.appendChild(icon);
+  icon.classList.add('fa-solid', 'fa-fw');
 
+  if (actionType === 'edit') {
+    button.dataset.bsTarget = tabConfig.editModalTarget;
+    button.dataset.bsToggle = 'modal';
+    button.classList.add('me-1');
+    icon.classList.add('fa-pencil');
+  }
+
+  if (actionType === 'delete') {
+    button.dataset.bsTarget = tabConfig.deleteModalTarget;
+    button.dataset.bsToggle = tabConfig.delete.toggle;
+    button.classList.add(tabConfig.delete.classListAdd);
+    icon.classList.add('fa-trash');
+  }
+
+  button.appendChild(icon);
   return button;
 }
 
@@ -1026,20 +1178,32 @@ const tabTypeMapping = {
   personnel: {
     tableBodyId: 'personnelTableBody',
     editModalTarget: '#editPersonnelModal',
-    deleteModalTarget: '#deleteModal',
+    deleteModalTarget: '#areYouSurePersonnelModal',
     getName: (data) => `${data.firstName} ${data.lastName}`,
+    delete: {
+      toggle: 'modal',
+      classListAdd: 'deletePersonnelBtn',
+    },
   },
   department: {
     tableBodyId: 'departmentTableBody',
     editModalTarget: '#editDepartmentModal',
-    deleteModalTarget: '#deleteModal',
+    deleteModalTarget: '#areYouSureDeleteDepartmentModal',
     getName: (data) => data.name,
+    delete: {
+      toggle: '',
+      classListAdd: 'deleteDepartmentBtn',
+    },
   },
   location: {
     tableBodyId: 'locationTableBody',
     editModalTarget: '#editLocationModal',
-    deleteModalTarget: '#deleteModal',
+    deleteModalTarget: '#areYouSureLocationModal',
     getName: (data) => data.name,
+    delete: {
+      toggle: '',
+      classListAdd: 'deleteLocationBtn',
+    },
   },
 };
 

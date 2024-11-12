@@ -34,16 +34,16 @@ if ($table == 'personnel') {
         $_POST['firstName'],
         $_POST['lastName'],
         $_POST['email'],
-        $_POST['departmentID'],
+        $_POST['department'],
     );
 } elseif ($table == 'department') {
     $query = $conn->prepare(
         'INSERT INTO department (name, locationID) VALUES (?, ?)',
     );
-    $query->bind_param('si', $_POST['name'], $_POST['locationID']);
+    $query->bind_param('si', $_POST['departmentName'], $_POST['locationID']);
 } elseif ($table == 'location') {
     $query = $conn->prepare('INSERT INTO `location` (name) VALUES (?)');
-    $query->bind_param('s', $_POST['name']);
+    $query->bind_param('s', $_POST['locationName']);
 }
 
 if ($query->execute()) {
