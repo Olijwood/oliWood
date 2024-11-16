@@ -28,9 +28,7 @@ if (mysqli_connect_errno()) {
 
 // Retrieve search query, active tab, and filters
 $searchQuery = isset($_POST['query']) ? $_POST['query'] : '';
-$activeTab = isset($_POST['tab']) ? $_POST['tab'] : 'personnel';
-$departmentIDs = isset($_POST['departmentIDs']) ? $_POST['departmentIDs'] : [];
-$locationIDs = isset($_POST['locationIDs']) ? $_POST['locationIDs'] : [];
+$activeTab = isset($_POST['table']) ? $_POST['table'] : 'personnel';
 
 // Prepare dynamic parts for the SQL WHERE clause
 $whereClauses = [];
@@ -57,23 +55,6 @@ if ($activeTab === 'personnel') {
         $likeText,
     );
     $types .= 'ssssss';
-
-    // Apply department filters if provided
-    if (!empty($departmentIDs)) {
-        $placeholders = implode(',', array_fill(0, count($departmentIDs), '?'));
-        $sql .= " AND p.departmentID IN ($placeholders)";
-        $params = array_merge($params, $departmentIDs);
-        $types .= str_repeat('i', count($departmentIDs));
-    }
-
-    // Apply location filters if provided
-    if (!empty($locationIDs)) {
-        $placeholders = implode(',', array_fill(0, count($locationIDs), '?'));
-        $sql .= " AND d.locationID IN ($placeholders)";
-        $params = array_merge($params, $locationIDs);
-        $types .= str_repeat('i', count($locationIDs));
-    }
-
     $sql .= ' ORDER BY `p`.`lastName`, `p`.`firstName`';
 }
 
@@ -86,15 +67,6 @@ elseif ($activeTab === 'department') {
 
     array_push($params, $likeText, $likeText);
     $types .= 'ss';
-
-    // Apply location filters if provided
-    if (!empty($locationIDs)) {
-        $placeholders = implode(',', array_fill(0, count($locationIDs), '?'));
-        $sql .= " AND d.locationID IN ($placeholders)";
-        $params = array_merge($params, $locationIDs);
-        $types .= str_repeat('i', count($locationIDs));
-    }
-
     $sql .= ' ORDER BY `d`.`name`, `l`.`name`';
 }
 

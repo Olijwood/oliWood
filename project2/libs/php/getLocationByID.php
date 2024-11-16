@@ -55,10 +55,10 @@ if ($result->num_rows === 0) {
     $output['status']['description'] = 'Location not found';
     $output['data'] = [];
 } else {
-    $output['status']['code'] = '200';
+    $output['status']['code'] = 200;
     $output['status']['name'] = 'ok';
     $output['status']['description'] = 'success';
-    $output['data'] = $result->fetch_assoc();
+    $output['location'] = $result->fetch_assoc();
 }
 
 $query->close();

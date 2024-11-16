@@ -1,6 +1,10 @@
 <?php
 $executionStartTime = microtime(true);
 
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 include 'config.php';
 
 header('Content-Type: application/json; charset=UTF-8');
@@ -29,69 +33,55 @@ if (mysqli_connect_errno()) {
     exit();
 }
 
-$query = $conn->prepare(
-    'SELECT id, name, locationID FROM department WHERE id =  ?',
-);
+$table = $_POST['table'];
+$allowedTables = ['department', 'location'];
 
-$id = $_POST['id'];
-$query->bind_param('i', $id);
+if (!in_array($table, $allowedTables)) {
+    $output['status']['code'] = '400';
+    $output['status']['name'] = 'invalid request';
+    $output['status']['description'] = 'Provided wrong table name';
+    $output['data'] = [];
 
+    mysqli_close($conn);
+
+    echo json_encode($output);
+
+    exit();
+}
+
+$prepared_query = "SELECT id, name FROM $table ORDER BY name";
+
+$query = $conn->prepare($prepared_query);
 $query->execute();
+$result = $query->get_result();
 
-if (false === $query) {
+if (!$result) {
     $output['status']['code'] = '400';
     $output['status']['name'] = 'executed';
     $output['status']['description'] = 'query failed';
     $output['data'] = [];
 
+    mysqli_close($conn);
+
     echo json_encode($output);
 
-    mysqli_close($conn);
     exit();
 }
 
-$result = $query->get_result();
-
-$department = [];
+$data = [];
 
 while ($row = mysqli_fetch_assoc($result)) {
-    array_push($department, $row);
+    array_push($data, $row);
 }
 
-// second query - does not accept parameters and so is not prepared
-
-// $query = 'SELECT id, name from location ORDER BY name';
-
-// $result = $conn->query($query);
-
-// if (!$result) {
-//     $output['status']['code'] = '400';
-//     $output['status']['name'] = 'executed';
-//     $output['status']['description'] = 'query failed';
-//     $output['data'] = [];
-
-//     mysqli_close($conn);
-
-//     echo json_encode($output);
-
-//     exit();
-// }
-
-// $location = [];
-
-// while ($row = mysqli_fetch_assoc($result)) {
-//     array_push($location, $row);
-// }
-
-$output['status']['code'] = '200';
+$output['status']['code'] = 200;
 $output['status']['name'] = 'ok';
 $output['status']['description'] = 'success';
 $output['status']['returnedIn'] =
     (microtime(true) - $executionStartTime) / 1000 . ' ms';
-$output['data']['department'] = $department;
-// $output['data']['location'] = $location;
-
-echo json_encode($output);
+$output['data'] = $data;
 
 mysqli_close($conn);
+
+echo json_encode($output);
 ?>

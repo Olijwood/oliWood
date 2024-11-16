@@ -53,7 +53,7 @@ while ($row = mysqli_fetch_assoc($result)) {
     array_push($data, $row);
 }
 
-$output['status']['code'] = '200';
+$output['status']['code'] = 200;
 $output['status']['name'] = 'ok';
 $output['status']['description'] = 'success';
 $output['status']['returnedIn'] =

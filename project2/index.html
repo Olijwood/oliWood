@@ -72,6 +72,7 @@
               id="personnelBtn"
               data-bs-toggle="tab"
               data-bs-target="#personnel-tab-pane"
+              data-tab="personnel"
               type="button"
               role="tab"
               aria-controls="home-tab-pane"
@@ -87,6 +88,7 @@
               id="departmentsBtn"
               data-bs-toggle="tab"
               data-bs-target="#departments-tab-pane"
+              data-tab="department"
               type="button"
               role="tab"
               aria-controls="profile-tab-pane"
@@ -102,6 +104,7 @@
               id="locationsBtn"
               data-bs-toggle="tab"
               data-bs-target="#locations-tab-pane"
+              data-tab="location"
               type="button"
               role="tab"
               aria-controls="contact-tab-pane"
@@ -264,7 +267,7 @@
 
           <div class="modal-body">
             <form id="editPersonnelForm">
-              <input type="hidden" id="editPersonnelEmployeeID" />
+              <input type="hidden" id="editPersonnelID" />
 
               <div class="form-floating mb-3">
                 <input

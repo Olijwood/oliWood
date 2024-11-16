@@ -72,7 +72,7 @@ while ($row = $result->fetch_assoc()) {
     $data[] = $row;
 }
 
-$output['status']['code'] = '200';
+$output['status']['code'] = 200;
 $output['status']['name'] = 'ok';
 $output['status']['description'] = 'success';
 $output['status']['returnedIn'] =

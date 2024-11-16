@@ -29,7 +29,7 @@ if (mysqli_connect_errno()) {
     exit();
 }
 
-$query = 'SELECT id, name 
+$query = 'SELECT id, name
             FROM location
             ORDER BY name';
 
@@ -54,7 +54,7 @@ while ($row = mysqli_fetch_assoc($result)) {
     array_push($data, $row);
 }
 
-$output['status']['code'] = '200';
+$output['status']['code'] = 200;
 $output['status']['name'] = 'ok';
 $output['status']['description'] = 'success';
 $output['status']['returnedIn'] =

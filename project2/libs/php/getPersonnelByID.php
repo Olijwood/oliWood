@@ -34,7 +34,6 @@ $query = $conn->prepare(
 );
 
 $id = $_POST['id'];
-$output['input']['id'] = $id;
 $query->bind_param('i', $id);
 
 $query->execute();
@@ -62,36 +61,36 @@ while ($row = mysqli_fetch_assoc($result)) {
 
 // second query - does not accept parameters and so is not prepared
 
-$query = 'SELECT id, name from department ORDER BY name';
+// $query = 'SELECT id, name from department ORDER BY name';
 
-$result = $conn->query($query);
+// $result = $conn->query($query);
 
-if (!$result) {
-    $output['status']['code'] = '400';
-    $output['status']['name'] = 'executed';
-    $output['status']['description'] = 'query failed';
-    $output['data'] = [];
+// if (!$result) {
+//     $output['status']['code'] = '400';
+//     $output['status']['name'] = 'executed';
+//     $output['status']['description'] = 'query failed';
+//     $output['data'] = [];
 
-    mysqli_close($conn);
+//     mysqli_close($conn);
 
-    echo json_encode($output);
+//     echo json_encode($output);
 
-    exit();
-}
+//     exit();
+// }
 
-$department = [];
+// $department = [];
 
-while ($row = mysqli_fetch_assoc($result)) {
-    array_push($department, $row);
-}
+// while ($row = mysqli_fetch_assoc($result)) {
+//     array_push($department, $row);
+// }
 
-$output['status']['code'] = '200';
+$output['status']['code'] = 200;
 $output['status']['name'] = 'ok';
 $output['status']['description'] = 'success';
 $output['status']['returnedIn'] =
     (microtime(true) - $executionStartTime) / 1000 . ' ms';
 $output['data']['personnel'] = $personnel;
-$output['data']['department'] = $department;
+// $output['data']['department'] = $department;
 
 mysqli_close($conn);
 
