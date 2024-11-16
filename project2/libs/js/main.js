@@ -931,12 +931,12 @@ function updateDropdown(table, dropdownId, prevValue, firstOptionAll = false) {
         optionAll.textContent = 'All';
         options.insertBefore(optionAll, options.firstChild);
       } else if (table !== null) {
-        const optionCreate = document.createElement('option');
-        optionCreate.value = 0;
-        options.disabled = true;
-        options.selected = true;
-        optionCreate.textContent = `Select a ${table}`;
-        options.insertBefore(optionCreate, options.firstChild);
+        const optionDisabled = document.createElement('option');
+        optionDisabled.value = 0;
+        optionDisabled.disabled = true;
+        optionDisabled.selected = true;
+        optionDisabled.textContent = `Select a ${table}`;
+        options.insertBefore(optionDisabled, options.firstChild);
       }
       dropdown.innerHTML = '';
       dropdown.appendChild(options);
