@@ -474,10 +474,7 @@
         <div class="container section-title" data-aos="fade-up">
           <h2>Portfolio</h2>
           <p>
-            Magnam dolores commodi suscipit. Necessitatibus eius consequatur ex
-            aliquid fuga eum quidem. Sit sint consectetur velit. Quisquam quos
-            quisquam cupiditate. Et nemo qui impedit suscipit alias ea. Quia
-            fugiat sit in iste officiis commodi quidem hic quas.
+            Explore a selection of my projects. Click on the icons for more details, to view screenshots, or to explore the live projects
           </p>
         </div>
         <!-- End Section Title -->
@@ -501,61 +498,165 @@
               >
                 <div class="portfolio-content h-100">
                   <img
-                    src="assets/img/portfolio/app-1.jpg"
+                    src="assets/img/portfolio/gazeteer_screenshot.png"
                     class="img-fluid"
-                    alt=""
+                    alt="An interactive map-based country profiler"
                   />
                   <div class="portfolio-info">
-                    <h4>App 1</h4>
-                    <p>Lorem ipsum, dolor sit amet consectetur</p>
-                    <a
-                      href="assets/img/portfolio/app-1.jpg"
-                      title="App 1"
-                      data-gallery="portfolio-gallery-app"
-                      class="glightbox preview-link"
-                      ><i class="bi bi-zoom-in"></i
-                    ></a>
-                    <a
-                      href="portfolio-details.html"
-                      title="More Details"
-                      class="details-link"
-                      ><i class="bi bi-link-45deg"></i
-                    ></a>
+                    <h4>Gazetteer</h4>
+
+                    <div class="portfolio-links">
+                      <a
+                        href="assets/img/portfolio/gazeteer_screenshot.png"
+                        title="Gazetteer"
+                        data-gallery="portfolio-gallery-app"
+                        class="glightbox preview-link"
+                        ><i class="bi bi-zoom-in"></i
+                      ></a>
+                      <a
+                        href="#"
+                        data-bs-toggle="modal"
+                        data-bs-target="#gazetteerModal"
+                        title="More Details"
+                        class="more-details-link"
+                        ><i class="bi bi-info-circle"></i
+                      ></a>
+                      <a
+                        href="project1/"
+                        target="_blank"
+                        title="View Project"
+                        class="view-project-link"
+                        ><i class="bi bi-link-45deg"></i
+                      ></a>
+                    </div>
+                    <p>
+                      A map-based web application that utilizes multiple APIs to
+                      showcase demographic, geographic, and economic data of
+                      countries. Features include dynamic modals and map markers
+                      for points of interest.
+                    </p>
                   </div>
                 </div>
               </div>
               <!-- End Portfolio Item -->
+
+              <!-- Gazetteer Portfolio Modal -->
+              <div
+                class="modal fade"
+                id="gazetteerModal"
+                tabindex="-1"
+                aria-hidden="true"
+              >
+                <div class="modal-dialog modal-dialog-centered">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h3 class="modal-title fw-bold">Gazetteer</h3>
+                      <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"
+                      ></button>
+                    </div>
+                    <div class="modal-body">
+                      <p class="fw-bold">
+                        Gazetteer is a dynamic global country profiler that leverages APIs to present rich demographic, geographic, and economic insights. Key features include:
+                        <ul>
+                          <li><strong>Interactive Map</strong>: Built with Leaflet for responsive and intuitive navigation.</li>
+                          <li><strong>API Integration</strong>: Fetches real-time data for the points of interest & data for each modal</li>
+                          <li><strong>Modals</strong>: Country Info, Demographics, Weather, Currency, Earthquakes</li>
+                          <li><strong>Markers</strong>: Cities, Airports, Train Stations, Hotels, Museums</li>
+                        </ul>
+                      </p>
+                      <p class="fw-bold">
+                        Tech stack: JavaScript, PHP, Leaflet, Bootstrap, jQuery
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
 
               <div
                 class="col-lg-4 col-md-6 portfolio-item isotope-item filter-app"
               >
                 <div class="portfolio-content h-100">
                   <img
-                    src="assets/img/portfolio/app-2.jpg"
+                    src="assets/img/portfolio/c_directory_screenshot.png"
                     class="img-fluid"
-                    alt=""
+                    alt="The user interface for Company Directory"
                   />
                   <div class="portfolio-info">
-                    <h4>App 2</h4>
-                    <p>Lorem ipsum, dolor sit amet consectetur</p>
-                    <a
-                      href="assets/img/portfolio/app-2.jpg"
-                      title="App 2"
-                      data-gallery="portfolio-gallery-app"
-                      class="glightbox preview-link"
-                      ><i class="bi bi-zoom-in"></i
-                    ></a>
-                    <a
-                      href="portfolio-details.html"
-                      title="More Details"
-                      class="details-link"
-                      ><i class="bi bi-link-45deg"></i
-                    ></a>
+                    <h4>Company Directory</h4>
+                    <p>An efficient and user-friendly directory system for managing personnel, departments, and office locations. Designed for seamless data handling and accessibility.</p>
+
+                    <div class="portfolio-links">
+                      <a
+                        href="assets/img/portfolio/c_directory_screenshot.png"
+                        title="Company Directory"
+                        data-gallery="portfolio-gallery-app"
+                        class="glightbox preview-link"
+                        ><i class="bi bi-zoom-in"></i
+                      ></a>
+                      <a
+                        href="#"
+                        data-bs-toggle="modal"
+                        data-bs-target="#companyDirectoryModal"
+                        title="More Details"
+                        class="more-details-link"
+                        ><i class="bi bi-info-circle"></i
+                      ></a>
+                      <a
+                        href="project2/"
+                        target="_blank"
+                        title="View Project"
+                        class="view-project-link"
+                        ><i class="bi bi-link-45deg"></i
+                      ></a>
+                    </div>
                   </div>
                 </div>
               </div>
               <!-- End Portfolio Item -->
+
+              <!-- Company Directory Portfolio Modal -->
+              <div
+                class="modal fade"
+                id="companyDirectoryModal"
+                tabindex="-1"
+                aria-hidden="true"
+              >
+                <div class="modal-dialog modal-dialog-centered">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h3 class="modal-title fw-bold">Company Directory</h3>
+                      <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"
+                      ></button>
+                    </div>
+                    <div class="modal-body">
+                      <p class="fw-bold">
+                        Company Directory is a versatile and efficient web-based system for managing organizational information. The application is built to simplify the management of personnel, departmental data, and office locations with features including:
+                        <ul>
+                          <li><strong>Comprehensive Database Management</strong>: Add, edit, and delete records dynamically for employees, departments, and locations using a streamlined interface.</li>
+                          <li><strong>Dynamic Modals</strong>: Interactive forms for data input and updates, with modals that dynamically populate fields based on user selections.</li>
+                          <li><strong>Real-Time Updates</strong>: AJAX integration ensures that changes are reflected instantly without page reloads.</li>
+                          <li><strong>Advanced Filtering</strong>: Dropdowns and search functionality enable users to filter and retrieve data quickly and efficiently.</li>
+                          <li><strong>Mobile-Friendly Design</strong>: Optimized for seamless use across devices, with responsive layouts and accessibility in mind,</li>
+                          <li><strong>Prepared Statements</strong>: To avoid SQL injections, using PHP and MySQL in the backend with prepared statements.</li>
+                        </ul>
+                      </p>
+                      <p class="fw-bold">
+                        Tech stack: JavaScript, MySQL, PHP, Bootstrap, jQuery
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
+
             <!-- End Portfolio Container -->
           </div>
         </div>
