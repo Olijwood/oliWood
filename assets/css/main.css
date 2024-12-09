@@ -1285,3 +1285,8 @@ section,
   margin-right: 8px;
   color: var(--accent-color);
 }
+
+#contact-form-container {
+  display: flex;
+  justify-content: center;
+}
