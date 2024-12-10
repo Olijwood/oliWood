@@ -517,6 +517,9 @@ section,
 .section-title {
   padding-bottom: 60px;
   position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .section-title h2 {
@@ -540,6 +543,7 @@ section,
 
 .section-title p {
   margin-bottom: 0;
+  font-size: 20px;
 }
 
 /*--------------------------------------------------------------
