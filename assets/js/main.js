@@ -219,24 +219,23 @@ document
       method: 'POST',
       body: formData,
     })
-      .then((response) => response.json())
+      .then((response) => {
+        return response.json();
+      })
       .then((data) => {
-        console.log(data);
         loadingMessage.style.display = 'none'; // Hide the loading animation
 
         if (data.status === 'success') {
-          console.log('Successful');
           errorMessage.style.display = 'none'; // Hide error if visible
           successMessage.style.display = 'block'; // Show success message
+          form.reset();
         } else {
-          console.log('Not successful');
           successMessage.style.display = 'none'; // Hide success if visible
           errorMessage.innerText = data.message; // Show error message
           errorMessage.style.display = 'block';
         }
       })
       .catch((error) => {
-        console.log('Error:', error);
         loadingMessage.style.display = 'none';
         successMessage.style.display = 'none'; // Hide success
         errorMessage.innerText =
