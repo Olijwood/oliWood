@@ -1,20 +1,52 @@
 # other directory files
 dashboard/
 geonamesExample/
-img/
+img-ignore/
 webalizer/
 applications.html
 bitnami.css
-favicon.ico
+# favicon.ico
 index.php
 .env
 .htaccess
+composer.phar
 
 # Project1
 project1/node_modules
 project1/.env
 project1/.htaccess
 
-project2/*
+# lint & prettifier
+project2/.vscode/
+project2/node_modules/
+project2/eslint.config.mjs
+project2/.prettierrc
+project2/package.json
+project2/package-lock.json
+project2/db.txt
+project2/libs/php/config.php
+project2/exIndex.html
+project2/exMain.css
+project2/exMain.js
+project2/tbHTML.html
+project2/tbCSS.css
+project2/tbJS.js
+
+node_modules/
+package.json
+package-lock.json
+.prettierrc
+eslint.config.mjs
+.vscode/
+
+# Composer Requirements
+assets/vendor/phpmailer/
+assets/vendor/composer/
+assets/vendor/graham-campbell/
+assets/vendor/phpoption/
+assets/vendor/symfony/
+assets/vendor/vlucas/
+assets/vendor/autoload.php
+
+# Other projects
 task/*
-/assets/vendor/
