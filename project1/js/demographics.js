@@ -1,7 +1,20 @@
-import { getGroupIndicatorIdsString, downsampleData, injectNumericDataForTab, labelPlacementMax, chartColours, rndTwo} from './utils.js';
+import {
+  getGroupIndicatorIdsString,
+  downsampleData,
+  injectNumericDataForTab,
+  labelPlacementMax,
+  chartColours,
+  rndTwo,
+} from './utils.js';
 import { indicatorGroups } from './configs/indicatorConfig.js';
-import { healthSectionsConfig, populationSectionsConfig, economicSectionsConfig, environmentSectionsConfig, overviewSectionsConfig } from "./configs/tabConfigs.js";
-import { createStackedHorizontalBarChart } from "./charts/chartDemographics.js";
+import {
+  healthSectionsConfig,
+  populationSectionsConfig,
+  economicSectionsConfig,
+  environmentSectionsConfig,
+  overviewSectionsConfig,
+} from './configs/tabConfigs.js';
+import { createStackedHorizontalBarChart } from './charts/chartDemographics.js';
 import { currentCountry, hideCustomOverlays } from './map.js';
 const DEMOGRAPHICS_ENDPOINT = 'php/demographics/getDemographics.php';
 const HISTORICAL_DATA_ENDPOINT = 'php/demographics/getHistoricalData.php';
@@ -27,7 +40,6 @@ class DemographicsFetcher {
       return null;
     }
   }
-  
 
   // Fetch recent demographics data for a specific indicator group
   async fetchRecentDemographicsByGroup(type) {
@@ -37,14 +49,14 @@ class DemographicsFetcher {
 
   // Fetch historical demographics data for a specific indicator group
   async fetchHistoricalDemographics(indicatorGroup) {
-    const indicatorIds = getGroupIndicatorIdsString(indicatorGroups[indicatorGroup]);
+    const indicatorIds = getGroupIndicatorIdsString(
+      indicatorGroups[indicatorGroup],
+    );
     return this.fetchData(HISTORICAL_DATA_ENDPOINT, indicatorIds);
   }
 }
 
-
 class DemographicsDataProcessor {
-
   static mapRecentData(data, indicatorGroup) {
     const mappedData = {};
     const dataByIndicator = data.reduce((acc, entry) => {
@@ -60,16 +72,20 @@ class DemographicsDataProcessor {
     return mappedData;
   }
 
-
   static mapHistoricalIndicatorData(data, section) {
     const indicatorGroup = indicatorGroups[section];
-    
+
     const mappedData = Object.fromEntries(
       Object.entries(indicatorGroup).map(([indicatorKey, indicatorId]) => {
         // Process data for this indicator
         const indicatorData = data
-          .filter(d => d.indicator === indicatorId && d.value !== null && d.date !== null)
-          .sort((a, b) => a.date - b.date);  // Ascending order by date
+          .filter(
+            (d) =>
+              d.indicator === indicatorId &&
+              d.value !== null &&
+              d.date !== null,
+          )
+          .sort((a, b) => a.date - b.date); // Ascending order by date
 
         const downsampledData = downsampleData(indicatorData);
 
@@ -77,17 +93,23 @@ class DemographicsDataProcessor {
         return [
           indicatorKey,
           {
-            values: downsampledData.map(d => d.value),
-            dates: downsampledData.map(d => d.date)
-          }
+            values: downsampledData.map((d) => d.value),
+            dates: downsampledData.map((d) => d.date),
+          },
         ];
-      })
+      }),
     );
     return mappedData;
   }
 }
 
-const injectSection = (containerId, title, data = [], charts = [], icon='') => {
+const injectSection = (
+  containerId,
+  title,
+  data = [],
+  charts = [],
+  icon = '',
+) => {
   let content = `
       <div class="card mb-3">
           <div class="card-header">
@@ -99,8 +121,10 @@ const injectSection = (containerId, title, data = [], charts = [], icon='') => {
   `;
 
   // Inject data fields (as rows)
-  data.forEach(item => {
-    const unitCite = item.unit ? `<cite class="text-muted small">(${item.unit})</cite>` : '';
+  data.forEach((item) => {
+    const unitCite = item.unit
+      ? `<cite class="text-muted small">(${item.unit})</cite>`
+      : '';
     content += `
         <tr>
             <td>${item.label} ${unitCite}</td>
@@ -110,8 +134,10 @@ const injectSection = (containerId, title, data = [], charts = [], icon='') => {
   });
 
   // Inject charts (if any)
-  charts.forEach(chart => {
-    const unitCite = chart.unit ? `<cite class="text-muted small">(${chart.unit})</cite>` : '';
+  charts.forEach((chart) => {
+    const unitCite = chart.unit
+      ? `<cite class="text-muted small">(${chart.unit})</cite>`
+      : '';
     content += `
         <tr>
             <td colspan="2" class="chart-td">
@@ -145,84 +171,220 @@ const updateOverviewTab = (overview) => {
   const birthRate = overview.birthRateO;
   const deathRate = overview.deathRateO;
 
-  createStackedHorizontalBarChart('birthDeathRateChart', [
-    { label: 'Birth Rate', data: [birthRate], backgroundColor: chartColours.births },
-    { label: 'Death Rate', data: [deathRate], backgroundColor: chartColours.deaths },
-  ], 'Birth and Death Rates', false, true, labelPlacementMax(birthRate, deathRate));
-}
+  createStackedHorizontalBarChart(
+    'birthDeathRateChart',
+    [
+      {
+        label: 'Birth Rate',
+        data: [birthRate],
+        backgroundColor: chartColours.births,
+      },
+      {
+        label: 'Death Rate',
+        data: [deathRate],
+        backgroundColor: chartColours.deaths,
+      },
+    ],
+    'Birth and Death Rates',
+    false,
+    true,
+    labelPlacementMax(birthRate, deathRate),
+  );
+};
 const updateHealthTab = (health) => {
   injectNumericDataForTab(health, healthSectionsConfig);
 
   const smokingPct = health.smokingPct;
   const smokingPctMale = health.smokingPctMale;
   const smokingPctFemale = health.smokingPctFemale;
-  const smokingMaxD3= Math.max(smokingPctMale, smokingPctFemale, smokingPct)/3;
+  const smokingMaxD3 =
+    Math.max(smokingPctMale, smokingPctFemale, smokingPct) / 3;
 
-  createStackedHorizontalBarChart('smokingSexDistribution', [
-    { label: 'Smoking Rate', data: [smokingPct], backgroundColor: chartColours.deaths },
-    { label: 'Male', data: [smokingPctMale], backgroundColor: chartColours.male },
-    { label: 'Female', data: [smokingPctFemale], backgroundColor: chartColours.female },
-  ], 'Distribution of Population who Smoke', false, true, smokingMaxD3);
+  createStackedHorizontalBarChart(
+    'smokingSexDistribution',
+    [
+      {
+        label: 'Smoking Rate',
+        data: [smokingPct],
+        backgroundColor: chartColours.deaths,
+      },
+      {
+        label: 'Male',
+        data: [smokingPctMale],
+        backgroundColor: chartColours.male,
+      },
+      {
+        label: 'Female',
+        data: [smokingPctFemale],
+        backgroundColor: chartColours.female,
+      },
+    ],
+    'Distribution of Population who Smoke',
+    false,
+    true,
+    smokingMaxD3,
+  );
 };
 
 const updatePopulationTab = (population) => {
   injectNumericDataForTab(population, populationSectionsConfig);
-  
+
   const workingAgePopulation = rndTwo(population.workingAgePopulation);
   const elderlyPopulation = population.elderlyPopulation;
   const childPopulation = 100 - workingAgePopulation - elderlyPopulation;
-  createStackedHorizontalBarChart('populationAgeChart', [
-    { label: '0-14', data: [childPopulation], backgroundColor:  'rgba(100, 182, 118, 0.2)'},
-    { label: '15-64', data: [workingAgePopulation], backgroundColor: 'rgba(255, 217, 64, 0.2)' },
-    { label: '65+', data: [elderlyPopulation], backgroundColor: 'rgba(255, 204, 121, 0.7)' }
-  ], 'Age distribution', true, true);
+  createStackedHorizontalBarChart(
+    'populationAgeChart',
+    [
+      {
+        label: '0-14',
+        data: [childPopulation],
+        backgroundColor: 'rgba(100, 182, 118, 0.2)',
+      },
+      {
+        label: '15-64',
+        data: [workingAgePopulation],
+        backgroundColor: 'rgba(255, 217, 64, 0.2)',
+      },
+      {
+        label: '65+',
+        data: [elderlyPopulation],
+        backgroundColor: 'rgba(255, 204, 121, 0.7)',
+      },
+    ],
+    'Age distribution',
+    true,
+    true,
+  );
 
   const femalePopulation = rndTwo(population.femalePopulation);
   const malePopulation = 100 - femalePopulation;
-  createStackedHorizontalBarChart('genderChart', [
-    { label: 'Female', data: [femalePopulation], backgroundColor: chartColours.female },
-    { label: 'Male', data: [malePopulation], backgroundColor: chartColours.male},
-  ], 'Gender distribution', true, true);
+  createStackedHorizontalBarChart(
+    'genderChart',
+    [
+      {
+        label: 'Female',
+        data: [femalePopulation],
+        backgroundColor: chartColours.female,
+      },
+      {
+        label: 'Male',
+        data: [malePopulation],
+        backgroundColor: chartColours.male,
+      },
+    ],
+    'Gender distribution',
+    true,
+    true,
+  );
 
   const urbanPopulation = rndTwo(population.urbanPopulation);
   const ruralPopulation = 100 - urbanPopulation;
-  createStackedHorizontalBarChart('urbanRuralChart', [
-    { label: 'Rural', data: [ruralPopulation], backgroundColor: 'rgba(100, 182, 118, 0.5)' },
-    { label: 'Urban', data: [urbanPopulation], backgroundColor: 'rgba(164, 194, 212, 0.5)' }
-  ], 'Rural vs Urban population', true, true);
+  createStackedHorizontalBarChart(
+    'urbanRuralChart',
+    [
+      {
+        label: 'Rural',
+        data: [ruralPopulation],
+        backgroundColor: 'rgba(100, 182, 118, 0.5)',
+      },
+      {
+        label: 'Urban',
+        data: [urbanPopulation],
+        backgroundColor: 'rgba(164, 194, 212, 0.5)',
+      },
+    ],
+    'Rural vs Urban population',
+    true,
+    true,
+  );
 
   const womenInParliamentPct = rndTwo(population.womenInParliamentPct);
   const menInParliamentPct = 100 - womenInParliamentPct;
-  createStackedHorizontalBarChart('parliamentChart', [
-    { label: 'Female', data: [womenInParliamentPct], backgroundColor: chartColours.female },
-    { label: 'Male', data: [menInParliamentPct], backgroundColor: chartColours.male }
-  ], 'Women in Parliament (%)', true, true);
+  createStackedHorizontalBarChart(
+    'parliamentChart',
+    [
+      {
+        label: 'Female',
+        data: [womenInParliamentPct],
+        backgroundColor: chartColours.female,
+      },
+      {
+        label: 'Male',
+        data: [menInParliamentPct],
+        backgroundColor: chartColours.male,
+      },
+    ],
+    'Women in Parliament (%)',
+    true,
+    true,
+  );
 
   const womenInManagementPct = rndTwo(population.womenInManagementPct);
   const menInManagementPct = 100 - womenInManagementPct;
-  createStackedHorizontalBarChart('managementChart', [
-    { label: 'Female', data: [womenInManagementPct], backgroundColor: chartColours.female },
-    { label: 'Male', data: [menInManagementPct], backgroundColor: chartColours.male }
-  ], 'Women in Management (%)', true, true);
-
+  createStackedHorizontalBarChart(
+    'managementChart',
+    [
+      {
+        label: 'Female',
+        data: [womenInManagementPct],
+        backgroundColor: chartColours.female,
+      },
+      {
+        label: 'Male',
+        data: [menInManagementPct],
+        backgroundColor: chartColours.male,
+      },
+    ],
+    'Women in Management (%)',
+    true,
+    true,
+  );
 
   const maleLifeExpectancy = population.maleLifeExpectancy;
   const femaleLifeExpectancy = population.femaleLifeExpectancy;
-  const lifeExpD3 =labelPlacementMax(maleLifeExpectancy, femaleLifeExpectancy);
-  createStackedHorizontalBarChart('sexLifeExpectancyChart', [
-    { label: 'Female', data: [femaleLifeExpectancy], backgroundColor: 'rgba(255, 192, 203, 0.5)' },
-    { label: 'Male', data: [maleLifeExpectancy], backgroundColor: 'rgba(135, 206, 235, 0.5)' },
-  ], 'Life expectancy (Years)', false, false, lifeExpD3);
+  const lifeExpD3 = labelPlacementMax(maleLifeExpectancy, femaleLifeExpectancy);
+  createStackedHorizontalBarChart(
+    'sexLifeExpectancyChart',
+    [
+      {
+        label: 'Female',
+        data: [femaleLifeExpectancy],
+        backgroundColor: 'rgba(255, 192, 203, 0.5)',
+      },
+      {
+        label: 'Male',
+        data: [maleLifeExpectancy],
+        backgroundColor: 'rgba(135, 206, 235, 0.5)',
+      },
+    ],
+    'Life expectancy (Years)',
+    false,
+    false,
+    lifeExpD3,
+  );
 
   const birthRate = population.birthRate;
   const deathRate = population.deathRate;
   const birthDeathD3 = labelPlacementMax(birthRate, deathRate);
-  createStackedHorizontalBarChart('birthDeathChart', [ 
-    { label: 'Births', data: [birthRate], backgroundColor: 'rgba(255, 217, 64, 0.2)' },
-    { label: 'Deaths', data: [deathRate], backgroundColor: chartColours.deaths },
-  ], 'Births vs Deaths (per Capita / Year)', false, false, birthDeathD3);
-
-
+  createStackedHorizontalBarChart(
+    'birthDeathChart',
+    [
+      {
+        label: 'Births',
+        data: [birthRate],
+        backgroundColor: 'rgba(255, 217, 64, 0.2)',
+      },
+      {
+        label: 'Deaths',
+        data: [deathRate],
+        backgroundColor: chartColours.deaths,
+      },
+    ],
+    'Births vs Deaths (per Capita / Year)',
+    false,
+    false,
+    birthDeathD3,
+  );
 };
 
 const updateEconomicTab = (economic) => {
@@ -247,14 +409,17 @@ class DemographicsUI {
     };
   }
 
-  injectTab = (sectionsConfig) => sectionsConfig.forEach(({ id, title, data, charts, icon }) => injectSection(id, title, data, charts, icon));
+  injectTab = (sectionsConfig) =>
+    sectionsConfig.forEach(({ id, title, data, charts, icon }) =>
+      injectSection(id, title, data, charts, icon),
+    );
 
   injectOverviewTab = () => this.injectTab(overviewSectionsConfig);
   injectHealthTab = () => this.injectTab(healthSectionsConfig);
   injectPopulationTab = () => this.injectTab(populationSectionsConfig);
   injectEcomomicTab = () => this.injectTab(economicSectionsConfig);
   injectEnvironmentTab = () => this.injectTab(environmentSectionsConfig);
-  
+
   async injectDataForTab(tabName) {
     const tabConfig = this.tabMap[tabName];
     if (!tabConfig) {
@@ -266,7 +431,6 @@ class DemographicsUI {
     tabConfig.updater(mappedData);
   }
 }
-
 
 $('.d-tabs-link').on('click', function () {
   // Remove the active class from all tabs
@@ -298,28 +462,42 @@ $('.d-tabs-link').on('click', function () {
   // Reusable function to handle tab data injection and spinner
   const loadTabData = (injectTabFunction, injectDataFunction) => {
     injectTabFunction.call(demographicsUI);
-    injectDataFunction.call(demographicsUI)
-      .then(() => {
-        $('.o-load').addClass('fadeOut'); // Hide loading spinner after data is ready
-      });
+    injectDataFunction.call(demographicsUI).then(() => {
+      $('.o-load').addClass('fadeOut'); // Hide loading spinner after data is ready
+    });
   };
 
   // Switch logic for different tabs
   switch (targetId) {
     case '#populationDemo':
-      loadTabData(demographicsUI.injectPopulationTab, demographicsUI.injectDataForTab.bind(demographicsUI, 'population'));
+      loadTabData(
+        demographicsUI.injectPopulationTab,
+        demographicsUI.injectDataForTab.bind(demographicsUI, 'population'),
+      );
       break;
     case '#healthDemo':
-      loadTabData(demographicsUI.injectHealthTab, demographicsUI.injectDataForTab.bind(demographicsUI, 'health'));
+      loadTabData(
+        demographicsUI.injectHealthTab,
+        demographicsUI.injectDataForTab.bind(demographicsUI, 'health'),
+      );
       break;
     case '#environmentDemo':
-      loadTabData(demographicsUI.injectEnvironmentTab, demographicsUI.injectDataForTab.bind(demographicsUI, 'environment'));
+      loadTabData(
+        demographicsUI.injectEnvironmentTab,
+        demographicsUI.injectDataForTab.bind(demographicsUI, 'environment'),
+      );
       break;
     case '#economyDemo':
-      loadTabData(demographicsUI.injectEcomomicTab, demographicsUI.injectDataForTab.bind(demographicsUI, 'economy'));
+      loadTabData(
+        demographicsUI.injectEcomomicTab,
+        demographicsUI.injectDataForTab.bind(demographicsUI, 'economy'),
+      );
       break;
     case '#currentDemo':
-      loadTabData(demographicsUI.injectOverviewTab, demographicsUI.injectDataForTab.bind(demographicsUI, 'overview'));
+      loadTabData(
+        demographicsUI.injectOverviewTab,
+        demographicsUI.injectDataForTab.bind(demographicsUI, 'overview'),
+      );
       break;
     default:
       break;
@@ -337,8 +515,8 @@ export const showDemographicsOverlay = () => {
   $('#demoContainer').css({ display: 'flex' });
 
   // Show the loading spinner
-  $('.o-load').removeClass('fadeOut'); 
-  
+  $('.o-load').removeClass('fadeOut');
+
   // Get the current country code
   const countryCode = currentCountry.countryCode;
   if (!countryCode) {
@@ -348,13 +526,12 @@ export const showDemographicsOverlay = () => {
 
   // Create the DemographicsUI instance
   const demographicsUI = new DemographicsUI(countryCode);
-  
+
   // Inject the overview tab content and data before displaying the tab
   demographicsUI.injectOverviewTab();
-  demographicsUI.injectDataForTab('overview')
-    .then(() => {
-      $('.o-load').addClass('fadeOut'); 
-    });
+  demographicsUI.injectDataForTab('overview').then(() => {
+    $('.o-load').addClass('fadeOut');
+  });
 
   // Hide all tab contents
   $('.tab-content').hide();
