@@ -53,14 +53,6 @@
 
     <!-- Main CSS File -->
     <link href="assets/css/main.css" rel="stylesheet" />
-
-    <!-- =======================================================
-  * Template Name: iPortfolio
-  * Template URL: https://bootstrapmade.com/iportfolio-bootstrap-portfolio-websites-template/
-  * Updated: Jun 29 2024 with Bootstrap v5.3.3
-  * Author: BootstrapMade.com
-  * License: https://bootstrapmade.com/license/
-  ======================================================== -->
   </head>
 
   <body class="index-page">
@@ -79,8 +71,6 @@
         href="index.html"
         class="logo d-flex align-items-center justify-content-center"
       >
-        <!-- Uncomment the line below if you also wish to use an image logo -->
-        <!-- <img src="assets/img/logo.png" alt=""> -->
         <h1 class="sitename">Oliver Wood</h1>
       </a>
 
@@ -126,6 +116,12 @@
               ><i class="bi bi-person-rolodex navicon"></i> Company Directory</a
             >
           </li>
+          <li>
+            <a href="https://dotdev.olijwood.co.uk" target="_blank"
+              ><i class="bi bi-file-post navicon"></i> DotDev</a
+            >
+          </li>
+
           <li>
             <a href="#contact"
               ><i class="bi bi-envelope navicon"></i> Contact</a
@@ -402,8 +398,8 @@
             </div>
             <div class="container text-center mt-4">
               <a
-                href="assets/cv/Oliver_Wood_CV.pdf"
-                download="Oliver_Wood_CV.pdf"
+                href="assets/cv/Oliver-Wood-CV.pdf"
+                download="Oliver-Wood-CV.pdf"
                 class="btn btn-primary cv-download-btn"
               >
                 <i class="bi bi-download me-2"></i> Download CV
@@ -488,12 +484,7 @@
               <!-- End Portfolio Item -->
 
               <!-- Gazetteer Portfolio Modal -->
-              <div
-                class="modal fade"
-                id="gazetteerModal"
-                tabindex="-1"
-                aria-hidden="true"
-              >
+              <div class="modal fade" id="gazetteerModal" tabindex="-1" inert>
                 <div class="modal-dialog modal-dialog-centered">
                   <div class="modal-content">
                     <div class="modal-header">
@@ -589,7 +580,7 @@
                 class="modal fade"
                 id="companyDirectoryModal"
                 tabindex="-1"
-                aria-hidden="true"
+                inert
               >
                 <div class="modal-dialog modal-dialog-centered">
                   <div class="modal-content">
@@ -651,9 +642,120 @@
                   </div>
                 </div>
               </div>
-            </div>
 
-            <!-- End Portfolio Container -->
+              <div
+                class="col-lg-6 col-md-6 portfolio-item isotope-item filter-app"
+              >
+                <div class="portfolio-content h-100">
+                  <img
+                    src="assets/img/portfolio/dotdev-screenshot.png"
+                    class="img-fluid"
+                    alt="A blog post on DotDev"
+                  />
+                  <div class="portfolio-info">
+                    <h4>DotDev</h4>
+                    <p>
+                      DotDev is a feature-rich blog-sharing platform inspired by
+                      dev.to, designed for developers to create, interact, and
+                      explore technical content. Built with Next.js 19, React,
+                      and Prisma, it supports Markdown-based posts, real-time
+                      reactions, and dynamic discussions.
+                    </p>
+
+                    <div class="portfolio-links">
+                      <a
+                        href="assets/img/portfolio/dotdev-screenshot.png"
+                        title="Dotdev"
+                        data-gallery="portfolio-gallery-app"
+                        class="glightbox preview-link"
+                        ><i class="bi bi-zoom-in"></i
+                      ></a>
+                      <a
+                        href="#"
+                        data-bs-toggle="modal"
+                        data-bs-target="#dotDevModal"
+                        title="More Details"
+                        class="more-details-link"
+                        ><i class="bi bi-info-circle"></i
+                      ></a>
+                      <a
+                        href="https://dotdev.olijwood.co.uk/"
+                        target="_blank"
+                        title="View Project"
+                        class="view-project-link"
+                        ><i class="bi bi-link-45deg"></i
+                      ></a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- End Portfolio Item -->
+
+              <!-- DotDev Portfolio Modal -->
+              <div
+                class="modal fade"
+                id="dotDevModal"
+                tabindex="-1"
+                aria-hidden="true"
+                inert
+              >
+                <div class="modal-dialog modal-dialog-centered">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h3 class="modal-title fw-bold">DotDev</h3>
+                      <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"
+                      ></button>
+                    </div>
+                    <div class="modal-body">
+                      <p class="fw-bold">
+                        DotDev is a modern blog-sharing platform inspired by
+                        dev.to, built with Next.js 19, React, and Prisma. Users
+                        can create posts using Markdown, interact through
+                        comments and reactions, and save posts to a reading
+                        list.
+                      </p>
+
+                      <ul>
+                        <li>
+                          <strong>Markdown Support</strong>: Write posts using a
+                          feature-rich Markdown editor with real-time preview.
+                        </li>
+                        <li>
+                          <strong>Authentication</strong>: OAuth login with
+                          Google/GitHub & optional 2FA.
+                        </li>
+                        <li>
+                          <strong>Real-Time Interactions</strong>: React to
+                          posts with emojis & engage in discussions via
+                          comments.
+                        </li>
+                        <li>
+                          <strong>Reading List</strong>: Save favorite articles
+                          for later.
+                        </li>
+                        <li>
+                          <strong>Middleware Protection</strong>: Secure routing
+                          to restrict unauthorized access.
+                        </li>
+                        <li>
+                          <strong>Responsive UI</strong>: Fully mobile-friendly
+                          with TailwindCSS.
+                        </li>
+                      </ul>
+                      <p class="fw-bold">
+                        Tech Stack: Next.js 19, React, TypeScript, Prisma,
+                        PostgreSQL, NextAuth.js, TailwindCSS
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- End DotDev Portfolio Modal -->
+            </div>
           </div>
         </div>
       </section>
@@ -773,7 +875,6 @@
 
     <!-- Vendor JS Files -->
     <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <!-- <script src="assets/vendor/php-email-form/validate.js"></script> -->
     <script src="assets/vendor/aos/aos.js"></script>
     <script src="assets/vendor/typed.js/typed.umd.js"></script>
     <script src="assets/vendor/purecounter/purecounter_vanilla.js"></script>
