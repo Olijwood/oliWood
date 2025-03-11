@@ -11,10 +11,10 @@ index.php
 .htaccess
 composer.phar
 
-# Project1
-project1/node_modules
-project1/.env
-project1/.htaccess
+# gazetteer
+gazetteer/node_modules
+gazetteer/.env
+gazetteer/.htaccess
 
 # lint & prettifier
 project2/.vscode/

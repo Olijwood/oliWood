@@ -16,9 +16,7 @@ if (isset($_GET['lat']) && isset($_GET['lon'])) {
     header('Content-Type: application/json');
     echo $response;
 } else {
-  header('Content-Type: application/json');
+    header('Content-Type: application/json');
     echo json_encode(['error' => 'Missing latitude or longitude']);
 }
-// http://localhost/project1/php/getWeatherForecast.php?lat=51.167232&lon=-0.5963776
-// http://localhost/project1/php/getWeatherForecast.php?lat=5.4793&lon=53.2060
 ?>

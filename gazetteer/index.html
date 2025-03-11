@@ -8,10 +8,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
     <!-- Favicon -->
-    <link rel="apple-touch-icon" sizes="180x180" href="/project1/favicon/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/project1/favicon/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/project1/favicon/site.webmanifest">
-    <link rel="manifest" href="/project1/favicon/site.webmanifest">
+    <link rel="apple-touch-icon" sizes="180x180" href="/gazetteer/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/gazetteer/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/gazetteer/favicon/site.webmanifest">
+    <link rel="manifest" href="/gazetteer/favicon/site.webmanifest">
 
     <!-- Stylesheet -->
     <link rel="stylesheet" href="css/styles.css">
@@ -19,12 +19,12 @@
     <link rel="stylesheet" href="css/nouislider.css">
   </head>
   <body>
-    <div id="pre-load"></div>      
-    
-    
+    <div id="pre-load"></div>
+
+
     <!-- main content -->
     <div>
-      
+
       <div id="map">
         <span id="selectContainer">
           <select id="countrySelect" class="form-select shadow-sm">
@@ -40,9 +40,9 @@
               <h5 class="text-center">Earthquakes</h5>
               <input class="form-check-input" type="checkbox" role="switch" id="toggleEarthquakes" checked>
             </div>
-            <button id="eOverlayCloseBtn" class="overlay-close-btn"><i class="bi bi-x"></i></button> 
+            <button id="eOverlayCloseBtn" class="overlay-close-btn"><i class="bi bi-x"></i></button>
           </div>
-        
+
           <div id="earthquakeRadio">
             <div class="form-check form-check-inline">
               <input class="form-check-input" type="radio" name="inlineRadioOptions" id="eqRadioDay" value="day" checked>
@@ -57,26 +57,26 @@
               <label class="form-check-label" for="eqRadioMonth">Month</label>
             </div>
           </div>
-        
+
           <div id="eAdvanced">
             <input id="search" type="text" class="input-field" placeholder="Search..."/>
             <h6></h6>
             <div id="slider"></div>
           </div>
         </div>
-        
+
         <div id="currencyOverlay" class="overlay-container">
           <div id="currencyHeader" class="overlay-header">
             <i class="bi bi-cash overlay-title-icon"></i>
             <div id="cTitleDiv" class="overlay-title">
               <h5 class="text-center">Currency Converter</h5>
             </div>
-            <button id="cOverlayCloseBtn" class="overlay-close-btn"><i class="bi bi-x"></i></button> 
+            <button id="cOverlayCloseBtn" class="overlay-close-btn"><i class="bi bi-x"></i></button>
           </div>
-        
+
           <div id="cConverterContainer">
             <div id="conversionRate" class="conversion-rate">1 GBP equals 1.28 EUR</div>
-            
+
             <!-- Convert From -->
             <div class="currency-input-group">
               <div class="currency-input">
@@ -86,7 +86,7 @@
                 <select id="fromCurrency"></select>
               </div>
             </div>
-            
+
             <!-- Convert To -->
             <div class="currency-input-group" id="toInputGroup">
               <div class="currency-input">
@@ -97,7 +97,7 @@
               </div>
             </div>
           </div>
-        </div> 
+        </div>
 
       </div>
 
@@ -121,11 +121,11 @@
             <div id="wTempContainer">
               <span id="temperature"></span>
               <div id="tempToggle" class="temp-toggle">
-                <span id="unit">°C</span> 
+                <span id="unit">°C</span>
                 <i id="tempToggleIcon" class="bi bi-arrow-left-right"></i>
               </div>
             </div>
-            <div class="weather-details">             
+            <div class="weather-details">
               <span id="weatherDesc"></span>
               <div class="weather-details-sm">
                 <span id="humidity" class="o-text-muted"></span>
@@ -133,15 +133,15 @@
               </div>
             </div>
           </div>
-          <div class="weather-time-desc"> 
+          <div class="weather-time-desc">
             <h5 id="weatherLocation" class="weather-location"></h5>
             <h5 id="weatherTime" class=" weather-location"></span>
           </div>
         </div>
-        
+
         <!-- Forecast Carousel -->
         <div id="wAdvanced">
-          
+
           <div id="hourlyCarousel" class="weather-carousel"></div>
           <div id="dailyCarousel" class="weather-carousel"></div>
         </div>
@@ -254,8 +254,8 @@
       </div>
     </div>
   </div>
-           
-      
+
+
       <!-- Demographics Modal -->
     <div class="overlay-modal-container" id="demoContainer">
       <div id="demoOverlay" class="overlay-container overlay-modal">
@@ -266,7 +266,7 @@
           </div>
           <button id="dOverlayCloseBtn" class="overlay-close-btn"><i class="bi bi-x"></i></button>
         </div>
-       
+
         <div class="overlay-tabs" id="demoTabsContainer">
           <!-- Tab Navigation -->
           <ul class="o-tabs-ul" id="demographicsTab" role="tablist">
@@ -290,10 +290,10 @@
         <div class="overlay-content" id="dOverlayContent">
             <!-- Overview Tab -->
           <div class="tab-content" id="currentDemoContent">
-           
+
             <div class="o-load"></div>
 
-            <div id="currentDemo" class="tab-content-inner">  
+            <div id="currentDemo" class="tab-content-inner">
               <div id="populationOverview"></div>
               <div id="economicOverview"></div>
               <div id="healthOverview"></div>
@@ -309,9 +309,9 @@
               <div id="popDistributions"></div>
               <div id="popEducation"></div>
               <div id="popMoreInfo"></div>
-            </div>  
+            </div>
           </div>
-          
+
             <!-- Health Tab -->
           <div class="tab-content" id="healthDemoContent">
             <div class="o-load"></div>
@@ -325,13 +325,13 @@
           </div>
 
             <!-- Economy Tab -->
-          <div class="tab-content" id="economyDemoContent"> 
+          <div class="tab-content" id="economyDemoContent">
             <div class="o-load"></div>
             <div id="economyDemoTab" class="tab-content-inner">
               <div id="econGeneral"></div>
               <div id="incomeInequality"></div>
               <div id="econMoreInfo"></div>
-                
+
             </div>
           </div>
 
@@ -351,16 +351,16 @@
     </div>
   </div>
 
-      
 
-      
-      
+
+
+
     <input type="hidden" value="" id='hiddenCountrySelected' />
     <input type="hidden" value="" id='hiddenCurrSelected' />
-   
+
     <!-- Webpack Bundle -->
     <script src="dist/bundle.js" defer></script>
 
-   
+
   </body>
 </html>
