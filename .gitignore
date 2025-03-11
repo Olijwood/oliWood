@@ -17,20 +17,20 @@ gazetteer/.env
 gazetteer/.htaccess
 
 # lint & prettifier
-project2/.vscode/
-project2/node_modules/
-project2/eslint.config.mjs
-project2/.prettierrc
-project2/package.json
-project2/package-lock.json
-project2/db.txt
-project2/libs/php/config.php
-project2/exIndex.html
-project2/exMain.css
-project2/exMain.js
-project2/tbHTML.html
-project2/tbCSS.css
-project2/tbJS.js
+companydir/.vscode/
+companydir/node_modules/
+companydir/eslint.config.mjs
+companydir/.prettierrc
+companydir/package.json
+companydir/package-lock.json
+companydir/db.txt
+companydir/libs/php/config.php
+companydir/exIndex.html
+companydir/exMain.css
+companydir/exMain.js
+companydir/tbHTML.html
+companydir/tbCSS.css
+companydir/tbJS.js
 
 node_modules/
 package.json

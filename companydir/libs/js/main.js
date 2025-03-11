@@ -970,6 +970,28 @@ function capitalizeFirst(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
+document.addEventListener('DOMContentLoaded', function () {
+  // Select all modals
+  const modals = document.querySelectorAll('.modal');
+
+  modals.forEach((modal) => {
+    const openButton = document.querySelector(
+      `[data-bs-target="#${modal.id}"]`,
+    );
+
+    modal.addEventListener('shown.bs.modal', function () {
+      modal.removeAttribute('inert');
+    });
+
+    modal.addEventListener('hidden.bs.modal', function () {
+      modal.setAttribute('inert', '');
+      if (openButton) {
+        openButton.focus();
+      }
+    });
+  });
+});
+
 // ================================
 //          INITIALIZE
 // ================================
